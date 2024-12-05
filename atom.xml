@@ -1,0 +1,1669 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://jinvic.github.io</id>
+    <title>Jinvic&apos;s Blog</title>
+    <updated>2024-12-05T09:53:25.687Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://jinvic.github.io"/>
+    <link rel="self" href="https://jinvic.github.io/atom.xml"/>
+    <subtitle>记录学习与生活</subtitle>
+    <logo>https://jinvic.github.io/images/avatar.png</logo>
+    <icon>https://jinvic.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2024, Jinvic&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[碎碎念 2024-12]]></title>
+        <id>https://jinvic.github.io/post/micro-blog-2024-12/</id>
+        <link href="https://jinvic.github.io/post/micro-blog-2024-12/">
+        </link>
+        <updated>2024-12-03T00:03:26.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="碎碎念">碎碎念</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E7%A2%8E%E7%A2%8E%E5%BF%B5">碎碎念</a>
+<ul>
+<li><a href="#2024-12-03">2024-12-03</a>
+<ul>
+<li><a href="#2024-12-03-080400">2024-12-03 08:04:00</a></li>
+</ul>
+</li>
+<li><a href="#2024-12-04">2024-12-04</a>
+<ul>
+<li><a href="#2024-12-04-102655">2024-12-04 10:26:55</a></li>
+</ul>
+</li>
+<li><a href="#2024-12-05">2024-12-05</a>
+<ul>
+<li><a href="#2024-12-05-094054">2024-12-05 09:40:54</a></li>
+<li><a href="#2024-12-05-102413">2024-12-05 10:24:13</a></li>
+<li><a href="#2024-12-05-152443">2024-12-05 15:24:43</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="2024-12-03">2024-12-03</h2>
+<h3 id="2024-12-03-080400">2024-12-03 08:04:00</h3>
+<p>搭了<a href="rustdesk.com">RustDesk</a>的自建服务器，试了一下速度挺快的，比之前的免费服务器好多了。之前卡的几乎用不了，现在虽然还有明显迟滞，但也和蓝牙耳机听歌的延迟差不多完全可以接受。</p>
+<p>说是搭了，其实也是在宝塔的应用市场一键部署的。不是很敢折腾，这段时间已经重装系统好几次了。。。能一键装好就不自己装了，之后也打算搞点版本控制和包管理器来。</p>
+<h2 id="2024-12-04">2024-12-04</h2>
+<h3 id="2024-12-04-102655">2024-12-04 10:26:55</h3>
+<p>查表建树，递归，爽。</p>
+<h2 id="2024-12-05">2024-12-05</h2>
+<h3 id="2024-12-05-094054">2024-12-05 09:40:54</h3>
+<p>因为没问清需求导致这段时间部分工作白做了。</p>
+<p>我倒是没什么，不过前端好像很崩溃的样子（缩头）。</p>
+<h3 id="2024-12-05-102413">2024-12-05 10:24:13</h3>
+<p>花三百多续了一年服务器，服务器好贵。</p>
+<p>花三百多买了十年域名，域名好便宜。</p>
+<p>把博客绑到<a href="blog.jinvic.top">blog.jinvic.top</a>了，欢迎访问。</p>
+<h3 id="2024-12-05-152443">2024-12-05 15:24:43</h3>
+<p>经典踢皮球。</p>
+<p>一些给第三方接口的参数要按照固定格式存json字符串，我懒得解析让前端拼，前端不想拼要传给我来拼。</p>
+<p>所以这到底是前端还是后端的活？</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[华为云服务器配置]]></title>
+        <id>https://jinvic.github.io/post/huaweicloud-server-config/</id>
+        <link href="https://jinvic.github.io/post/huaweicloud-server-config/">
+        </link>
+        <updated>2024-11-29T09:54:25.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="华为云服务器配置">华为云服务器配置</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E5%8D%8E%E4%B8%BA%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE">华为云服务器配置</a>
+<ul>
+<li><a href="#mfa%E9%85%8D%E7%BD%AE">MFA配置</a></li>
+<li><a href="#%E5%AE%89%E5%85%A8%E7%BB%84%E9%85%8D%E7%BD%AE">安全组配置</a></li>
+<li><a href="#%E9%87%8D%E7%BD%AE%E5%AF%86%E7%A0%81">重置密码</a></li>
+<li><a href="#ssh%E7%99%BB%E5%BD%95%E5%85%8D%E5%AF%86">ssh登录&amp;免密</a></li>
+<li><a href="#%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BF%E7%99%BB%E5%BD%95">宝塔面板登录</a></li>
+<li><a href="#%E9%98%B2%E7%81%AB%E5%A2%99%E5%BC%80%E6%94%BE%E7%AB%AF%E5%8F%A3">防火墙开放端口</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96%E9%85%8D%E7%BD%AE">其他配置</a>
+<ul>
+<li><a href="#mysql">mysql</a></li>
+<li><a href="#rustdesk">RustDesk</a></li>
+<li><a href="#redis">Redis</a></li>
+<li><a href="#localtunnel">localtunnel</a></li>
+<li><a href="#gotify">gotify</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<p>最近把几个月前买的华为云服务器翻出来了，然后总是搞着搞着就把环境搞得一团糟干脆重装，反正就几分钟的事。顺便写个教程以后自己想再重装回来翻下。</p>
+<h2 id="mfa配置">MFA配置</h2>
+<p>如果你用过github，相信对2FA一定不陌生，而MFA和2FA差不多。简单来说，就是一个定时刷新的验证码。我们在进行一些敏感操作，如重设密码等需要频繁验证，这时MFA就会比收短信验证码或者邮箱验证码这类更方便些，当然MFA不是必须的，使用传统验证方式也行。<br>
+在安全设置-敏感操作中绑定MFA。管理MFA可以使用华为云的官方app。我个人是Google爱好者，使用的是google authenticator，同时管理github在内多项MFA和2FA。</p>
+<figure data-type="image" tabindex="1"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic2.png" alt="pic2" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic3.png" alt="pic3" loading="lazy"></figure>
+<h2 id="安全组配置">安全组配置</h2>
+<p>安全组配置简单来说就是允许哪些ip访问以及开放哪些端口。这个其实刚开始不用管，用默认安全组就行。之后如果添加了某些服务再加上就行。例如你在服务器上装了个，mysql就要开放3306。细节可以参考<a href="https://support.huaweicloud.com/usermanual-flexusl/security_admin_0004.html">官方文档</a>。<br>
+要检查某个端口是否开放可以使用<code>netstat -an | grep 80</code>命令。</p>
+<h2 id="重置密码">重置密码</h2>
+<p>如果你不记得你的密码，可以在【实例概览-服务器操作-更多】中重置密码，只不过会有一个验证，这时之前设的MFA就排上用场了。如果没设MFA可以用手机或邮箱验证码。</p>
+<figure data-type="image" tabindex="3"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic1.png" alt="pic1" loading="lazy"></figure>
+<h2 id="ssh登录免密">ssh登录&amp;免密</h2>
+<p>使用<code>ssh [用户名]@[服务器公网地址]</code>命令就可以远程登录服务器了。默认用户名是root，如果忘了密码可以<a href="#%E9%87%8D%E7%BD%AE%E5%AF%86%E7%A0%81%E5%8F%AF%E9%80%89">重置密码</a>。</p>
+<p>如果觉得每次输密码太麻烦，可以配置免密登录。在本地计算机（<strong>不是服务器</strong>）上启动终端（window用cmd或powershell），<code>cd ~</code>来到用户目录下，一般为C:\User\用户名，<code>cd .ssh</code>进入.ssh文件夹，使用<code>ssh-keygen -t rsa</code>生成密钥，中途要求保存地址和密码不输直接回车也行。</p>
+<p>查看可以发现多出了<code>id_rsa</code>和<code>id_rsa_pub</code>两个文件，分别是私钥和公钥。</p>
+<figure data-type="image" tabindex="4"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic4.png" alt="pic4" loading="lazy"></figure>
+<p>此时可以使用<code>ssh-copy-id</code>命令再次登录服务器将会将生成的公钥复制到服务器，但会覆盖源文件。也可以记事本打开公钥文件将内容手动粘贴到<code>/root/.ssh/authorized_keys</code>文件中。如果不会linux的文件操作，可以使用华为云网页自带的远程登录，自带一个文件树，双击打开后粘贴就行。</p>
+<figure data-type="image" tabindex="5"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic5.png" alt="pic5" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic6.png" alt="pic6" loading="lazy"></figure>
+<p>或者也可以使用echo命令写入，即<code>echo &quot;你的公钥内容&quot; &gt;&gt; ~/.ssh/authorized_keys</code>。</p>
+<p>如上配置完成后再使用ssh命令登录就不需要输入密码了。</p>
+<h2 id="宝塔面板登录">宝塔面板登录</h2>
+<p>我买的Flexus L实例默认镜像是Ubuntu 22.04+宝塔面板。当然宝塔不是必要的，完全可以ssh登陆后自己敲命令装软件，不过为了方便还是先用着宝塔，以后可能会换别的管理软件。</p>
+<p>宝塔面板的默认账密在<code>credentials/password.txt</code>中，可以使用<code>cat</code>命令查看。</p>
+<figure data-type="image" tabindex="7"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic7.png" alt="pic7" loading="lazy"></figure>
+<p>登录后会要你装些软件，选默认配置就行。之后要装什么也可以在软件商店装。</p>
+<h2 id="防火墙开放端口">防火墙开放端口</h2>
+<p>我在使用宝塔面板中安装了mysql，并在ssh登录的终端中成功登录。但是尝试使用公网ip外部登录时失败。这是因为除了安全组配置，还需要在服务器上开放防火墙对应端口。对于Ubuntu系统可以使用ufw命令管理防火墙。如下是一些常用命令。</p>
+<ul>
+<li>sudo ufw enable/disable 启用/禁用ufw</li>
+<li>sudo ufw allow 80/tcp 开放特定端口，如果省略协议类型则同时允许tcp和udp</li>
+<li>sudo ufw status 查看防火墙开放的端口 加个numbered可以看序号</li>
+<li>sudo ufw delete [rule number] 删除某条规则</li>
+<li>sudo ufw reload 重启防火墙</li>
+</ul>
+<p>如果开放端口还是无法连接，可能是mysql本身设置的问题，可以参考<a href="https://www.cnblogs.com/zhangxiaoxia/p/13043508.html">这里</a>，修改访问权限。不建议直接更改root，可以新建一个用户再赋权。</p>
+<h2 id="其他配置">其他配置</h2>
+<h3 id="mysql">mysql</h3>
+<p>除了开放对应端口还需修改user表的host。</p>
+<ol>
+<li>使用<code>mysql -u root -p</code>登录。</li>
+<li><code>use mysql;</code>选择mysql数据库。</li>
+<li><code>select host,user from user</code>查看user表的host。一般这里root的host是localhost，也就是不允许从外部登录。这里个人不建议直接修改root。可以新建一个用户再赋权。</li>
+<li><code>CREATE USER 'newuser'@'%' IDENTIFIED BY 'mypassword';</code>新建用户。</li>
+<li><code>GRANT ALL PRIVILEGES ON *.* TO 'newuser'@'%';</code>赋予新用户所有权限。</li>
+<li><code>FLUSH PRIVILEGES;</code>刷新权限。</li>
+</ol>
+<p>完成如上操作后，就可以使用新用户远程登录mysql数据库了。</p>
+<h3 id="rustdesk">RustDesk</h3>
+<p>RustDesk在宝塔的应用商店里有。先装Docker和Docker Compose，之后就可以一键安装RustDesk了。</p>
+<p>安装RustDesk后要开放对应端口，<code>21115:21119/tcp</code>和<code>21116/udp</code>。防火墙和安全组都要配置。</p>
+<p>服务安装后在docker-容器-hbbs-日志查看api key，ID服务器地址填自己服务器的公网地址就行。</p>
+<figure data-type="image" tabindex="8"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic8.png" alt="pic8" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic9.png" alt="pic9" loading="lazy"></figure>
+<h3 id="redis">Redis</h3>
+<p>开放端口老生常谈了，略。</p>
+<p>在redis的配置文件中也有一行<code>bind 127.0.0.1</code>，限定只能本地登录。可以注释掉这行或者换成自己的ip。</p>
+<p>因为redis默认是不设账号密码的，所以一定要设置一下密码。在配置文件<code>/redis/redis.conf</code>中添加一行<code>requirepass mypassword</code>。如果还想设置用户名，可以使用<code>requireuser username</code>。</p>
+<p>如果使用的是宝塔面板，也可以直接在设置中修改。</p>
+<figure data-type="image" tabindex="10"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic10.png" alt="pic10" loading="lazy"></figure>
+<h3 id="localtunnel">localtunnel</h3>
+<p>localtunnel可以很方便地将本地服务暴露到公网。默认会使用localtunnel官方服务器，为了隐私和效率选择自建服务器。</p>
+<p><strong>拉取项目</strong>：<a href="https://github.com/localtunnel/server">服务端</a>的gitbub地址，使用<code>git clone https://github.com/localtunnel/server.git</code>命令拉取时报错如下：</p>
+<pre><code class="language-bash">error: RPC failed; curl 16 Error in the HTTP2 framing layer
+fatal: expected flush after ref listing
+</code></pre>
+<p>在<a href="https://stackoverflow.com/questions/72987674/git-pull-error-rpc-failed-curl-16-error-in-the-http2-framing-layer-fatal-exp">stackoverflow</a>上看到解决方法，使用<code>git config --global http.version HTTP/1.1</code>强制git使用HTTP 1.1，之后可以使用<code>git config --global http.version HTTP/2</code>改回来。</p>
+<p>刚打算试试，发现又好了。看来是github日常抽风，有空配下代理。</p>
+<p><strong>安装并启动项目</strong>：拉取后的文件夹名为<code>server</code>，我为了方面管理改成了<code>localtunnel-server</code>。cd到这个目录下，使用<code>npm install</code>安装依赖，然后使用<code>node -r esm bin/server --port 1234</code>启动项目。端口可以自定义。</p>
+<p>使用<code>nohup</code>可以在后台不挂起运行程序，退出终端不影响。</p>
+<h3 id="gotify">gotify</h3>
+<p>gotify是一个简单易部署的消息服务。</p>
+<p>使用docker部署gotify很方便。只需要一行命令就能完成。不过我们为了可用性还是使用docker-compose。首先新建一个文件夹作为项目位置，然后新建文件<code>docker-compose.yml</code>：</p>
+<pre><code class="language-yml">services:
+  gotify:
+    image: gotify/server
+    container_name: &quot;gotify&quot;
+    restart: always
+    ports:
+      - 28818:80  #可以自定义要映射的端口
+    environment:
+      - GOTIFY_DEFAULTUSER_NAME=admin #默认账号
+      - GOTIFY_DEFAULTUSER_PASS=admin  #默认密码，记得修改一下
+    volumes:
+      - &quot;./gotify_data:/app/data&quot;
+</code></pre>
+<p>然后<code>sudo docker-compose up -d</code>就行。记得开放设置的端口和安全组，然后就可以登录<code>&lt;ip&gt;:&lt;port&gt;</code>查看消息了。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[个人向软件推荐]]></title>
+        <id>https://jinvic.github.io/post/software-personal-recommand/</id>
+        <link href="https://jinvic.github.io/post/software-personal-recommand/">
+        </link>
+        <updated>2024-11-16T02:52:26.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="个人向软件推荐">个人向软件推荐</h1>
+<p>非广，只是偶尔遇到些感兴趣的东西就会存下来，想起来就试试。然后觉得不错的专门拉个清单。<br>
+主要来源于<a href="https://www.ruanyifeng.com/blog/weekly/">科技爱好者周刊</a>和<a href="https://hellogithub.com">HelloGithub</a></p>
+<hr>
+<h2 id="推荐">推荐</h2>
+<ul>
+<li><a href="https://immersivetranslate.com/zh-Hans/">沉浸式翻译</a><br>
+确实是很好用的翻译插件，<code>alt+A</code>全页翻译，翻译就在原文旁边，保持格式一致不会弹窗什么的很突兀。搭个阅读插件使用效果更佳，都能用来专门学外语了。</li>
+<li><a href="https://github.com/fanchenio/DawnLauncher">Dawn Launcher</a><br>
+一个开源的 Windows 快捷启动工具，分门别类管理桌面快捷方式。<br>
+之前用过steam上的SAO那个，帅是帅但用起来其实有点麻烦，基本就开着吃灰。<br>
+有v1v2两个版本，v2付费，三十几块钱。确实挺好用，v1也够用了。</li>
+<li><a href="https://github.com/pot-app/pot-desktop">Pot (Translator of Pylogmon)</a><br>
+一个开源的跨平台桌面软件，用于划词翻译，可以配置多个翻译引擎。<br>
+还不错的翻译软件，跨平台+多插件支持+ocr支持。个人现在一个翻译源一个英汉词典配着感觉还不错，就是翻译速度有点慢，有时会卡一下。</li>
+<li><a href="https://deskpins.fileplanet.com/">deskpins</a><br>
+手动置顶窗口，这个需求偶尔还是有的。用起来很方便，后台挂着也不碍事，推荐。</li>
+<li><a href="https://www.voidtools.com/zh-cn/">everything</a><br>
+windows自带的搜索功能就跟没有一样根本不好用。以至于我第一次用上这个时甚至有点热泪盈眶。</li>
+<li><a href="https://vfox.lhan.me/">vfox</a><br>
+一款跨平台的通用版本管理工具。<br>
+一个软件同时进行多个软件的版本管理，太需要了。以前不了解时东一榔头西一棒槌把环境搞得乱七八糟，现在才觉出版本控制的好。相比于每个软件专门配一个显然这种整合起来的用起来更方便。</li>
+<li><a href="https://devtoys.app/">DevToys</a><br>
+一款 Windows 的小工具集合，收入了开发者会用到的许多小工具。<br>
+很不错的工具集合。我之前用的都是<a href="https://it-tools.tech/">这个</a>，但说实话比起网页还是更偏爱应用，而且我之前常用的功能这里面都有，现在改用这个了。</li>
+<li><a href="https://github.com/marticliment/UniGetUI/tree/3.1.3">UniGetUI</a><br>
+非官方的包管理器GUI界面，以前叫Winget UI，给winget用的。现在也支持scoop等其他包管理器。<br>
+虽然cli也能用，但有gui当然更好啦。</li>
+<li><a href="https://github.com/slc3a2/dimmer">dimmer</a><br>
+开源的 Chrome 浏览器插件，暗黑模式一键切换。<br>
+对长期看电脑的我很实用。</li>
+<li><a href="https://just.systems/">Just</a><br>
+一个命令运行器，类似于 Make，但不具备构建功能。<br>
+它允许把一个项目的所有命令行命令，都写在一个文件里面，并可以指定命令之间的依赖关系，还可以跨平台使用。<br>
+比起使用make构建项目，我所需要的确实只是一个命令运行器而已。而Just完美满足了我的需求，强烈推荐。</li>
+<li><a href="https://dbgate.org/">DBGate</a><br>
+这是款免费、开源的数据库桌面管理工具，支持包括 MySQL、PostgreSQL、SQL Server、MongoDB、SQLite、Redis 等多种数据库，适用于 Windows、Linux、macOS 系统。<br>
+很好用的数据库客户端，支持数据库多，功能全，用起来也十分方便流畅。就是经常不知不觉中在后台闪退了，也不知道是不是我同时连接开太多了(lll￢ω￢)</li>
+<li><a href="app.follow.is">follow</a><br>
+一个新的 RSS 阅读器，在原本的 RSS 阅读器上添加了一些社区、互动的功能，并且引入了一个 Power 的 ERC-20 Token 作为货币系统。<br>
+很久之前就想试试rss了，试了试确实不错。rss这玩意用之前觉得没啥，体验后真香。</li>
+</ul>
+<h2 id="还行">还行</h2>
+<ul>
+<li><a href="https://theboroer.github.io/localtunnel-www/">Localtunnel</a><br>
+一个 npm 软件包，为你的本地服务分配一个公网的 URL，使得公网可以访问这个本地服务。<br>
+cli运行需要npm安装，也有go客户端 <a href="https://github.com/NoahShen/gotunnelme">客户端1</a> <a href="https://github.com/localtunnel/go-localtunnel">客户端2</a>。<br>
+用起来很方便，<code>lt --port [num]</code>就能将本地端口映射公网，有时需要提供本机公网ip当密码。<br>
+虽然是走它的服务器中转，但也开源了<a href="https://github.com/localtunnel/server">服务器</a>可以自己部署。<br>
+总之临时用一下很方便，长期使用稳定性不确定。</li>
+<li><a href="https://github.com/RGAA-Software/GammaRay/blob/master/docs/Readme_CN.md">GammaRay</a><br>
+一个开源工具，用来把手机和 PC 的桌面传到其他设备，支持远程桌面、视频采集等功能。<br>
+试了试还行，用起来挺方便的。</li>
+<li><a href="https://github.com/JasonGrass/auto-extension-manager">Extension Manager</a><br>
+一个浏览器插件，用来管理浏览器安装的各种插件，弥补系统自带的扩展管理器的不足。<br>
+挺好用的扩展管理工具，推荐。</li>
+<li><a href="https://github.com/vnt-dev/vnt">Vnt</a><br>
+An efficient VPN. 简便高效的异地组网、内网穿透工具。<br>
+如果Localtunnel是一个简便的命令行小工具，那Vnt就是个更专业的应用了。前者侧重公网访问，后者侧重异地组网。而且vnt不仅有官方服务器，也有一些民间中继服务器，也可以自建服务器。<br>
+有图像化页面，支持多平台，更多的配置项，简单快捷的操作，干净利落的风格，这正是我想要的。</li>
+<li><a href="https://github.com/mulaRahul/keyviz">Keyviz</a><br>
+开源的 Windows 软件，在桌面上显示用户实时的按键。<br>
+最然不知道有什么用但总会用上的XD。</li>
+<li><a href="https://xupefei.github.io/Locale-Emulator/">Locale Emulator</a><br>
+转区工具。<br>
+gal玩家大概对它很熟悉了，但我是用来跑LR2的。</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Kratos 快速入门实践]]></title>
+        <id>https://jinvic.github.io/post/kratos-quick-start-practice/</id>
+        <link href="https://jinvic.github.io/post/kratos-quick-start-practice/">
+        </link>
+        <updated>2024-11-11T12:50:17.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="kratos-快速入门实践">Kratos 快速入门实践</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#kratos-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%AE%9E%E8%B7%B5">Kratos 快速入门实践</a>
+<ul>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84">项目结构</a></li>
+<li><a href="#api%E5%B1%82">api层</a></li>
+<li><a href="#ent%E5%B1%82">ent层</a></li>
+<li><a href="#data%E5%B1%82">data层</a></li>
+<li><a href="#biz%E5%B1%82">biz层</a></li>
+<li><a href="#service%E5%B1%82">service层</a></li>
+<li><a href="#%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5">依赖注入</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="前言">前言</h2>
+<p>kratos<a href="https://go-kratos.dev/docs/getting-started/start">官方文档</a>的快速入门主打一个跑起来就算成功，基本没什么内容。本文将基于官方文档快速入门，结合自己的实践，详细说明如何在kratos框架中开发一个新功能。</p>
+<h2 id="项目结构">项目结构</h2>
+<p>如下是 Kratos 的一个典型的 Go 项目布局，也差不多是我们使用<code>kratos new .</code>创建新项目时的默认布局：</p>
+<pre><code class="language-bash">application
+|____api
+| |____helloworld
+| | |____v1
+| | |____errors
+|____cmd
+| |____helloworld
+|____configs
+|____internal
+| |____conf
+| |____data
+| |____biz
+| |____service
+| |____server
+|____test
+|____pkg
+|____go.mod
+|____go.sum
+|____LICENSE
+|____README.md
+</code></pre>
+<p>简单来说，要开发一个新功能就是<code>api-&gt;[service-biz-data]&lt;-ent</code>的流程。其中<code>api</code>层定义外部接口，<code>service</code>层负责与外部接口对接，<code>biz</code>层负责业务逻辑，<code>data</code>层与底层数据操作对接，<code>ent</code>层实现数据库定义与操作。</p>
+<h2 id="api层">api层</h2>
+<p>首先在<code>api/helloworld/v1</code>中定义protobuf文件，并使用 <code>kratos proto client .\api\helloworld\v1\test.proto</code> 生成go代码。</p>
+<pre><code class="language-proto">// api/helloworld/v1/test.proto
+syntax = &quot;proto3&quot;;
+
+package api.helloworld.v1;
+
+import &quot;google/api/annotations.proto&quot;;
+
+option go_package = &quot;helloworld/api/helloworld/v1;v1&quot;;
+
+// The test service definition.
+service Test {
+  rpc GetTest(GetTestRequest) returns (GetTestReply) {
+    option (google.api.http) = {
+      get: &quot;/test/{id}&quot;
+    };
+  };
+}
+
+message GetTestRequest {
+  string id = 1;
+}
+message GetTestReply {
+  string field1 = 1;
+  string field2 = 2;
+}
+</code></pre>
+<p>然后可以通过<code>kratos proto server .\api\helloworld\v1\test.proto -t internal/service</code>在<code>internal\service</code>下生成对应的service文件，这里实现了<code>pb.TestServer</code>接口。</p>
+<pre><code class="language-go">// internal/service/test.go
+package service
+
+import (
+ &quot;context&quot;
+
+ pb &quot;helloworld/api/helloworld/v1&quot;
+)
+
+type TestService struct {
+ pb.UnimplementedTestServer
+}
+
+func NewTestService() *TestService {
+ return &amp;TestService{}
+}
+
+func (s *TestService) GetTest(ctx context.Context, req *pb.GetTestRequest) (*pb.GetTestReply, error) {
+ return &amp;pb.GetTestReply{}, nil
+}
+</code></pre>
+<p>对外的部分就完成了，这是从外部接口到内部逻辑的步骤。</p>
+<p>接下来，我们从最底层的数据库开始，由内向外实现到service层。</p>
+<h2 id="ent层">ent层</h2>
+<p>首先是ent框架的schema定义，在<code>internal/data/ent/schema</code>下定义ent的schema文件。<br>
+关于ent的语法，在此不再赘述。</p>
+<pre><code class="language-go">// internal/data/ent/schema/test.go
+package schema
+
+import (
+ &quot;entgo.io/ent&quot;
+ &quot;entgo.io/ent/dialect&quot;
+ &quot;entgo.io/ent/schema/field&quot;
+)
+
+// Test holds the schema definition for the Test entity.
+type Test struct {
+ ent.Schema
+}
+
+// Fields of the Test.
+func (Test) Fields() []ent.Field {
+
+ return []ent.Field{
+
+  field.Int32(&quot;id&quot;).SchemaType(map[string]string{
+   dialect.MySQL: &quot;int(10)UNSIGNED&quot;, // Override MySQL.
+  }).NonNegative().Unique(),
+
+  field.String(&quot;field1&quot;).SchemaType(map[string]string{
+   dialect.MySQL: &quot;varchar(50)&quot;, // Override MySQL.
+  }),
+
+  field.String(&quot;field2&quot;).SchemaType(map[string]string{
+   dialect.MySQL: &quot;varchar(50)&quot;, // Override MySQL.
+  }),
+ }
+
+}
+
+// Edges of the Test.
+func (Test) Edges() []ent.Edge {
+ return nil
+}
+</code></pre>
+<p>在完成schema定义后，就可以使用ent工具生成用户操作数据库的相关代码。</p>
+<pre><code class="language-bash">ent generate ./internal/data/ent/schema
+</code></pre>
+<p>在<code>internal/data/data.go</code>中实现客户端并装载到Data结构体中,这样就把数据库操作和内部逻辑连接了起来。</p>
+<pre><code class="language-go">// internal/data/data.go
+package data
+
+import (
+    ...
+    _ &quot;github.com/go-sql-driver/mysql&quot; // mysql driver
+)
+
+// Data .
+type Data struct {
+ // TODO wrapped database client
+ db *ent.Client
+}
+
+// NewData .
+func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
+ cleanup := func() {
+  log.NewHelper(logger).Info(&quot;closing the data resources&quot;)
+ }
+ return &amp;Data{
+  db: NewEntClient(c, logger),
+ }, cleanup, nil
+}
+
+// NewEntClient .
+func NewEntClient(c *conf.Data, logger log.Logger) *ent.Client {
+ client, err := ent.Open(c.Database.Driver, c.Database.Source)
+ if err != nil {
+  log.NewHelper(logger).Fatal(err)
+ }
+ return client
+}
+</code></pre>
+<p>别忘了在<code>configs/config.yaml</code>中修改数据库配置。</p>
+<pre><code class="language-yaml">data:   
+  database:
+    driver: mysql
+    source: root:123456@tcp(127.0.0.1:3306)/test?parseTime=True&amp;loc=Local
+</code></pre>
+<p>完成api层和ent层后，程序内外的连接就完成了，接下来就是实现程序内部的逻辑。</p>
+<h2 id="data层">data层</h2>
+<p>在<code>internal/data/test.go</code>中实现数据库操作，这里让<code>testRepo</code>实现<code>GetTest</code>方法，即实现<code>biz.TestRepo</code>接口。</p>
+<pre><code class="language-go">// internal/data/test.go
+package data
+
+type testRepo struct {
+ data *Data
+ log  *log.Helper
+}
+
+func (r *testRepo) GetTest(ctx context.Context, id int32) (*biz.Test, error) {
+ test, err := r.data.db.Test.Query().Where(test.IDEQ(id)).Only(ctx)
+ if err != nil {
+  return nil, err
+ }
+ return &amp;biz.Test{
+  Id:     test.ID,
+  Field1: test.Field1,
+  Field2: test.Field2,
+ }, nil
+}
+
+</code></pre>
+<h2 id="biz层">biz层</h2>
+<p>在<code>internal/biz/test.go</code>中实现业务逻辑，这里因为逻辑很简单，直接调用data层方法就行。</p>
+<pre><code class="language-go">// internal/biz/test.go
+package biz
+
+type Test struct {
+ Id     int32
+ Field1 string
+ Field2 string
+}
+
+type TestRepo interface {
+ GetTest(context.Context, int32) (*Test, error)
+}
+
+type TestUsecase struct {
+ repo TestRepo
+ log  *log.Helper
+}
+
+// // GetTest search and return the Test.
+func (uc *TestUsecase) GetTest(ctx context.Context, id int32) (*Test, error) {
+ return uc.repo.GetTest(ctx, id)
+}
+</code></pre>
+<h2 id="service层">service层</h2>
+<p>最后，将<code>TestUsecase</code>装载到<code>internal/service/test.go</code>中，这样service层就完成了。</p>
+<pre><code class="language-go">// internal/service/test.go
+package service
+
+type TestService struct {
+ pb.UnimplementedTestServer
+ uc *biz.TestUsecase
+}
+
+func (s *TestService) GetTest(ctx context.Context, req *pb.GetTestRequest) (*pb.GetTestReply, error) {
+ id, err := strconv.Atoi(req.Id)
+ if err != nil {
+  return nil, err
+ }
+ test, err := s.uc.GetTest(ctx, int32(id))
+ if err != nil {
+  return nil, err
+ }
+ return &amp;pb.GetTestReply{
+  Field1: test.Field1,
+  Field2: test.Field2,
+ }, nil
+}
+</code></pre>
+<h2 id="依赖注入">依赖注入</h2>
+<p>最后，我们实现每一层的构造函数，并使用<code>wire</code>进行依赖注入。</p>
+<pre><code class="language-go">// internal/servece/test.go
+package service
+
+func NewTestService(
+ uc *biz.TestUsecase,
+) *TestService {
+ return &amp;TestService{
+  uc: uc,
+ }
+}
+// internal/servece/service.go
+package service
+
+import &quot;github.com/google/wire&quot;
+
+// ProviderSet is service providers.
+var ProviderSet = wire.NewSet(NewGreeterService, NewTestService)
+
+// internal/biz/test.go
+package biz
+
+// NewTestUsecase new a Test usecase.
+func NewTestUsecase(repo TestRepo, logger log.Logger) *TestUsecase {
+ return &amp;TestUsecase{repo: repo, log: log.NewHelper(logger)}
+}
+
+// internal/biz/biz.go
+package biz
+
+import &quot;github.com/google/wire&quot;
+
+// ProviderSet is biz providers.
+var ProviderSet = wire.NewSet(NewGreeterUsecase, NewTestUsecase)
+
+// internal/data/test.go
+package data
+
+// NewTestRepo .
+func NewTestRepo(data *Data, logger log.Logger) biz.TestRepo {
+ return &amp;testRepo{
+  data: data,
+  log:  log.NewHelper(logger),
+ }
+}
+
+// internal/data/data.go
+package data
+
+import (
+    ...
+    &quot;github.com/google/wire&quot;
+)
+
+// ProviderSet is data providers.
+var ProviderSet = wire.NewSet(NewData, NewGreeterRepo, NewTestRepo)
+
+// internal/server/http.go
+package server
+
+// NewHTTPServer new an HTTP server.
+func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, test *service.TestService, logger log.Logger) *http.Server {
+ var opts = []http.ServerOption{
+  http.Middleware(
+   recovery.Recovery(),
+  ),
+ }
+ if c.Http.Network != &quot;&quot; {
+  opts = append(opts, http.Network(c.Http.Network))
+ }
+ if c.Http.Addr != &quot;&quot; {
+  opts = append(opts, http.Address(c.Http.Addr))
+ }
+ if c.Http.Timeout != nil {
+  opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
+ }
+ srv := http.NewServer(opts...)
+ v1.RegisterGreeterHTTPServer(srv, greeter)
+ v1.RegisterTestHTTPServer(srv, test)
+ return srv
+}
+
+// internal/server/grpc.go
+package server
+
+// NewGRPCServer new a gRPC server.
+func NewGRPCServer(c *conf.Server, greeter *service.GreeterService, test *service.TestService, logger log.Logger) *grpc.Server {
+ var opts = []grpc.ServerOption{
+  grpc.Middleware(
+   recovery.Recovery(),
+  ),
+ }
+ if c.Grpc.Network != &quot;&quot; {
+  opts = append(opts, grpc.Network(c.Grpc.Network))
+ }
+ if c.Grpc.Addr != &quot;&quot; {
+  opts = append(opts, grpc.Address(c.Grpc.Addr))
+ }
+ if c.Grpc.Timeout != nil {
+  opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
+ }
+ srv := grpc.NewServer(opts...)
+ v1.RegisterGreeterServer(srv, greeter)
+ v1.RegisterTestServer(srv, test)
+ return srv
+}
+</code></pre>
+<p>使用<code>go generate ./...</code>命令更新依赖注入代码后就可以启动服务了。</p>
+<h2 id="总结">总结</h2>
+<p>通过以上步骤，我们完成了从proto文件到最终可运行的服务的整个过程，包括proto文件生成、ent层、data层、biz层、service层以及依赖注入。至于其他内容如<code>cmd</code>和<code>internal/conf</code>文件夹下的内容，在创建项目时已经生成好了不需要过多改动在此便不再赘述，有需要可以自行修改。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ent笔记]]></title>
+        <id>https://jinvic.github.io/post/ent-notes/</id>
+        <link href="https://jinvic.github.io/post/ent-notes/">
+        </link>
+        <updated>2024-11-07T06:41:18.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="ent笔记">ent笔记</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#ent%E7%AC%94%E8%AE%B0">ent笔记</a>
+<ul>
+<li><a href="#%E6%A6%82%E8%BF%B0">概述</a></li>
+<li><a href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8">快速入门</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85ent">安装ent</a></li>
+<li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96ent%E7%9B%AE%E5%BD%95">初始化ent目录</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E5%AE%9E%E4%BD%93">创建实体</a>
+<ul>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E5%AD%97%E6%AE%B5">添加字段</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E8%BE%B9relation">添加边（Relation）</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E9%80%86%E8%BE%B9backref">添加逆边（BackRef）</a></li>
+</ul>
+</li>
+<li><a href="#%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81">生成代码</a></li>
+<li><a href="#%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93">连接数据库</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E8%BF%81%E7%A7%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A8%A1%E5%BC%8F">创建&amp;迁移数据库模式</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%B6%E4%BB%96%E5%B7%A5%E5%85%B7">其他工具</a>
+<ul>
+<li><a href="#sql%E8%BD%ACentgo">SQL转entgo</a></li>
+<li><a href="#entimport">entimport</a></li>
+<li><a href="#protoc-gen-ent">protoc-gen-ent</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="概述">概述</h2>
+<blockquote>
+<p>ent 是一个 Go 的实体框架 (ORM)。 ent 可以使用 Go 代码轻松地定义任何数据模型或图结构；schema配置由 entc (ent codegen) 验证，这种配置生成了一个地道的静态类型的 API ，使开发人员能够富有生产性和幸福感。 它支持 MySQL, MariaDB, PostgreSQL, SQLite 和 Gremlin图数据库。</p>
+</blockquote>
+<p>简单来说，ent是Facebook团队开源的一个Go语言ORM框架，类似于Java的Hibernate，Python的SQLAlchemy，Go的GORM等。相比于gorm，ent的特点是专注于使用dsl写schema，关联和约束都写在 Go 代码，而不是结构标签，并用cli工具自动生成和验证代码，以及同样支持从schema构造迁移数据库结构，用户只需要管理好schema就行。缺点是学习成本和上手难度较高，需要理解学习它的schema概念和dls语法，以及面对复杂需求框架生成的代码可能不够灵活有时需要自定义方法。</p>
+<p><s>ent<a href="https://entgo.io/zh/docs/getting-started">官方文档</a>里的中文和没有差不多。这里贴一个民间翻译的<a href="https://ent.ryansu.tech/#/zh-cn/getting-started">中文文档</a>。</s></p>
+<blockquote>
+<p>241107: 才注意到ent主页挂着支持以色列的横幅，在开源项目中宣扬政治主张实在有点恶心了。<br>
+241114: 中文支持很差，甚至文档进度都不同步，建议看英文文档。为了封装硬生生搞了个语法子集出来，很多功能都无法实现。文档既少又烂，查资料全靠issue。两个字：<strong>快跑</strong></p>
+</blockquote>
+<h2 id="快速入门">快速入门</h2>
+<p>ent使用需要go环境，可以安装go后设置go项目:</p>
+<pre><code class="language-bash">go mod &lt;projectname&gt;
+</code></pre>
+<h3 id="安装ent">安装ent</h3>
+<pre><code class="language-bash">go get entgo.io/ent/cmd/ent
+</code></pre>
+<p>使用<code>ent -h</code>查看是否安装成功。如果提示找不到可以使用如下命令代替ent命令：</p>
+<pre><code class="language-bash">go run entgo.io/ent/cmd/ent
+</code></pre>
+<p>或者使用go install添加到%GOPATH/bin目录：</p>
+<pre><code class="language-bash">go install entgo.io/ent/cmd/ent
+</code></pre>
+<h3 id="初始化ent目录">初始化ent目录</h3>
+<pre><code class="language-bash">ent new
+</code></pre>
+<p>目录如下：</p>
+<pre><code class="language-bash">.
+└── ent
+    ├── generate.go
+    └── schema
+</code></pre>
+<h3 id="创建实体">创建实体</h3>
+<pre><code class="language-bash">ent new &lt;entityname&gt;
+</code></pre>
+<p>可以使用如上命令同时创建多个实体。它们将被创建在schema目录下。假设我们创建了一个User实体（<strong>首字母必须大写</strong>）<code>ent new User</code>：</p>
+<pre><code class="language-bash">.
+└── ent
+    ├── generate.go
+    └── schema
+        └── user.go
+</code></pre>
+<p>代码如下：</p>
+<pre><code class="language-go">
+package schema
+
+import &quot;entgo.io/ent&quot;
+
+// User holds the schema definition for the User entity.
+type User struct {
+    ent.Schema
+}
+
+// Fields of the User.
+func (User) Fields() []ent.Field {
+    return nil
+}
+
+// Edges of the User.
+func (User) Edges() []ent.Edge {
+    return nil
+}
+</code></pre>
+<p>其中Fields和Edges方法分别定义了实体的字段和关联关系。</p>
+<h4 id="添加字段">添加字段</h4>
+<p>直接修改各实体<code>Fields</code>方法的返回值即可。例如，我们给User实体添加age和name字段：</p>
+<pre><code class="language-go">// Fields of the User.
+func (User) Fields() []ent.Field {
+ return []ent.Field{
+  field.Int(&quot;age&quot;).
+   Positive(),
+  field.String(&quot;name&quot;).
+   Default(&quot;unknown&quot;),
+ }
+}
+</code></pre>
+<p>关于字段，详情见<a href="#fields">Fields</a>。</p>
+<h4 id="添加边relation">添加边（Relation）</h4>
+<p>直接修改各实体<code>Edges</code>方法的返回值即可。例如，我们给User实体添加一个一对多关系到Car：</p>
+<pre><code class="language-go">// Edges of the User.
+func (User) Edges() []ent.Edge {
+ return []ent.Edge{
+  edge.To(&quot;cars&quot;, Car.Type),
+ }
+}
+</code></pre>
+<p>这时如果我们查看数据库模式，会发现Car实体对应的cars表多了一列<code>user_cars</code>，作为外键约束指向User实体的id。</p>
+<h4 id="添加逆边backref">添加逆边（BackRef）</h4>
+<pre><code class="language-go">// Edges of the Car.
+func (Car) Edges() []ent.Edge {
+ return []ent.Edge{
+  // 创建一个名为 &quot;owner&quot; 的 `User` 反向边
+  // 并关联到 &quot;cars&quot; 边 (在 用户 结构中)
+  // 并显式的使用 `Ref` 方法。
+  edge.From(&quot;owner&quot;, User.Type).
+   Ref(&quot;cars&quot;).
+   // 设置边为唯一确保每辆车都只有一个拥有者
+   Unique(),
+ }
+}
+</code></pre>
+<p>如上代码创建了<code>cars</code>边的逆边<code>owner</code>。这时如果我们查看数据库模式，会发现并没有新增约束，因为这只是对原边的反向引用。</p>
+<p>我们可以通过<code>Unique</code>方法来设置边的唯一性，从而设置一对一，一对多或多对多关系。<br>
+如果是多对多关系将建立一个新的映射表来反映关联关系。</p>
+<p>关于边，详见<a href="#edges">Edges</a>。</p>
+<h3 id="生成代码">生成代码</h3>
+<pre><code class="language-bash">ent generate ./ent/schema
+</code></pre>
+<p>或者：</p>
+<pre><code class="language-bash">go generate ./ent
+</code></pre>
+<p>生成代码后目录如下：</p>
+<pre><code class="language-bash">.
+└── ent
+    ├── client.go
+    ├── ent.go
+    ├── enttest
+    │   └── enttest.go
+    ├── generate.go
+    ├── hook
+    │   └── hook.go
+    ├── migrate
+    │   ├── migrate.go
+    │   └── schema.go
+    ├── mutation.go
+    ├── predicate
+    │   └── predicate.go
+    ├── runtime
+    │   └── runtime.go
+    ├── runtime.go
+    ├── schema
+    │   └── user.go
+    ├── tx.go
+    ├── user            # user
+    │   ├── user.go
+    │   └── where.go        
+    ├── user.go         # user
+    ├── user_create.go  # user
+    ├── user_delete.go  # user
+    ├── user_query.go   # user
+    └── user_update.go  # user
+</code></pre>
+<p>其中，user文件夹及user开头的文件属于User实体，其他的文件则是通用的。</p>
+<p>在编写好schema和生成代码后，就可以使用ent的client进行数据库操作了。</p>
+<h3 id="连接数据库">连接数据库</h3>
+<p>ent支持多种数据库，包括MySQL、PostgreSQL、SQLite等。可以使用<code>ent.Open()</code>建立一个数据库链接并返回客户端：</p>
+<pre><code class="language-go">
+// func ent.Open(driverName string, dataSourceName string, options ...ent.Option) (*ent.Client, error)
+
+client, err := ent.Open(&quot;mysql&quot;, &quot;username:password@tcp(127.0.0.1:3306)/entdemo&quot;)
+defer client.Close()
+</code></pre>
+<h3 id="创建迁移数据库模式">创建&amp;迁移数据库模式</h3>
+<p>可以使用<code>ent.Client.Schema.Create()</code>方法创建数据库模式：</p>
+<pre><code class="language-go">// func (s *Schema) Create(ctx context.Context, opts ...schema.MigrateOption) error
+
+err := client.Schema.Create(context.Background())
+</code></pre>
+<h2 id="其他工具">其他工具</h2>
+<h3 id="sql转entgo">SQL转entgo</h3>
+<p><a href="https://old.printlove.cn/tools/sql2ent">SQL转entgo</a></p>
+<p>这个在线工具可以将sql直接转换成entgo的schema。</p>
+<h3 id="entimport">entimport</h3>
+<p><a href="https://entgo.io/zh/blog/2021/10/11/generating-ent-schemas-from-existing-sql-databases/">blog</a><br>
+<a href="https://github.com/ariga/entimport">github</a></p>
+<p>这个工具可以将数据库中现有的表结构转换成entgo的schema。</p>
+<h3 id="protoc-gen-ent">protoc-gen-ent</h3>
+<p><a href="https://entgo.io/blog/2021/05/04/announcing-schema-imports/">blog</a><br>
+<a href="https://github.com/ent/contrib/tree/master/entproto/cmd/protoc-gen-ent">github</a></p>
+<p>这个工具可以将protobuf文件转换成entgo的schema。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ProtoBuf笔记]]></title>
+        <id>https://jinvic.github.io/post/protobuf-notes/</id>
+        <link href="https://jinvic.github.io/post/protobuf-notes/">
+        </link>
+        <updated>2024-11-04T05:31:35.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="protobuf笔记">ProtoBuf笔记</h1>
+<p><a href="https://protobuf.com.cn/">官方文档</a></p>
+<p>尽量少抄文档吧。。。感觉抄文档的笔记没有一点意义，真要查些什么都直接查文档了。</p>
+<h2 id="概述">概述</h2>
+<h3 id="什么是protobuf">什么是ProtoBuf？</h3>
+<blockquote>
+<p><strong>定义</strong>：Protocol Buffers 是一种与语言无关、与平台无关的可扩展机制，用于序列化结构化数据。</p>
+</blockquote>
+<p>看起来有点懵，举个例子。我们随便定义一个结构体，在不同语言中定义方法是不同的：</p>
+<pre><code class="language-c">struct Person
+{
+    char name[50];
+    int age;
+};
+</code></pre>
+<pre><code class="language-c++">
+struct Person {
+    std::string name;
+    int age;
+};
+</code></pre>
+<pre><code class="language-python">class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+</code></pre>
+<pre><code class="language-go">type Person struct {
+    Name string
+    Age  int
+}
+</code></pre>
+<p>而protobuf提供了一种通用的定义方式，它可以通过工具转换成任意一种语言。</p>
+<pre><code class="language-protobuf">message Person {
+  string name = 1;
+  int32 age = 2;
+}
+</code></pre>
+<h3 id="protobuf有什么用">protobuf有什么用？</h3>
+<p>protobuf本质上是一种序列化技术。什么是序列化？这里不扯定义，简单粗暴地说，就是把数据转换成另一种更方便更通用的形式，方便进行存储和传输。你在程序里有个结构体，你可以把它当参数在这个程序里面传来传去。但如果你要把它存到磁盘，可能就得存一个txt或json，这个过程你就可以理解为序列化。你用另一个程序把这个txt或json读到程序里的结构体，然后就可以自由操作这个结构体了，这个过程就可以理解为反序列化。上面讲的是存储，而传输也是一样的道理。json就是序列化技术之一，而protobuf也是类似的。而相比json的轻量级标记，protobuf则有着更接近编程语言的语法和工具链支持。</p>
+<p>protobuf常用于跨语言，跨项目的通信协议和数据存储，如RPC等。具体什么是RPC这里不予赘述。</p>
+<h2 id="protobuf-go开发">protobuf-go开发</h2>
+<p>protobuf生成go代码时，需要使用 <code>go_package</code> 选项指定生成代码的包的导入路径。包名为最后一个路径组件。如下，包名为<code>tutorialpb</code>。</p>
+<pre><code class="language-proto">option go_package = &quot;github.com/protocolbuffers/protobuf/examples/go/tutorialpb&quot;;
+</code></pre>
+<p>使用protobuf生成go代码，需要额外安装插件<code>protoc-gen-go</code>，如果是gRPC开发还需安装<code>protoc-gen-go-grpc</code>：</p>
+<pre><code class="language-bash">go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+</code></pre>
+<p>编译器插件 <code>protoc-gen-go</code> 将安装在 <code>$GOBIN</code> 中，默认为 <code>$GOPATH/bin</code>。 需要将其添加到<code>$PATH</code> 中，以便协议编译器 <code>protoc</code> 能够找到它。</p>
+<p><strong>Linux添加PATH</strong>：</p>
+<pre><code class="language-bash">export PATH=&quot;$PATH:$(go env GOPATH)/bin&quot;
+</code></pre>
+<p>编译命令中使用<code>--go_out</code>和<code>--go-grpc_out</code>指定输出目录。</p>
+<pre><code class="language-bash">protoc --go_out=proto --go-grpc_out=proto .\proto\test.proto
+</code></pre>
+<h2 id="基础语法">基础语法</h2>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Linux笔记]]></title>
+        <id>https://jinvic.github.io/post/linux-notes/</id>
+        <link href="https://jinvic.github.io/post/linux-notes/">
+        </link>
+        <updated>2024-11-02T05:31:03.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="linux笔记">Linux笔记</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#linux%E7%AC%94%E8%AE%B0">Linux笔记</a>
+<ul>
+<li><a href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">常用命令</a></li>
+<li><a href="#%E9%83%A8%E5%88%86%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85">部分应用安装</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85vfox">安装vfox</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85make">安装make</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85protobuf">安装protobuf</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85go">安装go</a></li>
+</ul>
+</li>
+<li><a href="#wsl2%E9%87%8D%E8%A3%85%E7%B3%BB%E7%BB%9F">WSL2重装系统</a></li>
+<li><a href="#wsl2%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86">WSL2配置代理</a></li>
+<li><a href="#linux%E5%AE%89%E8%A3%85homebrew">Linux安装homebrew</a></li>
+<li><a href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86">用户管理</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p>本来最开始学Linux时用VMware装了个ubuntu镜像，但用起来卡卡的。虽然最开始时冲着图像界面去的，但后来发现用命令行操作更常用。于是又装了个WSL2学习命令行操作。而且挂载磁盘也比VMware方便。官方文档也很详细，中文支持很好，所以学习起来也很方便。<br>
+这里记一下使用过程中遇到的一些问题。</p>
+<h2 id="常用命令">常用命令</h2>
+<p>并没打算搞个命令大全之类的，只是记一下最常用且有用的几个。用多了随时添，没必要整一大堆跟背单词一样。</p>
+<ul>
+<li>ls 列出目录中的文件</li>
+<li>cd 更改当前目录</li>
+<li>pwd 打印当前工作目录</li>
+<li>cat 显示文件的内容</li>
+<li>rm 删除文件</li>
+<li>find 在目录层次结构中搜索文件</li>
+<li>whereis 在特定目录中查找符合条件的文件</li>
+<li>sudo 以超级用户身份执行命令</li>
+<li>touch 创建文件/修改文件属性</li>
+<li>nohup 在系统后台不挂断地运行命令</li>
+</ul>
+<h2 id="部分应用安装">部分应用安装</h2>
+<p>只是做个集合整理，避免每次重装时一个个去翻文档和官网。</p>
+<h3 id="安装vfox">安装vfox</h3>
+<p><a href="https://vfox.lhan.me/zh-hans/guides/quick-start.html">来源</a></p>
+<p><strong>安装vfox</strong>：</p>
+<p>apt安装命令：</p>
+<pre><code class="language-bash">echo &quot;deb [trusted=yes] https://apt.fury.io/versionfox/ /&quot; | sudo tee /etc/apt/sources.list.d/versionfox.list
+ sudo apt-get update
+ sudo apt-get install vfox
+</code></pre>
+<p><strong>挂载vfox到Shell</strong>：</p>
+<pre><code class="language-bash">echo 'eval &quot;$(vfox activate bash)&quot;' &gt;&gt; ~/.bashrc
+</code></pre>
+<h3 id="安装make">安装make</h3>
+<p>这里使用vfox安装并进行版本管理。<br>
+同时作个vfox安装应用教程。</p>
+<pre><code class="language-bash"># 添加插件
+vfox add make
+# 查看所有可用版本
+# vfox search make
+# 安装最新版本
+vfox install make@latest
+# 设置使用版本
+vfox use -g make
+</code></pre>
+<p>其中作用域参数有<code>-p -g -s</code>三种，分别表示项目，全局，会话。详情略。</p>
+<h3 id="安装protobuf">安装protobuf</h3>
+<p><a href="https://grpc.org.cn/docs/protoc-installation/">来源</a></p>
+<p>虽然vfox提供了unofficial的protobuf插件，但好像有bug安装不了，还是用apt了。</p>
+<pre><code class="language-bash">sudo apt install -y protobuf-compiler
+</code></pre>
+<p>如果要进行go开发，还需要额外安装插件：</p>
+<pre><code class="language-bash">go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+</code></pre>
+<h3 id="安装go">安装go</h3>
+<p>还是使用vfox，见上<a href="#%E5%AE%89%E8%A3%85make">安装make</a>。</p>
+<p>不要忘了更新path，虽然好像不加这行也能在其他目录调用。可能vfox时默认加的：</p>
+<pre><code class="language-bash">export PATH=&quot;$PATH:$(go env GOPATH)/bin&quot;
+</code></pre>
+<p>如果要进行grpc开发，还需要安装对应插件：</p>
+<pre><code class="language-bash">go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+</code></pre>
+<h2 id="wsl2重装系统">WSL2重装系统</h2>
+<p>有种说法是再ubuntu的应用设置中选择重置，亲测无效。</p>
+<p>后来又找到别的方法。输入<code>wsl.exe --unregister Ubuntu</code>，再<code>wsl --install</code>就能重新注册用户了。</p>
+<p>后续流程按官方的<a href="https://learn.microsoft.com/zh-cn/windows/wsl/setup/environment">最佳实践</a>来就行。</p>
+<h2 id="wsl2配置代理">WSL2配置代理</h2>
+<ol>
+<li>
+<p>如clash等代理软件打开Allow LAN（允许局域网链接）选项</p>
+</li>
+<li>
+<p>在wsl中，使用 <code>cd~</code> 进入用户目录</p>
+</li>
+<li>
+<p>编辑<code>.bashrc</code>文件，在末尾添加如下内容：</p>
+<pre><code class="language-bash">hostip=$(ip route show | grep -i default | awk '{ print $3}')
+ export https_proxy=&quot;http://${hostip}:7890&quot;
+ export http_proxy=&quot;http://${hostip}:7890&quot;
+ export all_proxy=&quot;socks5://${hostip}:7890&quot;
+</code></pre>
+</li>
+<li>
+<p>保存退出，执行 <code>source ~/.bashrc</code> 使配置生效</p>
+</li>
+<li>
+<p>使用<code>wget www.google.com</code>测试是否成功</p>
+</li>
+</ol>
+<p>我看很多教程获取ip地址都用的<br>
+<code>cat /etc/resolv.conf |grep -oP '(?&lt;=nameserver\ ).*'</code><br>
+可我看<a href="https://learn.microsoft.com/zh-cn/windows/wsl/networking#default-networking-mode-nat">官方教程</a>是<br>
+<code>ip route show | grep -i default | awk '{ print $3}'</code><br>
+也不知道为什么，反正我用前一个不行后一个行。</p>
+<h2 id="linux安装homebrew">Linux安装homebrew</h2>
+<p>虽然<a href="https://brew.sh/zh-cn/">Homebrew官网</a>上就一句话：</p>
+<p><code>/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;</code></p>
+<p>但如果你真的直接把这行代码复制粘贴到终端，大概率看到如下报错：</p>
+<pre><code class="language-text">Error: Failed to install Homebrew Portable Ruby and cannot find another Ruby 3.3!
+If there's no Homebrew Portable Ruby available for your processor:
+- install Ruby 3.3 with your system package manager (or rbenv/ruby-build)
+- make it first in your PATH
+- try again
+</code></pre>
+<p>提示说找不到适合你的处理器架构的Ruby 3.3版本，所以我们需要先安装一个Ruby 3.3版本。这里顺便推荐一个版本管理工具<a href="https://vfox.lhan.me/zh-hans/">vfox</a>。</p>
+<p>安装Ruby后再安装Homebrew，在茫茫的返回中你找到一行：</p>
+<p><code>==&gt; Installation successful!</code></p>
+<p>但是当你再次输入<code>brew -v</code>命令时，却提示<code>command not found</code>。再看一眼发现了在这行上面还有个报错：</p>
+<pre><code class="language-text">Warning: /home/linuxbrew/.linuxbrew/bin is not in your PATH.
+  Instructions on how to configure your shell for Homebrew
+  can be found in the 'Next steps' section below.
+</code></pre>
+<p>这是因为Homebrew的安装路径不在你的PATH环境变量中，所以需要手动添加。</p>
+<p><code>cd ~</code> 进入用户目录，修改<code>.bashrc</code>文件，在末尾添加如下内容：</p>
+<pre><code class="language-bash">export PATH=&quot;/home/linuxbrew/.linuxbrew/bin:$PATH&quot;
+</code></pre>
+<p>保存退出，执行 <code>source ~/.bashrc</code> 使配置生效。这时再执行<code>brew -v</code>就能看到版本号了。</p>
+<h2 id="用户管理">用户管理</h2>
+<p>当然可以一个root打天下。但我还是想为不同用途分下多用户。记一下用户操作。</p>
+<p><strong>新建用户</strong>：<code>useradd 选项 用户名</code>。可选项如下：</p>
+<ul>
+<li><code>-c</code> comment 指定一段注释性描述。</li>
+<li><code>-d</code> 目录 指定用户主目录，如果此目录不存在，则同时使用-m选项，可以创建主目录。</li>
+<li><code>-g</code> 用户组 指定用户所属的用户组。</li>
+<li><code>-G</code> 用户组，用户组 指定用户所属的附加组。</li>
+<li><code>-s</code> Shell文件 指定用户的登录Shell。</li>
+<li><code>-u</code> 用户号 指定用户的用户号，如果同时有-o选项，则可以重复使用其他用户的标识号。</li>
+</ul>
+<p>推荐操作：<code>sudo useradd -m username -s /bin/bash -g sudo</code>，创建用户的同时新建主目录并设置bash。</p>
+<p><strong>删除用户</strong>：<code>userdel 选项 用户名</code>。推荐操作<code>userdel -r username</code>，<code>-r</code>选项将连主目录一起删除。</p>
+<p><strong>修改用户</strong>：<code>usermod 选项 用户名</code>。选项同上。</p>
+<p><strong>修改密码</strong>：<code>passwd 选项 用户名</code>。可选项如下：</p>
+<ul>
+<li><code>-l</code> 锁定口令，即禁用账号。</li>
+<li><code>-u</code> 口令解锁。</li>
+<li><code>-d</code> 使账号无口令。</li>
+<li><code>-f</code> 强迫用户下次登录时修改口令。</li>
+</ul>
+<p><strong>查看用户组</strong>：<code>group username</code>或<code>id username</code></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[碎碎念 2024-11]]></title>
+        <id>https://jinvic.github.io/post/micro-blog-2024-11/</id>
+        <link href="https://jinvic.github.io/post/micro-blog-2024-11/">
+        </link>
+        <updated>2024-11-01T02:58:40.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="碎碎念">碎碎念</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E7%A2%8E%E7%A2%8E%E5%BF%B5">碎碎念</a>
+<ul>
+<li><a href="#2024-11-01">2024-11-01</a>
+<ul>
+<li><a href="#2024-11-01-110419">2024-11-01 11:04:19</a></li>
+</ul>
+</li>
+<li><a href="#2024-11-02">2024-11-02</a>
+<ul>
+<li><a href="#2024-11-02-134445">2024-11-02 13:44:45</a></li>
+<li><a href="#2024-11-02-153223">2024-11-02 15:32:23</a></li>
+</ul>
+</li>
+<li><a href="#2024-11-04">2024-11-04</a>
+<ul>
+<li><a href="#2024-11-04-82338">2024-11-04 8:23:38</a></li>
+</ul>
+</li>
+<li><a href="#2024-11-05">2024-11-05</a>
+<ul>
+<li><a href="#2024-11-05-115027">2024-11-05 11:50:27</a></li>
+</ul>
+</li>
+<li><a href="#2024-11-07">2024-11-07</a>
+<ul>
+<li><a href="#2024-11-07-161349">2024-11-07 16:13:49</a></li>
+</ul>
+</li>
+<li><a href="#2024-11-12">2024-11-12</a>
+<ul>
+<li><a href="#2024-11-12-081314">2024-11-12 08:13:14</a></li>
+<li><a href="#2024-11-12-083106">2024-11-12 08:31:06</a></li>
+</ul>
+</li>
+<li><a href="#2024-11-13">2024-11-13</a>
+<ul>
+<li><a href="#2024-11-13-102445">2024-11-13 10:24:45</a></li>
+</ul>
+</li>
+<li><a href="#2024-11-14">2024-11-14</a>
+<ul>
+<li><a href="#2024-11-14-155055">2024-11-14 15:50:55</a></li>
+</ul>
+</li>
+<li><a href="#2024-11-18">2024-11-18</a>
+<ul>
+<li><a href="#2024-11-18-170031">2024-11-18 17:00:31</a></li>
+<li><a href="#2024-11-18-193105">2024-11-18 19:31:05</a></li>
+</ul>
+</li>
+<li><a href="#2024-11-19">2024-11-19</a>
+<ul>
+<li><a href="#2024-11-19-013459">2024-11-19 01:34:59</a></li>
+<li><a href="#2024-11-19-100442">2024-11-19 10:04:42</a></li>
+</ul>
+</li>
+<li><a href="#2024-11-20">2024-11-20</a>
+<ul>
+<li><a href="#2024-11-20-115554">2024-11-20 11:55:54</a></li>
+<li><a href="#2024-11-20-172306">2024-11-20 17:23:06</a></li>
+</ul>
+</li>
+<li><a href="#2024-11-26">2024-11-26</a>
+<ul>
+<li><a href="#2024-11-26-103103">2024-11-26 10:31:03</a></li>
+</ul>
+</li>
+<li><a href="#2024-11-27">2024-11-27</a>
+<ul>
+<li><a href="#2024-11-27-110731">2024-11-27 11:07:31</a></li>
+<li><a href="#2024-11-27-195104">2024-11-27 19:51:04</a></li>
+</ul>
+</li>
+<li><a href="#2024-11-28">2024-11-28</a>
+<ul>
+<li><a href="#2024-11-28-154717">2024-11-28 15:47:17</a></li>
+<li><a href="#2024-11-28-173906">2024-11-28 17:39:06</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="2024-11-01">2024-11-01</h2>
+<h3 id="2024-11-01-110419">2024-11-01 11:04:19</h3>
+<p>把gredia的源文件路径迁移到百度网盘的同步空间了。本来是想着直接同步文件夹，发现不行，百度网盘只能同步它指定的文件夹，得自己移进去才行。wps倒是能实现同步不同地方的文件夹，但不是很信任wps的存储服务。在百度网盘里设置选择性同步也能勉强满足我的需求。</p>
+<h2 id="2024-11-02">2024-11-02</h2>
+<h3 id="2024-11-02-134445">2024-11-02 13:44:45</h3>
+<p>我的一天：<br>
+学protobuf<br>
+-&gt;看官方文档<br>
+-&gt;文档看累了<br>
+-&gt;gpt总结一下<br>
+-&gt;让gpt出点题来做<br>
+-&gt;做完了编译<br>
+-&gt;手敲敲命令好麻烦，写个脚本<br>
+-&gt;看makefile<br>
+-&gt;顺便看看cmake<br>
+-&gt;没啥用，还是看makefile<br>
+-&gt;mingw32-make好难敲，开linux吧<br>
+-&gt;wsl怎么没装make<br>
+-&gt;homebrew是什么，装一下<br>
+-&gt;下载好慢，弄下代理<br>
+-&gt;怎么还要Ruby<br>
+-&gt;搞个版本控制来玩玩<br>
+-&gt;装一下vfox<br>
+-&gt;Windows也装一下<br>
+-&gt;powershell玩坏了<br>
+-&gt;删下配置<br>
+-&gt;scoope是什么，装一下<br>
+-&gt;用scoope装了vfox<br>
+-&gt;用vfox装了Ruby<br>
+-&gt;Ruby环境下装了homebrew<br>
+-&gt;安装成功了怎么还是用不了<br>
+-&gt;配下path<br>
+-&gt;欸我要干啥来着？<br>
+-&gt;哦跑makefile<br>
+-&gt;用homebrew装了make<br>
+-&gt;用homebrew装了protobuf</p>
+<h3 id="2024-11-02-153223">2024-11-02 15:32:23</h3>
+<p>🎉 <strong>恭喜！</strong> 🎉</p>
+<p><strong>Jinvic学会了新技能：Protobuf！</strong></p>
+<p><strong>技能描述：</strong></p>
+<ul>
+<li><strong>名称：</strong> Protobuf</li>
+<li><strong>类型：</strong> 数据序列化</li>
+<li><strong>威力：</strong> 80</li>
+<li><strong>命中率：</strong> 100%</li>
+<li><strong>效果：</strong> 使用高效、跨平台的数据格式，将复杂数据结构序列化为二进制文件或网络传输。提升数据交换的速度和效率，减少带宽消耗。</li>
+</ul>
+<p><strong>技能特点：</strong></p>
+<ul>
+<li><strong>跨平台兼容：</strong> 无论是在服务器、客户端还是移动设备上，都能无缝使用。</li>
+<li><strong>高性能：</strong> 序列化和反序列化的速度比JSON快数倍。</li>
+<li><strong>强类型：</strong> 定义明确的数据结构，确保数据的一致性和可靠性。</li>
+<li><strong>易用性：</strong> 提供多种语言的支持，包括Go、Java、Python等，让你在不同项目中轻松应用。</li>
+</ul>
+<p><strong>使用场景：</strong></p>
+<ul>
+<li><strong>微服务通信：</strong> 在微服务架构中，作为API接口的数据传输格式。</li>
+<li><strong>缓存存储：</strong> 将数据序列化后存储在缓存中，提高读取速度。</li>
+<li><strong>配置文件：</strong> 将复杂的配置信息序列化为文件，方便管理和读取。</li>
+</ul>
+<p><strong>恭喜你掌握了这项强大的技能，你的开发之旅将更加顺畅！</strong></p>
+<hr>
+<p>尝试让gpt用这种语气说话，还挺有意思w</p>
+<h2 id="2024-11-04">2024-11-04</h2>
+<h3 id="2024-11-04-82338">2024-11-04 8:23:38</h3>
+<p>每次想着记点笔记，最后都变成了抄文档，毕竟文档已经很完善了，自己也写不出更好的。而文档不完善的？学都学不明白就更难写出什么东西了。还是肚子里没货，不能融会贯通举一反三。感觉除了流水账式的日志，做笔记状态最好的一次就是《Go程序设计语言》的阅读笔记，每每看到什么点都会想到这个在C++是怎样的在Python是怎样的，然后记一些比较和感悟。这才是正常的状态嘛。</p>
+<h2 id="2024-11-05">2024-11-05</h2>
+<h3 id="2024-11-05-115027">2024-11-05 11:50:27</h3>
+<p>今天读到一篇文章<a href="https://mp.weixin.qq.com/s?__biz=MzI2NDU4OTExOQ==&amp;mid=2247634338&amp;idx=1&amp;sn=0342aaa07b92133b4d70741010ccb2b9">我为什么放弃Go语言？</a>。看标题以为是讨论Go语言的缺点，结果内容却是非常细致地总结了盘点了Go 的常见错误帮助避坑。虽然有点标题党但怎么莫名有种刀子嘴豆腐心的傲娇感www</p>
+<h2 id="2024-11-07">2024-11-07</h2>
+<h3 id="2024-11-07-161349">2024-11-07 16:13:49</h3>
+<p>🎉 <strong>恭喜！</strong> 🎉</p>
+<p><strong>Jinvic学会了新技能：Ent！</strong></p>
+<p><strong>技能描述：</strong></p>
+<ul>
+<li><strong>名称：</strong> Ent</li>
+<li><strong>类型：</strong> ORM</li>
+<li><strong>威力：</strong> 90</li>
+<li><strong>命中率：</strong> 100%</li>
+<li><strong>效果：</strong> 使用Ent，你可以轻松地在Go应用程序中操作数据库。Ent提供了一种声明式的模式定义方式，让你能够以类型安全的方式处理数据模型，同时保持代码的简洁和高效。</li>
+</ul>
+<p><strong>技能特点：</strong></p>
+<ul>
+<li><strong>声明式模式定义：</strong> 通过简单的Go代码定义数据模型，无需编写复杂的SQL语句。</li>
+<li><strong>类型安全：</strong> 生成的代码是类型安全的，编译时即可发现错误，减少运行时的意外。</li>
+<li><strong>灵活扩展：</strong> 支持自定义钩子和中间件，让你可以根据需求扩展功能。</li>
+<li><strong>社区支持：</strong> 活跃的社区和丰富的文档，帮助你快速解决问题。</li>
+</ul>
+<p><strong>使用场景：</strong></p>
+<ul>
+<li><strong>Web开发：</strong> 在Go的Web应用中，使用Ent管理用户、订单等数据模型。</li>
+<li><strong>微服务：</strong> 在微服务架构中，使用Ent处理数据持久化和查询。</li>
+<li><strong>API后端：</strong> 为RESTful API或GraphQL API提供强大的数据支持。</li>
+</ul>
+<p><strong>恭喜你掌握了这项强大的技能，你的开发之旅将更加高效和愉快！</strong></p>
+<hr>
+<p>脑子都木了，好累💀</p>
+<h2 id="2024-11-12">2024-11-12</h2>
+<h3 id="2024-11-12-081314">2024-11-12 08:13:14</h3>
+<p>🎉 <strong>恭喜！</strong> 🎉</p>
+<p><strong>Jinvic学会了新技能：Kratos！</strong></p>
+<p><strong>技能描述：</strong></p>
+<ul>
+<li><strong>名称：</strong> Kratos</li>
+<li><strong>类型：</strong> 微服务框架</li>
+<li><strong>威力：</strong> 100</li>
+<li><strong>命中率：</strong> 100%</li>
+<li><strong>效果：</strong> 使用Kratos，你可以快速构建高性能、高可用的微服务应用。Kratos提供了丰富的功能和工具，帮助你简化开发流程，提升开发效率，同时保证系统的稳定性和可扩展性。</li>
+</ul>
+<p><strong>技能特点：</strong></p>
+<ul>
+<li><strong>模块化设计：</strong> Kratos采用模块化设计，你可以根据需要选择和组合不同的模块，灵活构建应用。</li>
+<li><strong>强大的中间件支持：</strong> 提供丰富的中间件，如认证、限流、日志等，帮助你快速实现常见功能。</li>
+<li><strong>完善的配置管理：</strong> 支持多种配置管理方式，如文件、环境变量、配置中心等，方便管理和维护。</li>
+<li><strong>强大的错误处理机制：</strong> 提供统一的错误处理机制，帮助你更好地管理和记录错误。</li>
+<li><strong>丰富的文档和社区支持：</strong> 活跃的社区和详细的文档，帮助你快速上手和解决问题。</li>
+</ul>
+<p><strong>使用场景：</strong></p>
+<ul>
+<li><strong>微服务架构：</strong> 快速构建和部署微服务应用，实现业务的高效解耦和独立部署。</li>
+<li><strong>API后端：</strong> 为前端应用提供高性能、稳定的API后端服务。</li>
+<li><strong>企业级应用：</strong> 构建企业级应用，满足高并发、高可用的需求。</li>
+<li><strong>实时数据处理：</strong> 处理实时数据流，如实时监控、在线聊天等。</li>
+</ul>
+<p><strong>恭喜你掌握了这项强大的技能，你的开发之旅将更加高效和顺畅！</strong></p>
+<h3 id="2024-11-12-083106">2024-11-12 08:31:06</h3>
+<p>昨晚加班两小时，啥也没干就写了篇<a href="https://jinvic.github.io/post/kratos-quick-start-practice/">博客</a>，算是对这段时间所学的一个总结吧。其实看懂了很简单的东西，或许就是因为太简单了所以文档根本没写清楚，费了我好大劲才搞明白，属实怨念满满。以前看各家教程总会把一些简单的基础的东西反复讲，觉得没啥必要这不是人人都会吗？落到自己头上才明白还是讲一下好。就算是应该人人都会的东西，从不会到会也是有个过程的。不会的用户看到你这里有门槛就去别家学了，学完就顺势用别家的不一定会回来用你家的，这不是主动把人往外赶嘛，总不能说暂时水平不够的就不配用你家产品了吧。</p>
+<h2 id="2024-11-13">2024-11-13</h2>
+<h3 id="2024-11-13-102445">2024-11-13 10:24:45</h3>
+<p>看着同事代码里简单粗暴的循环嵌套好难受。<br>
+acm之魂蠢蠢欲动，好想给它降一下时间复杂度😖<br>
+还是算了，多一事不如少一事，能跑就行。</p>
+<h2 id="2024-11-14">2024-11-14</h2>
+<h3 id="2024-11-14-155055">2024-11-14 15:50:55</h3>
+<p>ent这框架语法写太死了，很多功能都无法实现。设计一套新的边系统来管理表之间关联关系，用来从无到有生成表很方便，但要匹配现有表简直就是折磨，只能在它既定的规矩里勉力腾挪。换别的框架一个join就能解决的事，在它这搞了两三天没解决，你说你惦记你那傻逼主键id干嘛。最后还是笨办法查表然后写个双指针匹配凑合用。就算你要搞强封装，开个rawsql接口也不过分吧，只有一套子集真是被气死了。</p>
+<h2 id="2024-11-18">2024-11-18</h2>
+<h3 id="2024-11-18-170031">2024-11-18 17:00:31</h3>
+<p>想试试能不能在命令行全局设定just变量默认值，切目录就不用写一串很长的选项了。翻半天issue好像不行。之后试了试<code>watchexec</code>，监视文件变化自动运行just命令。给每个命令都配了个watchexec，又觉得一个个启动太麻烦开个多线程。<code>Start-ThreadJob</code>这个cmdlet函数windows预装的powershell没有又装了个powershell7。因为不想跑个ps1文件开始研究怎么连接命令。管道连接符 <code>|</code> 和bash的 <code>&amp;&amp;</code> 都不行，然后才发现是分号 <code>;</code> 。跑起来因为在线程里看不到输出又研究怎么输出到当前终端，没成功还是算了就这样。东搞西搞一个下午过去了，得到寥寥几行命令。</p>
+<pre><code class="language-powershell"># [watchexec requeired]
+watch-api:
+    watchexec -w api/meeting/{{ target }}/v1 -e proto just api
+
+# [watchexec requeired]
+watch-ent:
+    watchexec -w .\app\meeting\{{ target }}\internal\data\ent\schema -e go just ent
+
+# [watchexec requeired]
+watch-config:
+    watchexec -w .\app\meeting\{{ target }}\internal\conf -e proto just config
+
+# [watchexec requeired]
+watch-generate:
+    watchexec -w app\meeting\admin\internal\data\data.go \
+    -w app\meeting\admin\internal\biz\biz.go \
+    -w app\meeting\admin\internal\service\service.go \
+    -w app\meeting\admin\internal\server\http.go \
+    just generate
+
+# auto-generate codes while files modified [watchexec and powershell7 required]
+watch-all:
+    $jobs = @( \
+    (Start-ThreadJob -ScriptBlock {just watch-api}), \
+    (Start-ThreadJob -ScriptBlock {just watch-ent}), \
+    (Start-ThreadJob -ScriptBlock {just watch-config}), \
+    (Start-ThreadJob -ScriptBlock {just watch-generate}) \
+    ); | ForEach-Object { Wait-Job $_ }
+
+alias wall := watch-all
+</code></pre>
+<h3 id="2024-11-18-193105">2024-11-18 19:31:05</h3>
+<p>很多一时兴起但没有一口气完成的事，过段时间就成了梗在心头的拖累。想着做完算了却也怎么都提不起劲，放着不管又要时不时想起来刺挠你一下。</p>
+<h2 id="2024-11-19">2024-11-19</h2>
+<h3 id="2024-11-19-013459">2024-11-19 01:34:59</h3>
+<p>好久认真没写点东西了，今天半夜不想睡写点。<br>
+这段时间陆陆续续换手机换电脑，电子设备这块基本是重开了，勉强留下点数据也不好说全不全。说不定什么时候想找点什么却发现再也找不回来，或者已经有很重要的东西遗失了自己还没发现。即便这样，我还是想试着写点什么，算是在这个世界上留下点自己存在过的痕迹，也算是电子骨灰盒吧（笑）。</p>
+<p>我并不信任物理上的存储介质。初高中毕业时的同学录，现在也只是放在老家的床头柜里落灰。曾经我时常拿出来翻看，回忆往昔的青葱岁月。然而这一切都被熊孩子毁了。其中有一张上面用胶带粘了一颗糖，是我曾经有些好感的女孩子给的，尽管记忆中的面容都早已模糊，我还是对其十分珍视。直到熊孩子为了一颗不知道放了几年的糖将其粗暴地扯了下来，只留下一片刺目的疤痕。而我什么都做不了，甚至连愤怒都要被拿来取笑。是啊，一边是被捧上天的小祖宗，而另一边，只是一颗放了不知道几年的糖而已。</p>
+<p>虽然被毁坏的只有一张，但那一沓我都不愿意再拿出来翻看了。因为每次想要打开抽屉时，总会想起这件事，想起当时的气愤与无力。我又能做什么呢？恶毒地诅咒对方吃坏肚子，这已经是我能做的全部了，然而就连这点小小的报复最终也没能应验。</p>
+<h3 id="2024-11-19-100442">2024-11-19 10:04:42</h3>
+<hr>
+<p>🎉 <strong>恭喜！</strong> 🎉</p>
+<p><strong>你获得了新道具：Just 和 Watchexec！</strong></p>
+<p><strong>道具描述：</strong></p>
+<ul>
+<li>
+<p><strong>名称：</strong> Just</p>
+</li>
+<li>
+<p><strong>类型：</strong> 任务运行器</p>
+</li>
+<li>
+<p><strong>效果：</strong> 使用Just，你可以轻松地管理和运行复杂的任务脚本。Just提供了一个简单而强大的命令行工具，帮助你定义和执行各种开发任务，如编译、测试、部署等。它不仅提高了你的开发效率，还使团队协作更加顺畅。</p>
+</li>
+<li>
+<p><strong>名称：</strong> Watchexec</p>
+</li>
+<li>
+<p><strong>类型：</strong> 文件监听器</p>
+</li>
+<li>
+<p><strong>效果：</strong> 使用Watchexec，你可以自动检测文件的变化并立即执行相应的命令。无论是保存代码文件后的自动编译，还是修改配置文件后的自动重启服务，Watchexec都能帮助你实现无缝的工作流自动化，让你的开发过程更加流畅和高效。</p>
+</li>
+</ul>
+<p><strong>道具特点：</strong></p>
+<ul>
+<li>
+<p><strong>Just：</strong></p>
+<ul>
+<li><strong>任务管理：</strong> 通过简单的 <code>justfile</code> 配置文件，定义和管理各种开发任务。</li>
+<li><strong>命令别名：</strong> 为常用命令创建别名，简化命令行操作。</li>
+<li><strong>环境隔离：</strong> 支持环境变量和环境隔离，确保任务在不同环境下的一致性。</li>
+<li><strong>团队协作：</strong> 与团队成员共享 <code>justfile</code>，确保每个人都使用相同的任务配置。</li>
+</ul>
+</li>
+<li>
+<p><strong>Watchexec：</strong></p>
+<ul>
+<li><strong>文件监听：</strong> 实时监听文件变化，自动触发指定的命令。</li>
+<li><strong>灵活配置：</strong> 支持多种配置选项，如过滤文件类型、排除特定目录等。</li>
+<li><strong>多任务支持：</strong> 可以同时监听多个文件或目录，并执行不同的命令。</li>
+<li><strong>集成友好：</strong> 轻松与其他开发工具和工作流集成。</li>
+</ul>
+</li>
+</ul>
+<p><strong>使用场景：</strong></p>
+<ul>
+<li><strong>开发工作流：</strong> 使用Just和Watchexec，你可以自动化常见的开发任务，如编译、测试、打包和部署。</li>
+<li><strong>实时反馈：</strong> 在开发过程中，使用Watchexec实现实时编译和测试，提高开发效率。</li>
+<li><strong>团队协作：</strong> 通过Just共享任务配置，确保团队成员使用一致的开发流程。</li>
+<li><strong>持续集成：</strong> 在CI/CD管道中使用Just和Watchexec，实现自动化构建和测试。</li>
+</ul>
+<p><strong>恭喜你获得了这两项强大的道具，你的开发之旅将更加高效和顺畅！</strong></p>
+<hr>
+<h2 id="2024-11-20">2024-11-20</h2>
+<h3 id="2024-11-20-115554">2024-11-20 11:55:54</h3>
+<p>这段时间每天差不多都只睡了五小时，一整天都昏昏沉沉的，坐在工位上眼皮都睁不开。</p>
+<p>也不是全是忙，明明很困躺在床上闭上眼就是睡不着，干脆玩会手机玩累后断片似的睡一觉。</p>
+<p>也就趁现在年轻还能再作一下了。</p>
+<h3 id="2024-11-20-172306">2024-11-20 17:23:06</h3>
+<p>今天又是啥也没干，坐在工位上忙忙碌碌不知道在忙些什么。</p>
+<p>嘛，一周总有这么几天的，要是对此产生什么心理压力的话这鱼我不是白摸了？</p>
+<p>摸都摸了，大不了明天多干点。至于明天到底干不干再说🤗</p>
+<p>回寝室打游戏咯😋</p>
+<h2 id="2024-11-26">2024-11-26</h2>
+<h3 id="2024-11-26-103103">2024-11-26 10:31:03</h3>
+<p>昨天下午本来打算不加班玩一下的，结果太累了睡到十一点才醒。歇一会洗个澡就又该睡觉了。在床上躺到两点还没睡着很不爽干脆硬是又熬了一个通宵。好久没有这么作了。反正最近工作少上班时间补补觉间歇眯个十几二十分钟也问题不大。就是这种作息不规律还是少整为好，唉。</p>
+<h2 id="2024-11-27">2024-11-27</h2>
+<h3 id="2024-11-27-110731">2024-11-27 11:07:31</h3>
+<p>这后端开发也干了两个月了，感觉和当仓管差不多。前端列个单子让后端找货，后端互相交流这个货谁管的存在哪个仓库哪个货架，找出来装车发货...</p>
+<h3 id="2024-11-27-195104">2024-11-27 19:51:04</h3>
+<p>又装上了Chocolatey，包管理器真好用。主要是有UnigetUI这个图形化界面，真让我敲命令行我肯定没那耐心，强烈推荐。</p>
+<h2 id="2024-11-28">2024-11-28</h2>
+<h3 id="2024-11-28-154717">2024-11-28 15:47:17</h3>
+<p>策划和开发在测试文档里隔空吵架，乐🤣</p>
+<h3 id="2024-11-28-173906">2024-11-28 17:39:06</h3>
+<p>rss这玩意用之前觉得没啥，体验后真香。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[一点关于AI编程的随笔]]></title>
+        <id>https://jinvic.github.io/post/a-little-essay-on-ai-programming/</id>
+        <link href="https://jinvic.github.io/post/a-little-essay-on-ai-programming/">
+        </link>
+        <updated>2024-10-14T10:58:53.000Z</updated>
+        <content type="html"><![CDATA[<p>刚读了一篇文章（<a href="https://mp.weixin.qq.com/s?__biz=MzkzMDY1NDgyOQ==&amp;mid=2247804822&amp;idx=3&amp;sn=c5873bf87ce4dc0a9c1b4c948f0ca6b0">原文链接</a>），说调查了很多开发者，结论是copilot并未提升编码速度balabala。文章写的稀烂数据也是一坨，典型的标题党营销号文章。但正好这个cursor也用了一段时间了有点心得体会，顺手记录一下。</p>
+<hr>
+<p>最开始听到ai编程，当然是github的copilot。一方面是因为收费，另一方面就是不想，或者说不敢依赖AI，怕过于依赖ai自己的编程能力得不到提升。这当然没问题，但更深层的原因，其实是恐惧，恐惧AI的生产力，恐惧自己被淘汰。于是干脆当鸵鸟，只要我不去了解问题就不存在。</p>
+<hr>
+<p>现在又用上cursor，也只是偶然见到了相关信息，又看着是免费所以干脆试试。用了一段时间，最初的惊喜过去，现在的评价应该算是比较客观的了。在我看来，现在的ai编程，依然是一个生产力工具，还没有到完全取代程序员的地步。你当然可以让它独立完成一个程序，但它很难100%达到你的要求。自然语言的表述力是有限的，即使你描述的再详尽也总会有错漏之处。而一处小小歧义造成的语境污染可能就需要你花费大量的时间和精力去纠正它。而想要去精细化地修改优化，还是需要你本身看得懂代码。如果你的需求只是够用就行，那AI确实能够满足。但商业化，企业化的那种规模庞大，结构严谨，细节丰富的工程项目，全凭AI就力所不逮了。打个比方，AI或许可以独立写个贪吃蛇写个五子棋，但不可能独立写个战神4写个大表哥2。也就是说，完全不懂编程的人，依赖AI所能实现的还是比较有限的。哪些吹嘘ai无所不能的只是营销话术，而程序员集体失业也为时尚早不必过度焦虑。</p>
+<hr>
+<p>那程序员怎么用AI呢，其实也没那么高大上，还是像无良甲方那样，让AI不断拿出新的方案直到满意为止。有的人就要说了，不就是当甲方吗，我也会啊，其实还是有区别的。不懂代码提出的需求可能就是“五彩斑斓的黑”，而懂代码的画风可能就是具体到色号了。而且我个人的意见，向AI提需求时一定要尽可能的细化，不要让AI的思考代替你的思考。让AI成为你的笔尺，而不是成为你的脑子。有时一个功能刚写个函数名，他就把后面的内容全部生成好了。这时不要直接用它生成的代码，而是自己一行行写下去，哪怕每一句都有自动生成参与也比直接生成整个函数要好。这个一句句写下去的过程也是你思考和整理的过程，不要为了图方便把它舍弃。而且之后出了问题你也更好定位问题所在，有额外的需求也更容易实现。或许刚开始比较麻烦，但在理清思路后，经过你手一步步形成的代码是比在一坨直接生成的代码上缝缝补补更好维护的，而且写起来爽利的多。还是那句话，使用AI，而不是被AI使用，成为无情的tab工具。</p>
+<hr>
+<p>我现在的工作内容是后端开发，写点简单的数据库交互crud。对我来说，AI编程主要是用于处理那些重复死板的工作，那些不用动脑子的工作。比如模型和接口，经常结构大查不差，AI就可以帮我补全一些字段和注释，避免我把一个单词重复敲上许多次。又或者很多功能结构类似的地方，写过一次后AI就能帮你copy过来并自动改改名字改改变量以适配需求。还有就是有些包啊变量啊字段啊方法啊一层层嵌套就会很冗长，常规ide顶多给你补一层还需要前几个字母提示，AI就能一次给你补全了。把这些内容交给AI生成就能节省自己的时间精力，不用处理这些鸡毛蒜皮的小事。至于更大的需求，我对AI的使用就很谨慎了，基本不去要求它独立实现什么功能，就连自动补全多生成几行代码我都要多看两遍检查。还是那句话，是用AI实现你的想法，而不是你用tab去实现AI的想法。要搞清主从关系，这样你才不会被AI训化，能力才能得到提升。</p>
+<hr>
+<p>我想起了那个比较经典的话题，就是程序员面试能不能用IDE。嘲讽公司让程序员在白纸上手写代码，或者嘲讽现在的程序员离了ide的自动补全之类就不会写代码。现在的AI编程，确实有点IDE对白纸的降维打击那味了，但对行业的影响也没有传闻那么夸张，至少我现在也只是把AI当一个高级点的自动补全在用。时代在发展，社会在进步，至少在现在，以及未来很长一段时间内，AI都只会是一个提高生产力和工作效率的工具而已。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[碎碎念 2024-10]]></title>
+        <id>https://jinvic.github.io/post/micro-blog-2024-10/</id>
+        <link href="https://jinvic.github.io/post/micro-blog-2024-10/">
+        </link>
+        <updated>2024-10-07T12:00:17.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="碎碎念">碎碎念</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E7%A2%8E%E7%A2%8E%E5%BF%B5">碎碎念</a>
+<ul>
+<li><a href="#2024-10">2024-10</a>
+<ul>
+<li><a href="#2024-10-07">2024-10-07</a>
+<ul>
+<li><a href="#2024-10-07-200621">2024-10-07 20:06:21</a></li>
+<li><a href="#2024-10-07-200939">2024-10-07 20:09:39</a></li>
+<li><a href="#2024-10-07-205435">2024-10-07 20:54:35</a></li>
+<li><a href="#2024-10-07-210157">2024-10-07 21:01:57</a></li>
+</ul>
+</li>
+<li><a href="#2024-10-08">2024-10-08</a>
+<ul>
+<li><a href="#2024-10-08-114609">2024-10-08 11:46:09</a></li>
+<li><a href="#2024-10-08-153457">2024-10-08 15:34:57</a></li>
+<li><a href="#2024-10-08-170815">2024-10-08 17:08:15</a></li>
+</ul>
+</li>
+<li><a href="#2024-10-09">2024-10-09</a>
+<ul>
+<li><a href="#2024-10-09-174038">2024-10-09 17:40:38</a></li>
+<li><a href="#2024-10-09-135213">2024-10-09 13:52:13</a></li>
+<li><a href="#2024-10-09-141533">2024-10-09 14:15:33</a></li>
+</ul>
+</li>
+<li><a href="#2024-10-10">2024-10-10</a>
+<ul>
+<li><a href="#2024-10-10-083948">2024-10-10 08:39:48</a></li>
+<li><a href="#2024-10-10-161606">2024-10-10 16:16:06</a></li>
+</ul>
+</li>
+<li><a href="#2024-10-11">2024-10-11</a>
+<ul>
+<li><a href="#2024-10-11-113150">2024-10-11 11:31:50</a></li>
+<li><a href="#2024-10-11-113415">2024-10-11 11:34:15</a></li>
+</ul>
+</li>
+<li><a href="#2024-10-12">2024-10-12</a>
+<ul>
+<li><a href="#2024-10-12-100449">2024-10-12 10:04:49</a></li>
+<li><a href="#2024-10-12-152433">2024-10-12 15:24:33</a></li>
+</ul>
+</li>
+<li><a href="#2024-10-14">2024-10-14</a>
+<ul>
+<li><a href="#2024-10-14-082509">2024-10-14 08:25:09</a></li>
+<li><a href="#2024-10-14-195837">2024-10-14 19:58:37</a></li>
+</ul>
+</li>
+<li><a href="#2024-10-15">2024-10-15</a>
+<ul>
+<li><a href="#2024-10-15-171901">2024-10-15 17:19:01</a></li>
+</ul>
+</li>
+<li><a href="#2024-10-16">2024-10-16</a>
+<ul>
+<li><a href="#2024-10-16-144431">2024-10-16 14:44:31</a></li>
+</ul>
+</li>
+<li><a href="#2024-10-17">2024-10-17</a>
+<ul>
+<li><a href="#2024-10-17-163225">2024-10-17 16:32:25</a></li>
+</ul>
+</li>
+<li><a href="#2024-10-22">2024-10-22</a>
+<ul>
+<li><a href="#2024-10-22-085837">2024-10-22 08:58:37</a></li>
+<li><a href="#2024-10-22-191804">2024-10-22 19:18:04</a></li>
+<li><a href="#2024-10-22-204947">2024-10-22 20:49:47</a></li>
+</ul>
+</li>
+<li><a href="#2024-10-25">2024-10-25</a>
+<ul>
+<li><a href="#2024-10-25-210739">2024-10-25 21:07:39</a></li>
+</ul>
+</li>
+<li><a href="#2024-10-28">2024-10-28</a>
+<ul>
+<li><a href="#2024-10-28-194259">2024-10-28 19:42:59</a></li>
+</ul>
+</li>
+<li><a href="#2024-10-31">2024-10-31</a>
+<ul>
+<li><a href="#2024-10-31-145706">2024-10-31 14:57:06</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="2024-10">2024-10</h2>
+<h3 id="2024-10-07">2024-10-07</h3>
+<h4 id="2024-10-07-200621">2024-10-07 20:06:21</h4>
+<p>微博客什么的，还是挺想搞一个的，写点即兴的想法或吐槽。可惜gredia不支持，就专门开个贴当微博客用吧。</p>
+<h4 id="2024-10-07-200939">2024-10-07 20:09:39</h4>
+<p>又来活了，是goframe框架的，比之前那个练手的gin项目大得多也复杂的多，读项目都不知道要都多久才能弄明白，还要学个更难的新框架。大概程序员的日常就是这样吧，一直在学东西看东西，真正敲代码的时间反而没那么多。</p>
+<p>这次可没有给我提前学上一个月的余裕了，deadline也没个准信，不知道该从基础开始慢慢学还是先以快速开发为导向突击学比较好。个人还是喜欢慢慢来的，但职场可不是学校，拖进度的话后果会很严重吧...之前几次赶进度的学法，最后任务是完成了，脑子里什么都没留下。说到底还是根本没有时间管理，想一出是一出。</p>
+<h4 id="2024-10-07-205435">2024-10-07 20:54:35</h4>
+<p>正在看gf的demo的源码，发现一个奇怪的实现方法。</p>
+<pre><code class="language-go">// internal/service/user.go
+type IUser interface {
+    ... // 一些方法
+}
+var localUser IUser
+func User() IUser {
+    // 判空，略
+    return localUser
+}
+func RegisterUser(i IUser) {
+    localUser = i
+}
+
+// internal/logic/user/user.go
+type (
+    sUser struct{}
+)
+func init() {
+    service.RegisterUser(New())
+}
+func New() service.IUser {
+    return &amp;sUser{}
+}
+</code></pre>
+<p>这样绕一圈，就让结构体<code>sUser</code>有了<code>IUser</code>的方法，即实现了该接口，初见真的被绕得晕头转向吧。看了看文档，这种写法叫做 <strong>依赖注入（DI）</strong> ，我去，控制反转，依赖注入，这不是实习时spring的内容吗？tmd，java还在追我！</p>
+<p>其实只是设计模式罢了，并非java专属。</p>
+<h4 id="2024-10-07-210157">2024-10-07 21:01:57</h4>
+<p>被安排工作后，反而精神了起来，待办标签页又开了一堆。前段时间上个项目的工作完成后就懒了下来，一天八小时的班感觉睡两小时摸四小时，真正有效率的只有两小时左右。强打精神开了elasticsearch的坑，亢奋一会又萎了眼睛都睁不开。现在虽然被安排完全没经验的任务，但学新东西还挺有意思的，是未曾接触过的崭新世界口牙。说白了都是三分钟热度罢了，又任务压着还能保持状态，完成了怕是又萎了。就现在，上次开的gorm和goredis还有点坑没填呢，更别说进度堪忧的gin了。</p>
+<h3 id="2024-10-08">2024-10-08</h3>
+<h4 id="2024-10-08-114609">2024-10-08 11:46:09</h4>
+<p>看了半天gf文档才发现项目是v1的，文档是v2的，而v1和v2差别很大。得，一天白干。</p>
+<p>不过v2文档确实很完善，感觉当博客看都行，学到了很多项目架构方面的内容。</p>
+<h4 id="2024-10-08-153457">2024-10-08 15:34:57</h4>
+<p>想复制个本地的小项目跟着做，但gf1.16版本太老连init都跑不了，下不了资源包。这下汗流浃背了😅</p>
+<h4 id="2024-10-08-170815">2024-10-08 17:08:15</h4>
+<p>看进度表好像只有半月时间开发，加速加速。</p>
+<h3 id="2024-10-09">2024-10-09</h3>
+<h4 id="2024-10-09-174038">2024-10-09 17:40:38</h4>
+<p>整了个cursor试试，AI辅助确实方便。虽然之前也一直在用通义千问，但集合到IDE里光复制代码就很方便，而且模型是编程方面特化，用起来比常规大模型舒服不少。作为vscode分支插件啊快捷键啊也基本无缝迁移。<br>
+只是本来以为有免费额度，仔细一看消息过时了，现在只有两周试用。要买吗？每月20刀还是太贵了，支付可能也不是很方便。再说吧。</p>
+<h4 id="2024-10-09-135213">2024-10-09 13:52:13</h4>
+<p>每天都在写各种文档笔记备忘录，已经把脑子外挂出去了。<br>
+光靠自己什么都记不住，顶多当个索引知道去哪查。<br>
+什么赛博朋克。</p>
+<h4 id="2024-10-09-141533">2024-10-09 14:15:33</h4>
+<p>总是脑子没想清楚手就先开始动手，干了半天发现白干，纯纯浪费时间。<br>
+什么时候能改掉这个坏习惯。还是经验不足。</p>
+<h3 id="2024-10-10">2024-10-10</h3>
+<h4 id="2024-10-10-083948">2024-10-10 08:39:48</h4>
+<p>没有数据库和api文档好麻烦，很多东西只能脑测。<br>
+我又不好意思问。</p>
+<h4 id="2024-10-10-161606">2024-10-10 16:16:06</h4>
+<p>cursor这个代码补全真的好好用啊，全程tabtabtab就写好了。写功能和算法能力暂且不论，就我现在工作内容的crud代码绝对是一些一个准。这下不得不买了。</p>
+<h3 id="2024-10-11">2024-10-11</h3>
+<h4 id="2024-10-11-113150">2024-10-11 11:31:50</h4>
+<p>写完了问要不要写api文档才发地址。问我数据库在哪，我回没数据库地址才发我配置文件。是忘了吧！绝对是忘了吧！<br>
+下次记得自己要好了...</p>
+<h4 id="2024-10-11-113415">2024-10-11 11:34:15</h4>
+<p>刚报告做完了马上来新活，随着能力提升工作也越来越忙了呢。<br>
+下次要不要拖着等问了再说呢🤔感觉会轻松点。当老油条有什么不好。</p>
+<h3 id="2024-10-12">2024-10-12</h3>
+<h4 id="2024-10-12-100449">2024-10-12 10:04:49</h4>
+<p>说是大小周，因为调休，这段时间基本都是小周。<br>
+今天下午下馆子+打球。明天上午出勤下午打牌，真是充实的假期。<br>
+...<br>
+不知道该开心还是该伤心。<br>
+好困...</p>
+<h4 id="2024-10-12-152433">2024-10-12 15:24:33</h4>
+<p>摸了一整天鱼。主要是看看阮一峰的周刊，找点感兴趣的软件码一下。<br>
+感觉自己就像仓鼠一样，见到什么好东西总想着存起来，却基本不会打开第二次。<br>
+至少用起来吧。试了试确实有几个也挺好用，小而精的软件，感觉很极客。<br>
+上班上成软件测评了（</p>
+<h3 id="2024-10-14">2024-10-14</h3>
+<h4 id="2024-10-14-082509">2024-10-14 08:25:09</h4>
+<p>没有工作好慌。<br>
+本来悠闲地学了一个月，被hr问了一次后就突然很想工作，现在工作做完了暂时没有新工作也淡定不下来，回不到以前悠闲学东西的状态。<br>
+我是不是被PUA了。</p>
+<h4 id="2024-10-14-195837">2024-10-14 19:58:37</h4>
+<p>一点小bug改了一整天。如果是我自己来的话顶多两三个小时就搞定了，但bug不是我发现的，和别人沟通的过程花费了大量时间。多人协作就是这样的，写代码一时爽修bug火葬场。要是写的时候细心点这时就不用这么麻烦了。但中间其实也是有个峰值在的，并不是写的越慢越好。时间长了你反而会厌烦这个项目效率暴跌，尤其是那些看了一次又一次的代码，每次重新梳理结构真的抓狂。<br>
+感觉还是要改进协作方法，提升交流能力。现在在的公司已经还不错了，我都不敢想象那些管理混乱的小公司会是什么样。此外就是开发效率的问题，把开发时间控制在效率高的区间内也是们学问，既要保证层层检查减少错漏又要保证别耽搁花费太多时间适得其反。总是还是一句话：菜就多练😒</p>
+<h3 id="2024-10-15">2024-10-15</h3>
+<h4 id="2024-10-15-171901">2024-10-15 17:19:01</h4>
+<p>从零写个gin项目练手，久违的充实感。<br>
+接触过gf后感觉思维都不一样了。之前对着项目无从下手，现在能看到需求直接上手开拆，分层解耦后一目了然。这就是工程化的思维吗...确实学了gf的目录结构设计后，照猫画虎也能理解这段代码大概属于什么功能应该放在哪块。虽然对小项目来说有点笨重，但随着增量开发不断加代码只会越写越爽。解耦后只需要考虑这一块的内容就行，不像以前不断翻上下文确认自己没搞错，然后想到哪写到哪代码一团糟，造出一个个庞大的单文件鼠标滚轮滚烂。前期不规划好结构后面改都没法改，也许这就是屎山吧。这么想的话我前面练手的几个项目也是屎山，至少我现在看都不想看一眼。<br>
+开始对类似的软件体系架构方面感兴趣了。上学时总把这些课当水课非睡即逃，现在倒是想找几本书来看了。果然实践出真知。大学要是多注重实践也不会天天被骂水了，连技校都不如。</p>
+<h3 id="2024-10-16">2024-10-16</h3>
+<h4 id="2024-10-16-144431">2024-10-16 14:44:31</h4>
+<p>折腾了一下，给个人博客加上了评论系统，用的Waline。<br>
+我这个gredia主题本身支持Valine，了解一下好像有安全风险，就换成valine改的waline，算是升级版。然后修改了一下主题的配置让其也支持waline。其实就是全局搜索把valine全部改成waline就差不多了...</p>
+<h3 id="2024-10-17">2024-10-17</h3>
+<h4 id="2024-10-17-163225">2024-10-17 16:32:25</h4>
+<p>好累。<br>
+写代码一时爽，改bug火葬场。今天被测试上强度了。其实还是自己先前写的不够好怪不得别人。<br>
+才过几天就有点不想看自己写的代码了，感觉有点乱。嗯，一定是解耦做的不够好，还得拆得更细（暴论）</p>
+<h3 id="2024-10-22">2024-10-22</h3>
+<h4 id="2024-10-22-085837">2024-10-22 08:58:37</h4>
+<p>每天做不完的琐事，无非修修补补。<br>
+再念叨当初写好点已经无济于事干脆不乏牢骚了。当时一是水平不够，二是在别人的项目上改实在畏手畏脚。现在看懂了总算稍微敢大刀阔斧地改改了，越写越怀疑自己当初到底改了啥。</p>
+<h4 id="2024-10-22-191804">2024-10-22 19:18:04</h4>
+<p>好忙好忙好忙。<br>
+开始怀念刚入职没事干的状态了。<br>
+之前是有时间没事干。<br>
+现在是有想干的事没时间。</p>
+<p>刷旧周刊看到个感兴趣的极简朋友圈，也就是像这样的微博客，好像搞搞试试但没空。此外那个作者还有别的极简项目比如博客和论坛，都感兴趣都想搞都没时间。</p>
+<p>不想上班啦！</p>
+<h4 id="2024-10-22-204947">2024-10-22 20:49:47</h4>
+<p>cursor到期了。本来想换github copilot，毕竟前者20刀后者10刀便宜一半，但外币支付方式懒得整放弃了。<br>
+因为大语言问答模型一直用得阿里家的通义千问，这段时间也试了试通义灵码。不知道是我没调设置还是怎么得，体验非常糟糕，自动补全又慢又少。我主要还是用自动补全不怎么用问答功能就弃了。<br>
+找了找现在用的CodeGeeX。首先完全免费，其次支持本地部署不怕代码泄露和突然收费，再者中文支持好文档也全。用了一段时间感觉聊胜于无，只能说总比没有好。习惯了cursor的精确度感觉别家的代码补全都是半个智障。</p>
+<h3 id="2024-10-25">2024-10-25</h3>
+<h4 id="2024-10-25-210739">2024-10-25 21:07:39</h4>
+<p>这几天忙得脑子都木了。常规工作时间段以外的加班，反而成了难得的闲暇时光。看看博客再搞点自己的代码，因为人少所以可以光明正大地摸鱼。而且人坐在办公室，干的也算半件正事不算纯粹在玩，所以也没什么荒废时间的心理压力。还能蹭公司的夜宵和加班费，好耶。</p>
+<h3 id="2024-10-28">2024-10-28</h3>
+<h4 id="2024-10-28-194259">2024-10-28 19:42:59</h4>
+<p>工作越积越多，催促的声音也多了起来。已经没有空闲去慢悠悠地检查和测试了，蒙头写写完就交。虽然对不起测试但也算把一部分工作量甩出去了。</p>
+<h3 id="2024-10-31">2024-10-31</h3>
+<h4 id="2024-10-31-145706">2024-10-31 14:57:06</h4>
+<p>刚忙完一个项目，以为可以休息一下时下一个项目马上安排下来了。<br>
+好忙好忙好忙好忙。。。</p>
+]]></content>
+    </entry>
+</feed>

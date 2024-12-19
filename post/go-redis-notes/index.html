@@ -1,0 +1,2220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>go-redis速查笔记 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="go-redis速查笔记 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="go-redis速查笔记" />
+  <meta property="og:url" content="https://jinvic.github.io/post/go-redis-notes/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1734579477304"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1734579477304"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+                <a href="https://jinvic.github.io/tag/sXsvovEhxs/" class="tag">Redis</a>
+                
+                <a href="https://jinvic.github.io/tag/2vaencnsMM/" class="tag">Go</a>
+                
+                <a href="https://jinvic.github.io/tag/KbkCyWeWckl/" class="tag">笔记</a>
+                
+              </span>
+              <h1>go-redis速查笔记</h1>
+              <span class="meta">
+                Posted on
+                2024-08-22，64 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <h1 id="go-redis笔记">go-redis笔记</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#go-redis%E7%AC%94%E8%AE%B0">go-redis笔记</a>
+<ul>
+<li><a href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8">快速入门</a></li>
+<li><a href="#%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">基础数据结构</a>
+<ul>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2string">字符串（string）</a>
+<ul>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E9%94%AE%E5%80%BC%E5%AF%B9set">设置键值对：Set</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E9%94%AE%E5%80%BC%E5%AF%B9get">获取键值对：Get</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4%E9%94%AE%E5%80%BC%E5%AF%B9del">删除键值对：Del</a></li>
+<li><a href="#%E9%80%92%E5%A2%9E%E5%92%8C%E9%80%92%E5%87%8Fincrdecr">递增和递减：Incr/Decr</a></li>
+<li><a href="#%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9Cmsetmget">批量操作：MSet/MGet</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%B9%B6%E8%AE%BE%E7%BD%AEgetset">获取并设置：GetSet</a></li>
+<li><a href="#%E8%BF%BD%E5%8A%A0%E5%80%BCappend">追加值：Append</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%95%BF%E5%BA%A6strlen">获取字符串长度：StrLen</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E7%9A%84%E5%80%BCsetrange">设置字符串指定位置的值：SetRange</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E9%83%A8%E5%88%86%E5%80%BCgetrange">获取字符串的部分值：GetRange</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%B9%B6%E5%88%A0%E9%99%A4getdel">获取并删除：GetDel</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E6%9C%80%E5%B0%8F%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2lcs">获取最小公共子串：LCS</a></li>
+<li><a href="#%E9%80%92%E5%A2%9E%E6%B5%AE%E7%82%B9%E6%95%B0%E5%80%BCincrbyfloat">递增浮点数值：IncrByFloat</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%B8%A6%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4%E7%9A%84%E5%80%BCsetex">设置带过期时间的值：SetEx</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E5%80%BCsetnx">设置不存在的值：SetNX</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%AD%98%E5%9C%A8%E7%9A%84%E5%80%BCsetxx">设置存在的值：SetXX</a></li>
+<li><a href="#%E6%89%B9%E9%87%8F%E8%AE%BE%E7%BD%AE%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E5%80%BCmsetnx">批量设置不存在的值：MSetNX</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E5%80%BCsetargs">设置带参数的值：SetArgs</a></li>
+</ul>
+</li>
+<li><a href="#%E5%93%88%E5%B8%8Chash">哈希（hash）</a>
+<ul>
+<li><a href="#hset-%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E5%80%BC">HSet 设置指定字段的值</a></li>
+<li><a href="#hmset-%E6%89%B9%E9%87%8F%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E5%80%BC">HMSet 批量设置指定字段的值</a></li>
+<li><a href="#hget-%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E5%80%BC">HGet 获取指定字段的值</a></li>
+<li><a href="#hmget-%E6%89%B9%E9%87%8F%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E5%80%BC">HMGet 批量获取指定字段的值</a></li>
+<li><a href="#hsetnx%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E5%80%BC%E4%BB%85%E5%BD%93%E5%AD%97%E6%AE%B5%E4%B8%8D%E5%AD%98%E5%9C%A8%E6%97%B6">HSetNX设置指定字段的值（仅当字段不存在时）</a></li>
+<li><a href="#hlen-%E8%8E%B7%E5%8F%96%E5%AD%97%E6%AE%B5%E6%95%B0%E9%87%8F">HLen 获取字段数量</a></li>
+<li><a href="#hexists-%E6%A3%80%E6%9F%A5%E5%AD%97%E6%AE%B5%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8">HExists 检查字段是否存在</a></li>
+<li><a href="#hdel-%E5%88%A0%E9%99%A4%E5%AD%97%E6%AE%B5">HDel 删除字段</a></li>
+<li><a href="#hkeys-%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E5%AD%97%E6%AE%B5">HKeys 获取所有字段</a></li>
+<li><a href="#hvals-%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E5%80%BC">HVals 获取所有值</a></li>
+<li><a href="#hgetall-%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E5%AD%97%E6%AE%B5%E5%92%8C%E5%80%BC">HGetAll 获取所有字段和值</a></li>
+<li><a href="#hincrby-%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E6%95%B4%E6%95%B0%E5%80%BC%E5%A2%9E%E9%87%8F">HIncrBy 指定字段的整数值增量</a></li>
+<li><a href="#hincrbyfloat-%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E6%B5%AE%E7%82%B9%E6%95%B0%E5%80%BC%E5%A2%9E%E9%87%8F">HIncrByFloat 指定字段的浮点数值增量</a></li>
+<li><a href="#hscan-%E5%A2%9E%E9%87%8F%E8%BF%AD%E4%BB%A3%E5%AD%97%E6%AE%B5">HScan 增量迭代字段</a></li>
+<li><a href="#hscannovalues-%E5%A2%9E%E9%87%8F%E8%BF%AD%E4%BB%A3%E5%AD%97%E6%AE%B5%E4%B8%8D%E5%8C%85%E6%8B%AC%E5%80%BC">HScanNoValues 增量迭代字段（不包括值）</a></li>
+<li><a href="#hrandfield-%E9%9A%8F%E6%9C%BA%E8%8E%B7%E5%8F%96%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%AD%97%E6%AE%B5">HRandField 随机获取一个或多个字段</a></li>
+<li><a href="#hrandfieldwithvalues-%E9%9A%8F%E6%9C%BA%E8%8E%B7%E5%8F%96%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%AD%97%E6%AE%B5%E5%8F%8A%E5%85%B6%E5%80%BC">HRandFieldWithValues 随机获取一个或多个字段及其值</a></li>
+<li><a href="#hash-%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4%E7%9B%B8%E5%85%B3">Hash 过期时间相关</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%97%E8%A1%A8list">列表（list）</a>
+<ul>
+<li><a href="#llen%E8%8E%B7%E5%8F%96%E5%88%97%E8%A1%A8%E9%95%BF%E5%BA%A6">LLen：获取列表长度</a></li>
+<li><a href="#lindex%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E7%9A%84%E5%85%83%E7%B4%A0">LIndex：获取指定位置的元素</a></li>
+<li><a href="#lpos%E6%9F%A5%E6%89%BE%E6%8C%87%E5%AE%9A%E5%80%BC%E7%9A%84%E4%BD%8D%E7%BD%AE">LPos：查找指定值的位置</a></li>
+<li><a href="#lposcount%E6%9F%A5%E6%89%BE%E6%8C%87%E5%AE%9A%E5%80%BC%E7%9A%84%E4%BD%8D%E7%BD%AE%E9%99%90%E5%88%B6%E8%BF%94%E5%9B%9E%E6%95%B0%E9%87%8F">LPosCount：查找指定值的位置（限制返回数量）</a></li>
+<li><a href="#linsert%E5%9C%A8%E5%88%97%E8%A1%A8%E4%B8%AD%E6%8F%92%E5%85%A5%E5%85%83%E7%B4%A0">LInsert：在列表中插入元素</a></li>
+<li><a href="#linsertbefore%E5%9C%A8%E6%8C%87%E5%AE%9A%E5%85%83%E7%B4%A0%E5%89%8D%E6%8F%92%E5%85%A5%E6%96%B0%E5%85%83%E7%B4%A0">LInsertBefore：在指定元素前插入新元素</a></li>
+<li><a href="#linsertafter%E5%9C%A8%E6%8C%87%E5%AE%9A%E5%85%83%E7%B4%A0%E5%90%8E%E6%8F%92%E5%85%A5%E6%96%B0%E5%85%83%E7%B4%A0">LInsertAfter：在指定元素后插入新元素</a></li>
+<li><a href="#lpush%E5%B0%86%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E6%8F%92%E5%85%A5%E5%88%B0%E5%88%97%E8%A1%A8%E7%9A%84%E5%A4%B4%E9%83%A8">LPush：将一个或多个元素插入到列表的头部</a></li>
+<li><a href="#lpop%E4%BB%8E%E5%88%97%E8%A1%A8%E7%9A%84%E5%A4%B4%E9%83%A8%E5%BC%B9%E5%87%BA%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0">LPop：从列表的头部弹出一个元素</a></li>
+<li><a href="#lmpop%E4%BB%8E%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%88%97%E8%A1%A8%E4%B8%AD%E5%BC%B9%E5%87%BA%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0">LMPop：从一个或多个列表中弹出多个元素</a></li>
+<li><a href="#rpush%E5%B0%86%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E6%8F%92%E5%85%A5%E5%88%B0%E5%88%97%E8%A1%A8%E7%9A%84%E5%B0%BE%E9%83%A8">RPush：将一个或多个元素插入到列表的尾部</a></li>
+<li><a href="#rpop%E4%BB%8E%E5%88%97%E8%A1%A8%E7%9A%84%E5%B0%BE%E9%83%A8%E5%BC%B9%E5%87%BA%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0">RPop：从列表的尾部弹出一个元素</a></li>
+<li><a href="#rpoplpush%E4%BB%8E%E6%BA%90%E5%88%97%E8%A1%A8%E4%B8%AD%E5%BC%B9%E5%87%BA%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0%E5%B9%B6%E6%8E%A8%E9%80%81%E5%88%B0%E7%9B%AE%E6%A0%87%E5%88%97%E8%A1%A8%E7%9A%84%E5%A4%B4%E9%83%A8">RPopLPush：从源列表中弹出一个元素并推送到目标列表的头部</a></li>
+<li><a href="#lpopcount%E4%BB%8E%E5%88%97%E8%A1%A8%E7%9A%84%E5%A4%B4%E9%83%A8%E5%BC%B9%E5%87%BA%E6%8C%87%E5%AE%9A%E6%95%B0%E9%87%8F%E7%9A%84%E5%85%83%E7%B4%A0">LPopCount：从列表的头部弹出指定数量的元素</a></li>
+<li><a href="#rpopcount%E4%BB%8E%E5%88%97%E8%A1%A8%E7%9A%84%E5%B0%BE%E9%83%A8%E5%BC%B9%E5%87%BA%E6%8C%87%E5%AE%9A%E6%95%B0%E9%87%8F%E7%9A%84%E5%85%83%E7%B4%A0">RPopCount：从列表的尾部弹出指定数量的元素</a></li>
+<li><a href="#lpushx%E5%B0%86%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E6%8F%92%E5%85%A5%E5%88%B0%E5%88%97%E8%A1%A8%E7%9A%84%E5%A4%B4%E9%83%A8%E4%BB%85%E5%9C%A8%E5%88%97%E8%A1%A8%E5%AD%98%E5%9C%A8%E6%97%B6%E7%94%9F%E6%95%88">LPushX：将一个或多个元素插入到列表的头部，仅在列表存在时生效</a></li>
+<li><a href="#rpushx%E5%B0%86%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E6%8F%92%E5%85%A5%E5%88%B0%E5%88%97%E8%A1%A8%E7%9A%84%E5%B0%BE%E9%83%A8%E4%BB%85%E5%9C%A8%E5%88%97%E8%A1%A8%E5%AD%98%E5%9C%A8%E6%97%B6%E7%94%9F%E6%95%88">RPushX：将一个或多个元素插入到列表的尾部，仅在列表存在时生效</a></li>
+<li><a href="#lrange%E8%8E%B7%E5%8F%96%E5%88%97%E8%A1%A8%E4%B8%AD%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E7%9A%84%E5%85%83%E7%B4%A0">LRange：获取列表中指定范围的元素</a></li>
+<li><a href="#lrem%E4%BB%8E%E5%88%97%E8%A1%A8%E4%B8%AD%E7%A7%BB%E9%99%A4%E6%8C%87%E5%AE%9A%E6%95%B0%E9%87%8F%E7%9A%84%E6%9F%90%E4%B8%AA%E5%85%83%E7%B4%A0">LRem：从列表中移除指定数量的某个元素</a></li>
+<li><a href="#lset%E8%AE%BE%E7%BD%AE%E5%88%97%E8%A1%A8%E4%B8%AD%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E7%9A%84%E5%85%83%E7%B4%A0">LSet：设置列表中指定位置的元素</a></li>
+<li><a href="#ltrim%E5%AF%B9%E5%88%97%E8%A1%A8%E8%BF%9B%E8%A1%8C%E4%BF%AE%E5%89%AA%E4%BF%9D%E7%95%99%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E5%86%85%E7%9A%84%E5%85%83%E7%B4%A0">LTrim：对列表进行修剪，保留指定范围内的元素</a></li>
+<li><a href="#lmove%E4%BB%8E%E4%B8%80%E4%B8%AA%E5%88%97%E8%A1%A8%E7%A7%BB%E5%8A%A8%E5%85%83%E7%B4%A0%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E5%88%97%E8%A1%A8%E5%B9%B6%E6%8C%87%E5%AE%9A%E6%BA%90%E5%92%8C%E7%9B%AE%E6%A0%87%E4%BD%8D%E7%BD%AE">LMove：从一个列表移动元素到另一个列表，并指定源和目标位置</a></li>
+<li><a href="#%E9%98%BB%E5%A1%9E%E7%89%B9%E6%80%A7%E6%96%B9%E6%B3%95">阻塞特性方法</a></li>
+</ul>
+</li>
+<li><a href="#%E9%9B%86%E5%90%88set">集合（set）</a>
+<ul>
+<li><a href="#sadd-%E6%B7%BB%E5%8A%A0%E5%85%83%E7%B4%A0-scard-%E8%8E%B7%E5%8F%96%E5%85%83%E7%B4%A0%E6%95%B0%E9%87%8F">SAdd 添加元素 / SCard 获取元素数量</a></li>
+<li><a href="#smembers-%E8%8E%B7%E5%8F%96%E9%9B%86%E5%90%88%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E6%88%90%E5%91%98">SMembers 获取集合中的所有成员</a></li>
+<li><a href="#sunion-%E8%AE%A1%E7%AE%97%E5%B9%B6%E9%9B%86-sinter-%E8%AE%A1%E7%AE%97%E4%BA%A4%E9%9B%86">SUnion 计算并集 / SInter 计算交集</a></li>
+<li><a href="#sdiff-%E8%AE%A1%E7%AE%97%E9%9B%86%E5%90%88%E7%9A%84%E5%B7%AE%E9%9B%86">SDiff 计算集合的差集</a></li>
+<li><a href="#sismember-%E5%92%8C-smismember-%E6%A3%80%E6%9F%A5%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E6%98%AF%E5%90%A6%E6%98%AF%E9%9B%86%E5%90%88%E7%9A%84%E6%88%90%E5%91%98">SIsMember 和 SMIsMember 检查一个或多个元素是否是集合的成员</a></li>
+<li><a href="#smove-%E5%B0%86%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0%E4%BB%8E%E4%B8%80%E4%B8%AA%E9%9B%86%E5%90%88%E7%A7%BB%E5%8A%A8%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E9%9B%86%E5%90%88">SMove 将一个元素从一个集合移动到另一个集合</a></li>
+<li><a href="#spopspopn-%E4%BB%8E%E9%9B%86%E5%90%88%E4%B8%AD%E9%9A%8F%E6%9C%BA%E7%A7%BB%E9%99%A4%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0">SPop/SPopN 从集合中随机移除一个或多个元素</a></li>
+<li><a href="#srandmembersrandmembern-%E4%BB%8E%E9%9B%86%E5%90%88%E4%B8%AD%E9%9A%8F%E6%9C%BA%E8%8E%B7%E5%8F%96%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E4%BD%86%E4%B8%8D%E7%A7%BB%E9%99%A4%E5%AE%83%E4%BB%AC">SRandMember/SRandMemberN 从集合中随机获取一个或多个元素，但不移除它们</a></li>
+<li><a href="#srem-%E4%BB%8E%E9%9B%86%E5%90%88%E4%B8%AD%E7%A7%BB%E9%99%A4%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0">SRem 从集合中移除一个或多个元素</a></li>
+<li><a href="#sscan-%E5%A2%9E%E9%87%8F%E8%BF%AD%E4%BB%A3%E9%9B%86%E5%90%88%E4%B8%AD%E7%9A%84%E5%85%83%E7%B4%A0">SScan 增量迭代集合中的元素</a></li>
+<li><a href="#sunionstore-sinterstore-%E5%B0%86%E5%A4%9A%E4%B8%AA%E9%9B%86%E5%90%88%E7%9A%84%E5%B9%B6%E9%9B%86%E6%88%96%E4%BA%A4%E9%9B%86%E5%AD%98%E5%82%A8%E5%88%B0%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E9%9B%86%E5%90%88%E4%B8%AD">SUnionStore / SInterStore 将多个集合的并集或交集存储到一个新的集合中</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88zset">有序集合（zset）</a>
+<ul>
+<li><a href="#zadd%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E6%88%90%E5%91%98">ZAdd：添加一个或多个成员</a></li>
+<li><a href="#zaddltzaddgt%E6%B7%BB%E5%8A%A0%E6%88%90%E5%91%98%E6%A0%B9%E6%8D%AE%E5%88%86%E6%95%B0%E6%9B%B4%E6%96%B0">ZAddLT/ZAddGT：添加成员，根据分数更新</a></li>
+<li><a href="#zaddnxzaddxx%E6%B7%BB%E5%8A%A0%E6%88%90%E5%91%98%E4%BB%85%E5%BD%93%E6%88%90%E5%91%98%E4%B8%8D%E5%AD%98%E5%9C%A8%E5%AD%98%E5%9C%A8%E6%97%B6%E6%89%8D%E6%89%A7%E8%A1%8C">ZAddNX/ZAddXX：添加成员，仅当成员不存在/存在时才执行</a></li>
+<li><a href="#zaddargszaddargsincr%E6%B7%BB%E5%8A%A0%E6%88%90%E5%91%98%E5%B9%B6%E4%BD%BF%E7%94%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE%E8%8B%A5%E5%B7%B2%E5%AD%98%E5%9C%A8%E5%88%99%E5%88%86%E6%95%B0%E5%A2%9E%E5%8A%A0">ZAddArgs/ZAddArgsIncr：添加成员，并使用参数配置（若已存在则分数增加。）</a></li>
+<li><a href="#zincrby%E6%88%90%E5%91%98%E5%88%86%E6%95%B0%E5%A2%9E%E5%8A%A0%E6%8C%87%E5%AE%9A%E7%9A%84%E5%A2%9E%E9%87%8F">ZIncrBy：成员分数增加指定的增量</a></li>
+<li><a href="#zscorezmscore%E8%8E%B7%E5%8F%96%E5%A4%9A%E4%B8%AA%E6%88%90%E5%91%98%E7%9A%84%E5%88%86%E6%95%B0">ZScore/ZMScore：获取（多个）成员的分数</a></li>
+<li><a href="#zcard%E8%8E%B7%E5%8F%96%E6%88%90%E5%91%98%E6%95%B0%E9%87%8F">ZCard：获取成员数量</a></li>
+<li><a href="#zcountzlexcount%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E5%88%86%E6%95%B0%E8%8C%83%E5%9B%B4%E6%8C%87%E5%AE%9A%E5%AD%97%E5%85%B8%E5%8C%BA%E9%97%B4%E5%86%85%E7%9A%84%E6%88%90%E5%91%98%E6%95%B0%E9%87%8F">ZCount/ZLexCount：获取指定分数范围/指定字典区间内的成员数量</a></li>
+<li><a href="#zinterzinterwithscores%E8%AE%A1%E7%AE%97%E5%A4%9A%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E7%9A%84%E4%BA%A4%E9%9B%86%E5%B9%B6%E8%BF%94%E5%9B%9E%E5%B8%A6%E5%88%86%E6%95%B0%E7%BB%93%E6%9E%9C">ZInter/ZInterWithScores：计算多个有序集合的交集，并返回（带分数）结果</a></li>
+<li><a href="#zintercard%E8%AE%A1%E7%AE%97%E4%BA%A4%E9%9B%86%E6%95%B0%E9%87%8F">ZInterCard：计算交集数量</a></li>
+<li><a href="#zinterstore%E8%AE%A1%E7%AE%97%E4%BA%A4%E9%9B%86%E5%B9%B6%E5%B0%86%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%9C">ZInterStore：计算交集并将存储结果</a></li>
+<li><a href="#zmpop%E6%89%B9%E9%87%8F%E5%BC%B9%E5%87%BA%E6%9C%80%E5%B0%8F%E6%88%96%E6%9C%80%E5%A4%A7%E7%9A%84%E5%A4%9A%E4%B8%AA%E6%88%90%E5%91%98">ZMPop：批量弹出最小或最大的多个成员</a></li>
+<li><a href="#bzmpop%E6%89%B9%E9%87%8F%E5%BC%B9%E5%87%BA%E6%9C%80%E5%A4%A7%E6%88%96%E6%9C%80%E5%B0%8F%E5%88%86%E6%95%B0%E7%9A%84%E6%88%90%E5%91%98%E9%98%BB%E5%A1%9E">BZMPop：批量弹出最大或最小分数的成员【阻塞】</a></li>
+<li><a href="#bzpopmaxbzpopmin%E6%89%B9%E9%87%8F%E5%BC%B9%E5%87%BA%E6%9C%80%E5%A4%A7%E6%9C%80%E5%B0%8F%E5%88%86%E6%95%B0%E7%9A%84%E6%88%90%E5%91%98%E9%98%BB%E5%A1%9E">BZPopMax/BZPopMin：批量弹出最大/最小分数的成员【阻塞】</a></li>
+<li><a href="#zpopmaxzpopmin%E5%BC%B9%E5%87%BA%E6%9C%80%E5%A4%A7%E6%9C%80%E5%B0%8F%E5%88%86%E6%95%B0%E7%9A%84%E6%88%90%E5%91%98">ZPopMax/ZPopMin：弹出最大/最小分数的成员</a></li>
+<li><a href="#zrangezrangewithscores%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E5%8C%BA%E9%97%B4%E5%86%85%E7%9A%84%E6%88%90%E5%91%98%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZRange/ZRangeWithScores：获取指定区间内的成员（及其分数）</a></li>
+<li><a href="#zrangebyscorezrangebylexzrangebyscorewithscores%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E5%88%86%E6%95%B0%E8%8C%83%E5%9B%B4%E6%8C%87%E5%AE%9A%E5%AD%97%E5%85%B8%E5%8C%BA%E9%97%B4%E5%86%85%E7%9A%84%E6%88%90%E5%91%98%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZRangeByScore/ZRangeByLex/ZRangeByScoreWithScores：获取指定分数范围/指定字典区间内的成员(及其分数)</a></li>
+<li><a href="#zrangeargszrangeargswithscores%E6%A0%B9%E6%8D%AE%E7%BB%99%E5%AE%9A%E7%9A%84%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%9C%89%E6%88%90%E5%91%98%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZRangeArgs/ZRangeArgsWithScores：根据给定的参数获取有成员(及其分数)</a></li>
+<li><a href="#zrangestore%E5%B0%86%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E5%86%85%E7%9A%84%E6%88%90%E5%91%98%E5%AD%98%E5%82%A8%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E9%9B%86%E5%90%88%E4%B8%AD">ZRangeStore：将指定范围内的成员存储到另一个集合中</a></li>
+<li><a href="#zrevrangezrevrangewithscores%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E5%86%85%E7%9A%84%E6%88%90%E5%91%98%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0%E6%8C%89%E5%88%86%E6%95%B0%E4%BB%8E%E9%AB%98%E5%88%B0%E4%BD%8E%E6%8E%92%E5%BA%8F">ZRevRange/ZRevRangeWithScores：获取指定范围内的成员(及其分数)，按分数从高到低排序</a></li>
+<li><a href="#zrevrangebyscorezrevrangebylexzrevrangebyscorewithscores%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E5%88%86%E6%95%B0%E8%8C%83%E5%9B%B4%E6%8C%87%E5%AE%9A%E5%AD%97%E5%85%B8%E8%8C%83%E5%9B%B4%E5%86%85%E7%9A%84%E6%88%90%E5%91%98%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0%E6%8C%89%E5%88%86%E6%95%B0%E4%BB%8E%E9%AB%98%E5%88%B0%E4%BD%8E%E6%8E%92%E5%BA%8F">ZRevRangeByScore/ZRevRangeByLex/ZRevRangeByScoreWithScores：获取指定分数范围/指定字典范围内的成员(及其分数)，按分数从高到低排序</a></li>
+<li><a href="#zrankzrankwithscore%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E6%88%90%E5%91%98%E7%9A%84%E6%8E%92%E5%90%8D%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZRank/ZRankWithScore：获取指定成员的排名(及其分数)</a></li>
+<li><a href="#zrevrankzrevrankwithscore%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E6%88%90%E5%91%98%E7%9A%84%E9%80%86%E5%BA%8F%E6%8E%92%E5%90%8D%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZRevRank/ZRevRankWithScore：获取指定成员的逆序排名（及其分数）</a></li>
+<li><a href="#zremzremrangebyrankzremrangebyscorezremrangebylex%E7%A7%BB%E9%99%A4%E6%8C%87%E5%AE%9A%E6%8E%92%E5%90%8D%E8%8C%83%E5%9B%B4%E6%8C%87%E5%AE%9A%E5%88%86%E6%95%B0%E8%8C%83%E5%9B%B4%E6%8C%87%E5%AE%9A%E5%AD%97%E5%85%B8%E8%8C%83%E5%9B%B4-%E5%86%85%E7%9A%84%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E6%88%90%E5%91%98">ZRem/ZRemRangeByRank/ZRemRangeByScore/ZRemRangeByLex：移除（指定排名范围/指定分数范围/指定字典范围 内的）一个或多个成员</a></li>
+<li><a href="#zrandmemberzrandmemberwithscores%E9%9A%8F%E6%9C%BA%E8%8E%B7%E5%8F%96%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E4%B8%AD%E7%9A%84%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E6%88%90%E5%91%98%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZRandMember/ZRandMemberWithScores：随机获取有序集合中的一个或多个成员（及其分数）</a></li>
+<li><a href="#zunionzunionwithscores%E8%AE%A1%E7%AE%97%E5%A4%9A%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E7%9A%84%E5%B9%B6%E9%9B%86%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZUnion/ZUnionWithScores：计算多个有序集合的并集（及其分数）</a></li>
+<li><a href="#zunionstore%E5%B0%86%E5%A4%9A%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E7%9A%84%E5%B9%B6%E9%9B%86%E5%AD%98%E5%82%A8%E5%88%B0%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E4%B8%AD">ZUnionStore：将多个有序集合的并集存储到一个新的有序集合中</a></li>
+<li><a href="#zdiffzdiffwithscores%E8%AE%A1%E7%AE%97%E5%A4%9A%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E7%9A%84%E5%B7%AE%E9%9B%86%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZDiff/ZDiffWithScores：计算多个有序集合的差集（及其分数）</a></li>
+<li><a href="#zdiffstore%E5%B0%86%E5%A4%9A%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E7%9A%84%E5%B7%AE%E9%9B%86%E5%AD%98%E5%82%A8%E5%88%B0%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E4%B8%AD">ZDiffStore：将多个有序集合的差集存储到一个新的有序集合中</a></li>
+<li><a href="#zscan%E8%BF%AD%E4%BB%A3%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E4%B8%AD%E7%9A%84%E6%88%90%E5%91%98">ZScan：迭代有序集合中的成员</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">高级数据结构</a>
+<ul>
+<li><a href="#%E4%BD%8D%E5%9B%BEbitmaps">位图（Bitmaps）</a>
+<ul>
+<li><a href="#getbit-%E8%8E%B7%E5%8F%96%E4%BD%8D%E5%9B%BE%E4%B8%AD%E6%8C%87%E5%AE%9A%E5%81%8F%E7%A7%BB%E9%87%8F%E7%9A%84%E5%80%BC">GetBit - 获取位图中指定偏移量的值</a></li>
+<li><a href="#setbit-%E8%AE%BE%E7%BD%AE%E4%BD%8D%E5%9B%BE%E4%B8%AD%E6%8C%87%E5%AE%9A%E5%81%8F%E7%A7%BB%E9%87%8F%E7%9A%84%E5%80%BC">SetBit - 设置位图中指定偏移量的值</a></li>
+<li><a href="#bitcount-%E8%AE%A1%E7%AE%97%E4%BD%8D%E5%9B%BE%E4%B8%AD%E5%80%BC%E4%B8%BA-1-%E7%9A%84%E4%BD%8D%E6%95%B0">BitCount - 计算位图中值为 1 的位数</a></li>
+<li><a href="#bitopand-%E5%AF%B9%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E4%BD%8D%E5%9B%BE%E6%89%A7%E8%A1%8C-and%E6%93%8D%E4%BD%9C%E5%B9%B6%E5%B0%86%E7%BB%93%E6%9E%9C%E5%AD%98%E5%82%A8%E5%9C%A8%E7%9B%AE%E6%A0%87%E4%BD%8D%E5%9B%BE%E4%B8%AD">BitOpAnd - 对一个或多个位图执行 AND操作，并将结果存储在目标位图中</a></li>
+<li><a href="#bitopor-%E5%AF%B9%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E4%BD%8D%E5%9B%BE%E6%89%A7%E8%A1%8C-or-%E6%93%8D%E4%BD%9C%E5%B9%B6%E5%B0%86%E7%BB%93%E6%9E%9C%E5%AD%98%E5%82%A8%E5%9C%A8%E7%9B%AE%E6%A0%87%E4%BD%8D%E5%9B%BE%E4%B8%AD">BitOpOr - 对一个或多个位图执行 OR 操作，并将结果存储在目标位图中</a></li>
+<li><a href="#bitopxor-%E5%AF%B9%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E4%BD%8D%E5%9B%BE%E6%89%A7%E8%A1%8C-xor-%E6%93%8D%E4%BD%9C%E5%B9%B6%E5%B0%86%E7%BB%93%E6%9E%9C%E5%AD%98%E5%82%A8%E5%9C%A8%E7%9B%AE%E6%A0%87%E4%BD%8D%E5%9B%BE%E4%B8%AD">BitOpXor - 对一个或多个位图执行 XOR 操作，并将结果存储在目标位图中</a></li>
+<li><a href="#bitopnot-%E5%AF%B9%E4%BD%8D%E5%9B%BE%E6%89%A7%E8%A1%8C%E5%8F%96%E5%8F%8Dnot%E6%93%8D%E4%BD%9C%E5%B9%B6%E5%B0%86%E7%BB%93%E6%9E%9C%E5%AD%98%E5%82%A8%E5%9C%A8%E7%9B%AE%E6%A0%87%E4%BD%8D%E5%9B%BE%E4%B8%AD">BitOpNot - 对位图执行取反(NOT)操作，并将结果存储在目标位图中</a></li>
+<li><a href="#bitpos-%E6%9F%A5%E6%89%BE%E4%BD%8D%E5%9B%BE%E4%B8%AD%E7%AC%AC%E4%B8%80%E4%B8%AA%E8%AE%BE%E7%BD%AE%E4%B8%BA%E6%8C%87%E5%AE%9A%E5%80%BC%E7%9A%84%E4%BD%8D%E7%9A%84%E4%BD%8D%E7%BD%AE">BitPos - 查找位图中第一个设置为指定值的位的位置</a></li>
+<li><a href="#bitposspan-%E6%9F%A5%E6%89%BE%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E5%86%85%E7%AC%AC%E4%B8%80%E4%B8%AA%E8%AE%BE%E7%BD%AE%E4%B8%BA%E6%8C%87%E5%AE%9A%E5%80%BC%E7%9A%84%E4%BD%8D%E7%9A%84%E4%BD%8D%E7%BD%AE">BitPosSpan - 查找指定范围内第一个设置为指定值的位的位置</a></li>
+<li><a href="#bitfield-%E6%89%A7%E8%A1%8C%E5%A4%9A%E4%B8%AA%E4%BD%8D%E5%9F%9F%E6%93%8D%E4%BD%9C">BitField - 执行多个位域操作</a></li>
+</ul>
+</li>
+<li><a href="#%E8%B6%85%E6%97%A5%E5%BF%97hyperloglogs">超日志（HyperLogLogs）</a>
+<ul>
+<li><a href="#%E5%9F%BA%E6%95%B0%E4%BC%B0%E7%AE%97">基数估算</a></li>
+<li><a href="#pfadd-%E5%B0%86%E6%8C%87%E5%AE%9A%E5%85%83%E7%B4%A0%E6%B7%BB%E5%8A%A0%E5%88%B0-hyperloglog">PFAdd - 将指定元素添加到 HyperLogLog</a></li>
+<li><a href="#pfcount-%E8%BF%94%E5%9B%9E%E7%BB%99%E5%AE%9A-hyperloglog-%E7%9A%84%E5%9F%BA%E6%95%B0%E4%BC%B0%E7%AE%97%E5%80%BC">PFCount - 返回给定 HyperLogLog 的基数估算值</a></li>
+<li><a href="#pfmerge-%E5%B0%86%E5%A4%9A%E4%B8%AA-hyperloglog-%E5%90%88%E5%B9%B6%E4%B8%BA%E4%B8%80%E4%B8%AA">PFMerge - 将多个 HyperLogLog 合并为一个</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9C%B0%E7%90%86%E7%A9%BA%E9%97%B4geospatial">地理空间（Geospatial）</a>
+<ul>
+<li><a href="#geoadd-%E6%B7%BB%E5%8A%A0%E5%9C%B0%E7%90%86%E7%A9%BA%E9%97%B4%E4%BD%8D%E7%BD%AE">GeoAdd - 添加地理空间位置</a></li>
+<li><a href="#geopos-%E8%8E%B7%E5%8F%96%E5%9C%B0%E7%90%86%E7%A9%BA%E9%97%B4%E4%BD%8D%E7%BD%AE">GeoPos - 获取地理空间位置</a></li>
+<li><a href="#georadius-%E6%A0%B9%E6%8D%AE%E7%BB%8F%E7%BA%AC%E5%BA%A6%E6%9F%A5%E8%AF%A2%E9%99%84%E8%BF%91%E7%9A%84%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE">GeoRadius - 根据经纬度查询附近的地理位置</a></li>
+<li><a href="#georadiusstore-%E6%A0%B9%E6%8D%AE%E7%BB%8F%E7%BA%AC%E5%BA%A6%E6%9F%A5%E8%AF%A2%E9%99%84%E8%BF%91%E7%9A%84%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E5%B9%B6%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%9C">GeoRadiusStore - 根据经纬度查询附近的地理位置并存储结果</a></li>
+<li><a href="#georadiusbymember-%E6%A0%B9%E6%8D%AE%E5%B7%B2%E6%9C%89%E6%88%90%E5%91%98%E7%9A%84%E4%BD%8D%E7%BD%AE%E6%9F%A5%E8%AF%A2%E9%99%84%E8%BF%91%E7%9A%84%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE">GeoRadiusByMember - 根据已有成员的位置查询附近的地理位置</a></li>
+<li><a href="#georadiusbymemberstore-%E6%A0%B9%E6%8D%AE%E5%B7%B2%E6%9C%89%E6%88%90%E5%91%98%E7%9A%84%E4%BD%8D%E7%BD%AE%E6%9F%A5%E8%AF%A2%E9%99%84%E8%BF%91%E7%9A%84%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E5%B9%B6%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%9C">GeoRadiusByMemberStore - 根据已有成员的位置查询附近的地理位置并存储结果</a></li>
+<li><a href="#geosearch-%E6%A0%B9%E6%8D%AE%E4%B8%8D%E5%90%8C%E6%9D%A1%E4%BB%B6%E6%90%9C%E7%B4%A2%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE">GeoSearch - 根据不同条件搜索地理位置</a></li>
+<li><a href="#geosearchlocation-%E6%A0%B9%E6%8D%AE%E4%B8%8D%E5%90%8C%E6%9D%A1%E4%BB%B6%E6%90%9C%E7%B4%A2%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E5%B9%B6%E8%BF%94%E5%9B%9E%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF">GeoSearchLocation - 根据不同条件搜索地理位置并返回详细信息</a></li>
+<li><a href="#geosearchstore-%E6%A0%B9%E6%8D%AE%E4%B8%8D%E5%90%8C%E6%9D%A1%E4%BB%B6%E6%90%9C%E7%B4%A2%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E5%B9%B6%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%9C">GeoSearchStore - 根据不同条件搜索地理位置并存储结果</a></li>
+<li><a href="#geodist-%E8%AE%A1%E7%AE%97%E4%B8%A4%E4%B8%AA%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E4%B9%8B%E9%97%B4%E7%9A%84%E8%B7%9D%E7%A6%BB">GeoDist - 计算两个地理位置之间的距离</a></li>
+<li><a href="#geohash-%E8%8E%B7%E5%8F%96%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8%E7%A4%BA">GeoHash - 获取地理位置的哈希表示</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B5%81streams">流（Streams）</a>
+<ul>
+<li><a href="#redisxaddargs">redis.XAddArgs</a></li>
+<li><a href="#redisxreadargs">redis.XReadArgs</a></li>
+<li><a href="#redisxreadgroupargs">redis.XReadGroupArgs</a></li>
+<li><a href="#xadd-%E6%B7%BB%E5%8A%A0%E6%B6%88%E6%81%AF%E5%88%B0%E6%9C%AB%E5%B0%BE">XAdd - 添加消息到末尾</a></li>
+<li><a href="#xtrimmaxlenxtrimmaxlenapprox-%E5%9F%BA%E4%BA%8E%E9%95%BF%E5%BA%A6%E8%A3%81%E5%89%AA">XTrimMaxLen/XTrimMaxLenApprox 基于长度裁剪</a></li>
+<li><a href="#xtrimminidxtrimminidapprox-%E5%9F%BA%E4%BA%8Eid%E8%A3%81%E5%89%AA">XTrimMinID/XTrimMinIDApprox 基于ID裁剪</a></li>
+<li><a href="#xdel-%E5%88%A0%E9%99%A4%E6%B6%88%E6%81%AF">XDel 删除消息</a></li>
+<li><a href="#xlen-%E8%8E%B7%E5%8F%96%E6%B5%81%E5%8C%85%E5%90%AB%E7%9A%84%E5%85%83%E7%B4%A0%E6%95%B0%E9%87%8F%E5%8D%B3%E6%B6%88%E6%81%AF%E9%95%BF%E5%BA%A6">XLen 获取流包含的元素数量，即消息长度</a></li>
+<li><a href="#xrangexrevrange-%E8%8E%B7%E5%8F%96%E6%B6%88%E6%81%AF%E5%88%97%E8%A1%A8%E4%BC%9A%E8%87%AA%E5%8A%A8%E8%BF%87%E6%BB%A4%E5%B7%B2%E7%BB%8F%E5%88%A0%E9%99%A4%E7%9A%84%E6%B6%88%E6%81%AF">XRange/XRevRange 获取消息列表，会自动过滤已经删除的消息</a></li>
+<li><a href="#xreadxreadgroupxreadstreams-%E8%8E%B7%E5%8F%96%E6%B6%88%E6%81%AF%E5%88%97%E8%A1%A8">XRead/XReadGroup/XReadStreams 获取消息列表</a></li>
+<li><a href="#xgroupcreatexgroupcreateconsumerxgroupcreatemkstream-%E5%88%9B%E5%BB%BA%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84">XGroupCreate/XGroupCreateConsumer/XGroupCreateMkStream 创建消费者（组）</a></li>
+<li><a href="#xack-%E5%B0%86%E6%B6%88%E6%81%AF%E6%A0%87%E8%AE%B0%E4%B8%BA%E5%B7%B2%E5%A4%84%E7%90%86">XAck 将消息标记为&quot;已处理&quot;</a></li>
+<li><a href="#xgroupsetid-%E4%B8%BA%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E8%AE%BE%E7%BD%AE%E6%96%B0%E7%9A%84%E6%9C%80%E5%90%8E%E9%80%92%E9%80%81%E6%B6%88%E6%81%AFid">XGroupSetID 为消费者组设置新的最后递送消息ID</a></li>
+<li><a href="#xgroupdelconsumer-%E5%88%A0%E9%99%A4%E6%B6%88%E8%B4%B9%E8%80%85">XGroupDelConsumer 删除消费者</a></li>
+<li><a href="#xgroupdestroy-%E5%88%A0%E9%99%A4%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84">XGroupDestroy 删除消费者组</a></li>
+<li><a href="#xpendingxpendingext-%E7%A4%BA%E5%BE%85%E5%A4%84%E7%90%86%E6%B6%88%E6%81%AF%E7%9A%84%E7%9B%B8%E5%85%B3%E4%BF%A1%E6%81%AF">XPending/XPendingExt 示待处理消息的相关信息</a></li>
+<li><a href="#xclaimxclaimjustid-%E8%BD%AC%E7%A7%BB%E6%B6%88%E6%81%AF%E7%9A%84%E5%BD%92%E5%B1%9E%E6%9D%83">XClaim/XClaimJustID/ 转移消息的归属权</a></li>
+<li><a href="#xautoclaimxautojustid-%E8%BD%AC%E7%A7%BB%E6%B6%88%E6%81%AF%E7%9A%84%E5%BD%92%E5%B1%9E%E6%9D%83">XAutoClaim/XAutoJustID/ 转移消息的归属权</a></li>
+<li><a href="#xinfostreamxinfogroupsxinfoconsumers-%E6%89%93%E5%8D%B0%E4%BF%A1%E6%81%AF">XInfoStream/XInfoGroups/XInfoConsumers 打印信息</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%85%B6%E4%BB%96">其他</a>
+<ul>
+<li><a href="#%E9%94%AEkey">键（key）</a>
+<ul>
+<li><a href="#del-%E5%88%A0%E9%99%A4%E9%94%AE">Del 删除键</a></li>
+<li><a href="#dump-%E5%BA%8F%E5%88%97%E5%8C%96%E9%94%AE">Dump 序列化键</a></li>
+<li><a href="#exists-%E6%A3%80%E6%9F%A5%E9%94%AE%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8">Exists 检查键是否存在</a></li>
+<li><a href="#expire-%E8%AE%BE%E7%BD%AE%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4">Expire 设置过期时间</a></li>
+<li><a href="#expireat-%E8%AE%BE%E7%BD%AE%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4%E6%97%B6%E9%97%B4%E6%88%B3">ExpireAt 设置过期时间（时间戳）</a></li>
+<li><a href="#keys-%E6%9F%A5%E6%89%BE%E7%AC%A6%E5%90%88%E6%A8%A1%E5%BC%8F%E7%9A%84key">Keys 查找符合模式的key</a></li>
+<li><a href="#move-%E7%A7%BB%E5%8A%A8%E6%95%B0%E6%8D%AE%E8%87%B3%E5%8F%A6%E4%B8%80%E6%95%B0%E6%8D%AE%E5%BA%93">Move 移动数据至另一数据库</a></li>
+<li><a href="#persist-%E7%A7%BB%E9%99%A4%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4">Persist 移除过期时间</a></li>
+<li><a href="#ttl-%E8%BF%94%E5%9B%9E%E5%89%A9%E4%BD%99%E7%94%9F%E5%AD%98%E6%97%B6%E9%97%B4">TTL 返回剩余生存时间</a></li>
+<li><a href="#randomkey-%E9%9A%8F%E6%9C%BA%E8%BF%94%E5%9B%9E%E4%B8%80%E4%B8%AAkey">RandomKey 随机返回一个key</a></li>
+<li><a href="#rename-%E4%BF%AE%E6%94%B9%E9%94%AE%E7%9A%84%E5%90%8D%E7%A7%B0">Rename 修改键的名称</a></li>
+<li><a href="#renamenx-%E4%BF%AE%E6%94%B9%E9%94%AE%E7%9A%84%E5%90%8D%E7%A7%B0%E4%BB%85%E5%BD%93%E6%96%B0%E9%94%AE%E4%B8%8D%E5%AD%98%E5%9C%A8%E6%97%B6">RenameNX 修改键的名称（仅当新键不存在时）</a></li>
+<li><a href="#scan-%E8%BF%AD%E4%BB%A3%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E9%94%AE">Scan 迭代数据库中的键</a></li>
+<li><a href="#type-%E8%BF%94%E5%9B%9Ekey%E6%89%80%E5%82%A8%E5%AD%98%E7%9A%84%E5%80%BC%E7%9A%84%E7%B1%BB%E5%9E%8B">Type 返回key所储存的值的类型</a></li>
+<li><a href="#%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F">匹配模式</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85pubsub">发布/订阅（Pub/Sub）</a>
+<ul>
+<li><a href="#%E6%8E%A5%E6%94%B6%E5%8F%91%E5%B8%83%E7%A4%BA%E4%BE%8B">接收发布示例</a></li>
+<li><a href="#%E4%B8%8D%E5%90%8C%E6%8E%A5%E6%94%B6%E6%96%B9%E6%B3%95%E5%8C%BA%E5%88%AB">不同接收方法区别</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AE%A1%E9%81%93%E5%92%8C%E4%BA%8B%E5%8A%A1">管道和事务</a></li>
+<li><a href="#redis%E9%9B%86%E7%BE%A4">Redis集群</a></li>
+<li><a href="#redis%E5%93%A8%E5%85%B5">Redis哨兵</a></li>
+<li><a href="#redis%E5%88%86%E7%89%87">Redis分片</a></li>
+<li><a href="#aof-%E6%97%A5%E5%BF%97">AOF 日志</a>
+<ul>
+<li><a href="#%E4%B8%89%E7%A7%8D%E5%86%99%E5%9B%9E%E7%AD%96%E7%95%A5">三种写回策略</a></li>
+<li><a href="#aof%E9%87%8D%E5%86%99%E6%9C%BA%E5%88%B6">AOF重写机制</a></li>
+</ul>
+</li>
+<li><a href="#rdb-%E5%BF%AB%E7%85%A7">RDB 快照</a>
+<ul>
+<li><a href="#%E5%86%99%E6%97%B6%E5%A4%8D%E5%88%B6%E6%8A%80%E6%9C%AF">写时复制技术</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<p>基本都在抄API😓</p>
+<h2 id="快速入门">快速入门</h2>
+<pre><code class="language-go">package main
+
+import (
+    &quot;context&quot;
+    &quot;fmt&quot;
+    &quot;github.com/redis/go-redis/v9&quot;
+)
+
+var ctx = context.Background()
+
+func main() {
+    rdb := redis.NewClient(&amp;redis.Options{
+        Addr:     &quot;localhost:6379&quot;, // Redis 服务器地址
+        Password: &quot;&quot;,               // 没有密码则留空
+        DB:       0,                // 使用默认数据库
+    })
+
+    // 测试连接
+    pong, err := rdb.Ping(ctx).Result()
+    if err != nil {
+        fmt.Println(&quot;无法连接到 Redis:&quot;, err)
+        return
+    }
+    fmt.Println(&quot;连接成功:&quot;, pong)
+}
+</code></pre>
+<h2 id="基础数据结构">基础数据结构</h2>
+<h3 id="字符串string">字符串（string）</h3>
+<p>基本的数据存储单元，可以存储字符串、整数或者浮点数。</p>
+<h4 id="设置键值对set">设置键值对：Set</h4>
+<pre><code class="language-go">func (c redis.cmdable) Set(ctx context.Context, key string, value interface{}, expiration time.Duration) *redis.StatusCmd
+</code></pre>
+<p>使用示例：<code>rdb.Set(ctx, key,value,0)</code></p>
+<h4 id="获取键值对get">获取键值对：Get</h4>
+<pre><code class="language-go">func (c redis.cmdable) Get(ctx context.Context, key string) *redis.StringCmd
+</code></pre>
+<p>使用示例：<code>rdb.Get(ctx, key)</code></p>
+<h4 id="删除键值对del">删除键值对：Del</h4>
+<p>支持批量删除。</p>
+<pre><code class="language-go">func (c redis.cmdable) Del(ctx context.Context, keys ...string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.Del(ctx, key)</code></p>
+<h4 id="递增和递减incrdecr">递增和递减：Incr/Decr</h4>
+<p>只能操作整数值。</p>
+<pre><code class="language-go">func (c redis.cmdable) Incr(ctx context.Context, key string) *redis.IntCmd
+func (c redis.cmdable) Decr(ctx context.Context, key string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.Incr(ctx, key)</code> <code>rdb.Decr(ctx, key)</code></p>
+<h4 id="批量操作msetmget">批量操作：MSet/MGet</h4>
+<pre><code class="language-go">func (c redis.cmdable) MSet(ctx context.Context, values ...interface{}) *redis.StatusCmd
+func (c redis.cmdable) MGet(ctx context.Context, keys ...string) *redis.SliceCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">rdb.MSet(ctx, key1, value1, key2, value2...)
+rdb.MSet(ctx, []string{key1, value1, key2, value2...})
+rdb.MSet(ctx, map[string]interface{}{key1: value1, key2: value2...})
+rdb.MSet(struct)
+
+rdb.MGet(ctx, key1, key2...)
+</code></pre>
+<h4 id="获取并设置getset">获取并设置：GetSet</h4>
+<p>设置指定 key 的值，并返回 key 的旧值。</p>
+<pre><code class="language-go">func (c redis.cmdable) GetSet(ctx context.Context, key string, value interface{}) *redis.StringCmd
+</code></pre>
+<p>使用示例：<code>rdb.GetSet(ctx, key, value)</code></p>
+<h4 id="追加值append">追加值：Append</h4>
+<p>为指定的 key 追加值。</p>
+<p>如果 key 已经存在并且是一个字符串， APPEND 命令将 value 追加到 key 原来的值的末尾。</p>
+<p>如果 key 不存在， APPEND 就简单地将给定 key 设为 value。</p>
+<pre><code class="language-go">func (c redis.cmdable) Append(ctx context.Context, key string, value string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.Append(ctx, key, value)</code></p>
+<h4 id="获取字符串长度strlen">获取字符串长度：StrLen</h4>
+<pre><code class="language-go">func (c redis.cmdable) StrLen(ctx context.Context, key string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.StrLen(ctx, key)</code></p>
+<h4 id="设置字符串指定位置的值setrange">设置字符串指定位置的值：SetRange</h4>
+<pre><code class="language-go">func (c redis.cmdable) SetRange(ctx context.Context, key string, offset int64, value string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.SetRange(ctx, key, offset, value)</code></p>
+<h4 id="获取字符串的部分值getrange">获取字符串的部分值：GetRange</h4>
+<pre><code class="language-go">func (c redis.cmdable) GetRange(ctx context.Context, key string, start int64, end int64) *redis.StringCmd
+</code></pre>
+<p>使用示例：<code>rdb.GetRange(ctx, key, start, end)</code></p>
+<h4 id="获取并删除getdel">获取并删除：GetDel</h4>
+<pre><code class="language-go">func (c redis.cmdable) GetDel(ctx context.Context, key string) *redis.StringCmd
+</code></pre>
+<p>使用示例：<code>rdb.GetDel(ctx, key)</code></p>
+<h4 id="获取最小公共子串lcs">获取最小公共子串：LCS</h4>
+<pre><code class="language-go">type LCSQuery struct {
+    Key1         string
+    Key2         string
+    Len          bool
+    Idx          bool
+    MinMatchLen  int
+    WithMatchLen bool
+}
+
+func (c redis.cmdable) LCS(ctx context.Context, q *redis.LCSQuery) *redis.LCSCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">lcsQuery := redis.LCSQuery{
+    Key1: &quot;string1&quot;,
+    Key2: &quot;string2&quot;,
+}
+
+rdb.LCS(ctx, lcsQuery)
+</code></pre>
+<h4 id="递增浮点数值incrbyfloat">递增浮点数值：IncrByFloat</h4>
+<pre><code class="language-go">func (c redis.cmdable) IncrByFloat(ctx context.Context, key string, value float64) *redis.FloatCmd
+</code></pre>
+<p>使用示例：<code>rdb.IncrByFloat(ctx, key, value)</code></p>
+<h4 id="设置带过期时间的值setex">设置带过期时间的值：SetEx</h4>
+<pre><code class="language-go">func (c redis.cmdable) SetEx(ctx context.Context, key string, value interface{}, expiration time.Duration) *redis.StatusCmd
+</code></pre>
+<p>使用示例：<code>rdb.SetEx(ctx, key, valve, 10*time.Second)</code></p>
+<h4 id="设置不存在的值setnx">设置不存在的值：SetNX</h4>
+<p>仅当键不存在时设置值。</p>
+<pre><code class="language-go">func (c redis.cmdable) SetNX(ctx context.Context, key string, value interface{}, expiration time.Duration) *redis.BoolCmd
+</code></pre>
+<p>使用示例：<code>rdb.SetNX(ctx, key, valve, 0)</code></p>
+<h4 id="设置存在的值setxx">设置存在的值：SetXX</h4>
+<p>仅当键存在时设置值。</p>
+<pre><code class="language-go">func (c redis.cmdable) SetXX(ctx context.Context, key string, value interface{}, expiration time.Duration) *redis.BoolCmd
+</code></pre>
+<p>使用示例：<code>rdb.SetXX(ctx, key, valve, 0)</code></p>
+<h4 id="批量设置不存在的值msetnx">批量设置不存在的值：MSetNX</h4>
+<pre><code class="language-go">func (c redis.cmdable) MSetNX(ctx context.Context, values ...interface{}) *redis.BoolCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">rdb.MSetNX(ctx, key1, value1, key2, value2...)
+rdb.MSetNX(ctx, []string{key1, value1, key2, value2...})
+rdb.MSetNX(ctx, map[string]interface{}{key1: value1, key2: value2...})
+rdb.MSetNX(struct)
+</code></pre>
+<h4 id="设置带参数的值setargs">设置带参数的值：SetArgs</h4>
+<pre><code class="language-go">type SetArgs struct {
+    // Mode can be `NX` or `XX` or empty.
+    Mode string
+
+    // Zero `TTL` or `Expiration` means that the key has no expiration time.
+    TTL      time.Duration
+    ExpireAt time.Time
+
+    // When Get is true, the command returns the old value stored at key, or nil when key did not exist.
+    Get bool
+
+    // KeepTTL is a Redis KEEPTTL option to keep existing TTL, it requires your redis-server version &gt;= 6.0,
+    // otherwise you will receive an error: (error) ERR syntax error.
+    KeepTTL bool
+}
+
+func (c redis.cmdable) SetArgs(ctx context.Context, key string, value interface{}, a redis.SetArgs) *redis.StatusCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">setArgs := redis.SetArgs{
+    Mode: &quot;NX&quot;, // 仅当键不存在时设置
+    TTL:  10 * time.Second,
+}
+
+err := rdb.SetArgs(ctx, &quot;paramKey&quot;, &quot;paramValue&quot;, setArgs).Err()
+</code></pre>
+<h3 id="哈希hash">哈希（hash）</h3>
+<p>Redis 的 <code>Hash</code> 数据类型类似于传统编程语言中的哈希表或字典。它存储的是键值对集合，特别适合存储对象数据，例如用户信息或配置项。通过 Hash 数据类型，我们可以高效地进行字段的读取、写入、删除操作。</p>
+<h4 id="hset-设置指定字段的值">HSet 设置指定字段的值</h4>
+<pre><code class="language-go">func (c redis.cmdable) HSet(ctx context.Context, key string, values ...interface{}) *redis.IntCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">rdb.HSet(ctx, key, field1, value1, field2, value2...)
+rdb.HSet(ctx, key, []string{field1, value1, field2, value2...})
+rdb.HSet(ctx, key, map[string]interface{}{key1: value1, field2: value2...})
+type hash struct{ Field1 type `redis:field1`; Field2 type `redis:field2`... }
+rdb.HSet(ctx, key, hash{value1, value2...}) 
+</code></pre>
+<h4 id="hmset-批量设置指定字段的值">HMSet 批量设置指定字段的值</h4>
+<p>在 Redis 4.0 及更高版本中已被标记为弃用。</p>
+<h4 id="hget-获取指定字段的值">HGet 获取指定字段的值</h4>
+<pre><code class="language-go">func (c redis.cmdable) HGet(ctx context.Context, key string, field string) *redis.StringCmd
+</code></pre>
+<p>使用示例：<code>rdb.HGet(ctx, key, field)</code></p>
+<h4 id="hmget-批量获取指定字段的值">HMGet 批量获取指定字段的值</h4>
+<pre><code class="language-go">func (c redis.cmdable) HMGet(ctx context.Context, key string, fields ...string) *redis.SliceCmd
+</code></pre>
+<p>使用示例：<code>rdb.HGet(ctx, key, &quot;field1&quot;, &quot;field2&quot;...)</code></p>
+<h4 id="hsetnx设置指定字段的值仅当字段不存在时">HSetNX设置指定字段的值（仅当字段不存在时）</h4>
+<pre><code class="language-go">func (c redis.cmdable) SetNX(ctx context.Context, key string, value interface{}, expiration time.Duration) *redis.BoolCmd
+</code></pre>
+<p>使用示例：<code>rdb.HGet(ctx, key, field, value)</code></p>
+<h4 id="hlen-获取字段数量">HLen 获取字段数量</h4>
+<pre><code class="language-go">func (c redis.cmdable) HLen(ctx context.Context, key string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.HLen(ctx, key)</code></p>
+<h4 id="hexists-检查字段是否存在">HExists 检查字段是否存在</h4>
+<pre><code class="language-go">func (c redis.cmdable) HExists(ctx context.Context, key string, field string) *redis.BoolCmd
+</code></pre>
+<p>使用示例：<code>rdb.HExists(ctx, key, field)</code></p>
+<h4 id="hdel-删除字段">HDel 删除字段</h4>
+<pre><code class="language-go">func (c redis.cmdable) HDel(ctx context.Context, key string, fields ...string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.HDel(ctx, key, field1, field2...)</code></p>
+<h4 id="hkeys-获取所有字段">HKeys 获取所有字段</h4>
+<pre><code class="language-go">func (c redis.cmdable) HKeys(ctx context.Context, key string) *redis.StringSliceCmd
+</code></pre>
+<p>使用示例：<code>rdb.HKeys(ctx, key)</code></p>
+<h4 id="hvals-获取所有值">HVals 获取所有值</h4>
+<pre><code class="language-go">func (c redis.cmdable) HVals(ctx context.Context, key string) *redis.StringSliceCmd
+</code></pre>
+<p>使用示例：<code>rdb.HVals(ctx, key)</code></p>
+<h4 id="hgetall-获取所有字段和值">HGetAll 获取所有字段和值</h4>
+<pre><code class="language-go">func (c redis.cmdable) HGetAll(ctx context.Context, key string) *redis.MapStringStringCmd
+</code></pre>
+<p>使用示例：<code>rdb.HGetAll(ctx, key)</code></p>
+<h4 id="hincrby-指定字段的整数值增量">HIncrBy 指定字段的整数值增量</h4>
+<pre><code class="language-go">func (c redis.cmdable) HIncrBy(ctx context.Context, key string, field string, incr int64) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.HIncrBy(ctx, key, field, incr)</code></p>
+<h4 id="hincrbyfloat-指定字段的浮点数值增量">HIncrByFloat 指定字段的浮点数值增量</h4>
+<pre><code class="language-go">func (c redis.cmdable) HIncrByFloat(ctx context.Context, key string, field string, incr float64) *redis.FloatCmd
+</code></pre>
+<p>使用示例：<code>rdb.HIncrByFloat(ctx, key, field, incr)</code></p>
+<h4 id="hscan-增量迭代字段">HScan 增量迭代字段</h4>
+<p>它非常适合处理大哈希表，因为它可以在不阻塞服务器的情况下逐步遍历表中的所有元素。</p>
+<pre><code class="language-go">func (c redis.cmdable) HScan(ctx context.Context, key string, cursor uint64, match string, count int64) *redis.ScanCmd
+</code></pre>
+<p>使用示例：<code>rdb.HScan(ctx, key, cursor, match，count)</code></p>
+<ul>
+<li><strong>cursor</strong>：扫描的游标，初始值为 0。</li>
+<li><strong>match</strong>：匹配模式，这里使用 * 匹配以任意字段。</li>
+<li><strong>count</strong>：每次扫描提示返回的元素数量。</li>
+</ul>
+<p>注意，这里的<code>count</code>参数为提示值（hint）。当集合足够小时，SCAN命令会返回集合中的所有元素，直接忽略COUNT属性。</p>
+<h4 id="hscannovalues-增量迭代字段不包括值">HScanNoValues 增量迭代字段（不包括值）</h4>
+<pre><code class="language-go">func (c redis.cmdable) HScanNoValues(ctx context.Context, key string, cursor uint64, match string, count int64) *redis.ScanCmd
+</code></pre>
+<p>使用示例：<code>rdb.HScanNoValues(ctx, key, cursor, match，count)</code></p>
+<h4 id="hrandfield-随机获取一个或多个字段">HRandField 随机获取一个或多个字段</h4>
+<pre><code class="language-go">func (c redis.cmdable) HRandField(ctx context.Context, key string, count int) *redis.StringSliceCmd
+</code></pre>
+<p>使用示例：<code>rdb.HRandField(ctx, key, count)</code></p>
+<h4 id="hrandfieldwithvalues-随机获取一个或多个字段及其值">HRandFieldWithValues 随机获取一个或多个字段及其值</h4>
+<pre><code class="language-go">func (c redis.cmdable) HRandFieldWithValues(ctx context.Context, key string, count int) *redis.KeyValueSliceCmd
+</code></pre>
+<p>使用示例：<code>rdb.HRandFieldWithValues(ctx, key, count)</code></p>
+<h4 id="hash-过期时间相关">Hash 过期时间相关</h4>
+<ul>
+<li>HExpire 设置指定字段的过期时间（以秒为单位）</li>
+<li>HExpireWithArgs 设置指定字段的过期时间（以秒为单位）并附加过期选项</li>
+<li>HPExpire 设置指定字段的过期时间（以毫秒为单位）</li>
+<li>HPExpireWithArgs 设置指定字段的过期时间（以毫秒为单位）并附加过期选项</li>
+<li>HExpireAt 设置指定字段的过期时间点</li>
+<li>HExpireAtWithArgs 设置指定字段的过期时间点并附加过期选项</li>
+<li>HPExpireAt 设置指定字段的过期时间点（以毫秒为单位）</li>
+<li>HPExpireAtWithArgs 设置指定字段的过期时间点（以毫秒为单位）并附加过期选项</li>
+<li>HExpireTime 获取指定字段的过期时间</li>
+<li>HPExpireTime 获取指定字段的过期时间（以毫秒为单位）</li>
+<li>HPersist 移除指定字段的过期时间，使其永久有效</li>
+<li>HTTL 获取指定字段的剩余生存时间（以秒为单位）</li>
+<li>HPTTL 获取指定字段的剩余生存时间（以毫秒为单位）</li>
+</ul>
+<h3 id="列表list">列表（list）</h3>
+<p>Redis 的 <code>List</code> 数据结构是一种简单的链表数据结构，可以在头部和尾部进行高效的插入和删除操作。它的元素是有序的，可以重复，支持对元素进行任意位置的操作。Redis List 的常见使用场景包括消息队列、任务队列、实时数据流等。</p>
+<h4 id="llen获取列表长度">LLen：获取列表长度</h4>
+<pre><code class="language-go">func (c redis.cmdable) LLen(ctx context.Context, key string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.LLen(ctx, key)</code></p>
+<h4 id="lindex获取指定位置的元素">LIndex：获取指定位置的元素</h4>
+<pre><code class="language-go">func (c redis.cmdable) LIndex(ctx context.Context, key string, index int64) *redis.StringCmd
+</code></pre>
+<p>使用示例：<code>rdb.LIndex(ctx, key, index)</code></p>
+<h4 id="lpos查找指定值的位置">LPos：查找指定值的位置</h4>
+<pre><code class="language-go">func (c redis.cmdable) LPos(ctx context.Context, key string, value string, a redis.LPosArgs) *redis.IntCmd
+</code></pre>
+<ul>
+<li><code>args</code>：查询参数（如开始位置、结束位置等）</li>
+</ul>
+<p>使用示例：<code>rdb.LPos(ctx, key, value, reids.Args{})</code></p>
+<h4 id="lposcount查找指定值的位置限制返回数量">LPosCount：查找指定值的位置（限制返回数量）</h4>
+<pre><code class="language-go">func (c redis.cmdable) LPosCount(ctx context.Context, key string, value string, count int64, a redis.LPosArgs) *redis.IntSliceCmd
+</code></pre>
+<p>使用示例：<code>rdb.LPos(ctx, list, value, count, reids.Args{})</code></p>
+<h4 id="linsert在列表中插入元素">LInsert：在列表中插入元素</h4>
+<pre><code class="language-go">func (c redis.cmdable) LInsert(ctx context.Context, key string, op string, pivot interface{}, value interface{}) *redis.IntCmd
+</code></pre>
+<ul>
+<li><code>op</code>：插入操作（“before” 或 “after”）</li>
+<li><code>pivot</code>：参考元素</li>
+<li><code>value</code>：待插入的元素</li>
+</ul>
+<p>使用示例：<code>rdb.LInsert(ctx, list, &quot;after&quot;, pivot, value)</code></p>
+<h4 id="linsertbefore在指定元素前插入新元素">LInsertBefore：在指定元素前插入新元素</h4>
+<pre><code class="language-go">func (c redis.cmdable) LInsertBefore(ctx context.Context, key string, pivot interface{}, value interface{}) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.LInsertBefore(ctx, list, pivot, value)</code></p>
+<h4 id="linsertafter在指定元素后插入新元素">LInsertAfter：在指定元素后插入新元素</h4>
+<pre><code class="language-go">func (c redis.cmdable) LInsertAfter(ctx context.Context, key string, pivot interface{}, value interface{}) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.LInsertAfter(ctx, list, pivot, value)</code></p>
+<h4 id="lpush将一个或多个元素插入到列表的头部">LPush：将一个或多个元素插入到列表的头部</h4>
+<pre><code class="language-go">func (c redis.cmdable) LPush(ctx context.Context, key string, values ...interface{}) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.LPush(ctx, list, value1, value2...)</code></p>
+<h4 id="lpop从列表的头部弹出一个元素">LPop：从列表的头部弹出一个元素</h4>
+<pre><code class="language-go">func (c redis.cmdable) LPop(ctx context.Context, key string) *redis.StringCmd
+</code></pre>
+<p>使用示例：<code>rdb.LPop(ctx, list)</code></p>
+<h4 id="lmpop从一个或多个列表中弹出多个元素">LMPop：从一个或多个列表中弹出多个元素</h4>
+<p>Redis 6.0+ 支持</p>
+<pre><code class="language-go">func (c redis.cmdable) LMPop(ctx context.Context, direction string, count int64, keys ...string) *redis.KeyValuesCmd
+</code></pre>
+<ul>
+<li><code>direction</code>：弹出方向（“left” 或 “right”）</li>
+<li><code>count</code>：弹出数量</li>
+</ul>
+<p>使用示例：<code>rdb.LMPop(ctx, &quot;left&quot;, 2, list1, list2...)</code></p>
+<h4 id="rpush将一个或多个元素插入到列表的尾部">RPush：将一个或多个元素插入到列表的尾部</h4>
+<pre><code class="language-go">func (c redis.cmdable) RPush(ctx context.Context, key string, values ...interface{}) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.RPush(ctx, key, value1, value2...)</code></p>
+<h4 id="rpop从列表的尾部弹出一个元素">RPop：从列表的尾部弹出一个元素</h4>
+<pre><code class="language-go">func (c redis.cmdable) RPop(ctx context.Context, key string) *redis.StringCmd
+</code></pre>
+<p>使用示例：<code>rdb.RPush(ctx, list)</code></p>
+<h4 id="rpoplpush从源列表中弹出一个元素并推送到目标列表的头部">RPopLPush：从源列表中弹出一个元素并推送到目标列表的头部</h4>
+<pre><code class="language-go">func (c redis.cmdable) RPopLPush(ctx context.Context, source string, destination string) *redis.StringCmd
+</code></pre>
+<p>使用示例：<code>rdb.RPopLPush(ctx, list_src,list_dest)</code></p>
+<h4 id="lpopcount从列表的头部弹出指定数量的元素">LPopCount：从列表的头部弹出指定数量的元素</h4>
+<pre><code class="language-go">func (c redis.cmdable) LPopCount(ctx context.Context, key string, count int) *redis.StringSliceCmd
+</code></pre>
+<p>使用示例：<code>rdb.LPopCount(ctx, list, cnt)</code></p>
+<h4 id="rpopcount从列表的尾部弹出指定数量的元素">RPopCount：从列表的尾部弹出指定数量的元素</h4>
+<pre><code class="language-go">func (c redis.cmdable) RPopCount(ctx context.Context, key string, count int) *redis.StringSliceCmd
+</code></pre>
+<p>使用示例：<code>rdb.RPopCount(ctx, list, cnt)</code></p>
+<h4 id="lpushx将一个或多个元素插入到列表的头部仅在列表存在时生效">LPushX：将一个或多个元素插入到列表的头部，仅在列表存在时生效</h4>
+<pre><code class="language-go">func (c redis.cmdable) LPushX(ctx context.Context, key string, values ...interface{}) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.LPushX(ctx, list, values1, values2...)</code></p>
+<h4 id="rpushx将一个或多个元素插入到列表的尾部仅在列表存在时生效">RPushX：将一个或多个元素插入到列表的尾部，仅在列表存在时生效</h4>
+<pre><code class="language-go">func (c redis.cmdable) RPushX(ctx context.Context, key string, values ...interface{}) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.RPushX(ctx, list, values1, values2...)</code></p>
+<h4 id="lrange获取列表中指定范围的元素">LRange：获取列表中指定范围的元素</h4>
+<p>包含结束索引位置上的值</p>
+<pre><code class="language-go">func (c redis.cmdable) LRange(ctx context.Context, key string, start int64, stop int64) *redis.StringSliceCmd
+</code></pre>
+<ul>
+<li><code>start</code>：起始索引</li>
+<li><code>stop</code>：结束索引</li>
+</ul>
+<p>使用示例：<code>rdb.LRange(ctx, list, start, stop...)</code></p>
+<h4 id="lrem从列表中移除指定数量的某个元素">LRem：从列表中移除指定数量的某个元素</h4>
+<pre><code class="language-go">func (c redis.cmdable) LRem(ctx context.Context, key string, count int64, value interface{}) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.LRem(ctx, list, count, value)</code></p>
+<h4 id="lset设置列表中指定位置的元素">LSet：设置列表中指定位置的元素</h4>
+<pre><code class="language-go">func (c redis.cmdable) LSet(ctx context.Context, key string, index int64, value interface{}) *redis.StatusCmd
+</code></pre>
+<p>使用示例：<code>rdb.LRem(ctx, list, index, value)</code></p>
+<h4 id="ltrim对列表进行修剪保留指定范围内的元素">LTrim：对列表进行修剪，保留指定范围内的元素</h4>
+<p>包含结束索引位置上的值</p>
+<pre><code class="language-go">func (c redis.cmdable) LTrim(ctx context.Context, key string, start int64, stop int64) *redis.StatusCmd
+</code></pre>
+<ul>
+<li><code>start</code>：起始索引</li>
+<li><code>stop</code>：结束索引</li>
+</ul>
+<p>使用示例：<code>rdb.LTrim(ctx, list, start, stop)</code></p>
+<h4 id="lmove从一个列表移动元素到另一个列表并指定源和目标位置">LMove：从一个列表移动元素到另一个列表，并指定源和目标位置</h4>
+<pre><code class="language-go">func (c redis.cmdable) LMove(ctx context.Context, source string, destination string, srcpos string, destpos string) *redis.StringCmd
+</code></pre>
+<ul>
+<li><code>source</code>：源列表的键</li>
+<li><code>destination</code>：目标列表的键</li>
+<li><code>srcpos</code>：源列表的位置（“left” 或 “right”）</li>
+<li><code>destpos</code>：目标列表的位置（“left” 或 “right”）</li>
+</ul>
+<p>使用示例：<code>rdb.LMove(ctx, list_src, list_dest, &quot;right&quot;, &quot;left&quot;)</code></p>
+<h4 id="阻塞特性方法">阻塞特性方法</h4>
+<p>这些命令会在没有满足条件的数据可用时阻塞客户端，直到满足条件的数据出现或达到超时限制。这里的 B 代表 &quot;Blocking&quot;（阻塞）。</p>
+<p><strong>阻塞时间</strong>：阻塞命令的第二个参数是阻塞时间，单位是秒。如果设置为 0，则表示无限期阻塞，直到有数据可用或键被删除。</p>
+<ul>
+<li><code>BLPop</code>：阻塞地从一个或多个列表中弹出元素，直到有元素可用或超时。</li>
+<li><code>BRPop</code>：阻塞地从一 个或多个列表中弹出元素，直到有元素可用或超时。</li>
+<li><code>BRPopLPush</code>：从源列表中弹出一个元素并推送到目标列表的头部，支持阻塞操作。</li>
+<li><code>BLMPop</code>：从一个或多个列表中弹出多个元素并返回，支持从头部或尾部弹出，Redis 6.0+ 支持。</li>
+<li><code>BLMove</code>：从源列表的指定方向弹出一个元素并推送到目标列表的指定方向，支持阻塞操作。</li>
+</ul>
+<h3 id="集合set">集合（set）</h3>
+<p>Redis 的 <code>Set</code> 是一个无序的字符串集合。集合中的元素是唯一的，这意味着集合中不能有重复的数据。Sets 提供了一些强大而有用的操作，如求交集、并集和差集等。</p>
+<h4 id="sadd-添加元素-scard-获取元素数量">SAdd 添加元素 / SCard 获取元素数量</h4>
+<pre><code class="language-go">func (c redis.cmdable) SAdd(ctx context.Context, key string, members ...interface{}) *redis.IntCmd
+func (c redis.cmdable) SCard(ctx context.Context, key string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.SAdd(ctx, set, member1,member2...)</code><br>
+<code>rdb.SCard(ctx,set)</code></p>
+<h4 id="smembers-获取集合中的所有成员">SMembers 获取集合中的所有成员</h4>
+<pre><code class="language-go">func (c redis.cmdable) SMembers(ctx context.Context, key string) *redis.StringSliceCmd
+</code></pre>
+<p>使用示例：<code>rdb.SMembers(ctx,set)</code></p>
+<h4 id="sunion-计算并集-sinter-计算交集">SUnion 计算并集 / SInter 计算交集</h4>
+<pre><code class="language-go">func (c redis.cmdable) SUnion(ctx context.Context, keys ...string) *redis.StringSliceCmd
+func (c redis.cmdable) SInter(ctx context.Context, keys ...string) *redis.StringSliceCmd
+</code></pre>
+<p>使用示例：<br>
+<code>db.SUnion(ctx, set1, set2...)</code><br>
+<code>db.SInter(ctx, set1, set2...)</code></p>
+<h4 id="sdiff-计算集合的差集">SDiff 计算集合的差集</h4>
+<p>即set1中存在但set2中不存在的元素。</p>
+<pre><code class="language-go">func (c redis.cmdable) SDiff(ctx context.Context, keys ...string) *redis.StringSliceCmd
+</code></pre>
+<p>使用示例：<code>db.SDiff(ctx, set1, set2...)</code></p>
+<h4 id="sismember-和-smismember-检查一个或多个元素是否是集合的成员">SIsMember 和 SMIsMember 检查一个或多个元素是否是集合的成员</h4>
+<pre><code class="language-go">func (c redis.cmdable) SIsMember(ctx context.Context, key string, member interface{}) *redis.BoolCmd
+func (c redis.cmdable) SMIsMember(ctx context.Context, key string, members ...interface{}) *redis.BoolSliceCmd
+</code></pre>
+<p>使用示例：<br>
+<code>db.SIsMember(ctx, set, mem)</code><br>
+<code>db.SMIsMember(ctx, set, mem1, mem2...)</code></p>
+<h4 id="smove-将一个元素从一个集合移动到另一个集合">SMove 将一个元素从一个集合移动到另一个集合</h4>
+<pre><code class="language-go">func (c redis.cmdable) SMove(ctx context.Context, source string, destination string, member interface{}) *redis.BoolCmd
+</code></pre>
+<p>使用示例：<code>db.SMove(ctx, set_src, set_dest, mem)</code></p>
+<h4 id="spopspopn-从集合中随机移除一个或多个元素">SPop/SPopN 从集合中随机移除一个或多个元素</h4>
+<p><strong>注意</strong>：<strong>随机</strong>移除</p>
+<pre><code class="language-go">func (c redis.cmdable) SPop(ctx context.Context, key string) *redis.StringCmd
+func (c redis.cmdable) SPopN(ctx context.Context, key string, count int64) *redis.StringSliceCmd
+</code></pre>
+<p>使用示例：<br>
+<code>db.SPop(ctx, set)</code><br>
+<code>db.SPopN(ctx, set， cnt)</code></p>
+<h4 id="srandmembersrandmembern-从集合中随机获取一个或多个元素但不移除它们">SRandMember/SRandMemberN 从集合中随机获取一个或多个元素，但不移除它们</h4>
+<pre><code class="language-go">func (c redis.cmdable) SRandMember(ctx context.Context, key string) *redis.StringCmd
+func (c redis.cmdable) SRandMemberN(ctx context.Context, key string, count int64) *redis.StringSliceCmd
+</code></pre>
+<p>使用示例：<br>
+<code>db.SRandMember(ctx, set)</code><br>
+<code>db.SRandMemberN(ctx, set， cnt)</code></p>
+<h4 id="srem-从集合中移除一个或多个元素">SRem 从集合中移除一个或多个元素</h4>
+<pre><code class="language-go">func (c redis.cmdable) SRem(ctx context.Context, key string, members ...interface{}) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>db.SRem(ctx, set, mem1, mem2...)</code></p>
+<h4 id="sscan-增量迭代集合中的元素">SScan 增量迭代集合中的元素</h4>
+<p>在处理 Redis Set 集合数据类型时，有时候需要增量迭代集合中的元素以避免一次性获取所有元素带来的性能问题。增量迭代是一种高效的遍历数据集合的方法，特别适用于数据量较大的集合。与一次性获取所有数据不同，增量迭代可以分批次获取数据，降低内存和网络资源的消耗。</p>
+<pre><code class="language-go">func (c redis.cmdable) SScan(ctx context.Context, key string, cursor uint64, match string, count int64) *redis.ScanCmd
+</code></pre>
+<p>使用示例：<code>db.SScan(ctx, set, cursor,match, cnt)</code></p>
+<h4 id="sunionstore-sinterstore-将多个集合的并集或交集存储到一个新的集合中">SUnionStore / SInterStore 将多个集合的并集或交集存储到一个新的集合中</h4>
+<pre><code class="language-go">func (c redis.cmdable) SUnionStore(ctx context.Context, destination string, keys ...string) *redis.IntCmd
+func (c redis.cmdable) SInterStore(ctx context.Context, destination string, keys ...string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>db.SUnionStore(ctx, set_dest, set1,set2...)</code><br>
+<code>db.SInterStore(ctx, set_dest, set1,set2...)</code></p>
+<h3 id="有序集合zset">有序集合（zset）</h3>
+<p><code>Redis</code> 有序集合（SortedSet）是一种集合类型，其中的每个元素都关联一个分数，元素按分数从小到大排序。有序集合非常适合用于排行榜、带权重的数据存储、优先级队列等场景。</p>
+<pre><code class="language-go">// Z represents sorted set member.
+type Z struct {
+    Score  float64
+    Member interface{}
+}
+</code></pre>
+<h4 id="zadd添加一个或多个成员">ZAdd：添加一个或多个成员</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZAdd(ctx context.Context, key string, members ...redis.Z) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.ZAdd(ctx, zset, mem1, mem2...)</code></p>
+<h4 id="zaddltzaddgt添加成员根据分数更新">ZAddLT/ZAddGT：添加成员，根据分数更新</h4>
+<p>ZAddLT:如果新成员的分数小于现有成员的分数，则更新。<br>
+ZAddGT:如果新成员的分数大于现有成员的分数，则更新。</p>
+<pre><code class="language-go">func (c redis.cmdable) ZAddLT(ctx context.Context, key string, members ...redis.Z) *redis.IntCmd
+func (c redis.cmdable) ZAddGT(ctx context.Context, key string, members ...redis.Z) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.ZAddLT(ctx, zset, mem1, mem2...)</code><br>
+<code>rdb.ZAddGT(ctx, zset, mem1, mem2...)</code></p>
+<h4 id="zaddnxzaddxx添加成员仅当成员不存在存在时才执行">ZAddNX/ZAddXX：添加成员，仅当成员不存在/存在时才执行</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZAddNX(ctx context.Context, key string, members ...redis.Z) *redis.IntCmd
+func (c redis.cmdable) ZAddXX(ctx context.Context, key string, members ...redis.Z) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.ZAddNX(ctx, zset, mem1, mem2...)</code><br>
+<code>rdb.ZAddXX(ctx, zset, mem1, mem2...)</code></p>
+<h4 id="zaddargszaddargsincr添加成员并使用参数配置若已存在则分数增加">ZAddArgs/ZAddArgsIncr：添加成员，并使用参数配置（若已存在则分数增加。）</h4>
+<pre><code class="language-go">// ZAddArgs WARN: The GT, LT and NX options are mutually exclusive.
+type ZAddArgs struct {
+    NX      bool
+    XX      bool
+    LT      bool
+    GT      bool
+    Ch      bool
+    Members []Z
+}
+
+func (c redis.cmdable) ZAddArgs(ctx context.Context, key string, args redis.ZAddArgs) *redis.IntCmd
+func (c redis.cmdable) ZAddArgsIncr(ctx context.Context, key string, args redis.ZAddArgs) *redis.FloatCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.ZAddArgs(ctx, zset, args)</code><br>
+<code>rdb.ZAddArgsIncr(ctx, zset, args)</code></p>
+<h4 id="zincrby成员分数增加指定的增量">ZIncrBy：成员分数增加指定的增量</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZIncrBy(ctx context.Context, key string, increment float64, member string) *redis.FloatCmd
+</code></pre>
+<p>使用示例：<code>rdb.ZIncrBy(ctx, zset, incr, mem)</code></p>
+<h4 id="zscorezmscore获取多个成员的分数">ZScore/ZMScore：获取（多个）成员的分数</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZScore(ctx context.Context, key string, member string) *redis.FloatCmd
+func (c redis.cmdable) ZMScore(ctx context.Context, key string, members ...string) *redis.FloatSliceCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.ZScore(ctx, zset, mem)</code><br>
+<code>rdb.ZMScore(ctx, zset, mem1, mem2...)</code></p>
+<h4 id="zcard获取成员数量">ZCard：获取成员数量</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZCard(ctx context.Context, key string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.ZCard(ctx, zset)</code></p>
+<h4 id="zcountzlexcount获取指定分数范围指定字典区间内的成员数量">ZCount/ZLexCount：获取指定分数范围/指定字典区间内的成员数量</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZCount(ctx context.Context, key string, min string, max string) *redis.IntCmd
+func (c redis.cmdable) ZLexCount(ctx context.Context, key string, min string, max string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.ZCount(ctx, zset, min, max)</code><br>
+<code>rdb.ZLexCount(ctx, zset, min, max)</code></p>
+<h4 id="zinterzinterwithscores计算多个有序集合的交集并返回带分数结果">ZInter/ZInterWithScores：计算多个有序集合的交集，并返回（带分数）结果</h4>
+<pre><code class="language-go">// ZStore is used as an arg to ZInter/ZInterStore and ZUnion/ZUnionStore.
+type ZStore struct {
+    Keys    []string
+    Weights []float64
+    // Can be SUM, MIN or MAX.
+    Aggregate string
+}
+
+func (c redis.cmdable) ZInter(ctx context.Context, store *redis.ZStore) *redis.StringSliceCmd
+func (c redis.cmdable) ZInterWithScores(ctx context.Context, store *redis.ZStore) *redis.ZSliceCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">store := &amp;redis.ZStore{
+        Keys: []string{&quot;zset1&quot;, &quot;zset2&quot;},
+    }
+rdb.ZInter(ctx, store)
+rdb.ZInterWithScores(ctx, store)
+</code></pre>
+<h4 id="zintercard计算交集数量">ZInterCard：计算交集数量</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZInterCard(ctx context.Context, limit int64, keys ...string) *redis.IntCmd
+</code></pre>
+<p><code>limit</code>：交集计算的最大数量。</p>
+<p>使用示例：<code>rdb.ZInterCard(ctx, limit, zset1, zset2...)</code></p>
+<h4 id="zinterstore计算交集并将存储结果">ZInterStore：计算交集并将存储结果</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZInterStore(ctx context.Context, destination string, store *redis.ZStore) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.ZInterStore(ctx, zset_dest, store)</code></p>
+<h4 id="zmpop批量弹出最小或最大的多个成员">ZMPop：批量弹出最小或最大的多个成员</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZMPop(ctx context.Context, order string, count int64, keys ...string) *redis.ZSliceWithKeyCmd
+</code></pre>
+<p><code>order</code>：弹出成员的顺序，&quot;MIN&quot; 表示最小，&quot;MAX&quot; 表示最大。</p>
+<p>使用示例：<code>rdb.ZMPop(ctx, order, count, zset1, zset2...)</code></p>
+<h4 id="bzmpop批量弹出最大或最小分数的成员阻塞">BZMPop：批量弹出最大或最小分数的成员【阻塞】</h4>
+<pre><code class="language-go">func (c redis.cmdable) BZMPop(ctx context.Context, timeout time.Duration, order string, count int64, keys ...string) *redis.ZSliceWithKeyCmd
+</code></pre>
+<p><code>timeout</code>：超时时间，阻塞等待的时间。</p>
+<h4 id="bzpopmaxbzpopmin批量弹出最大最小分数的成员阻塞">BZPopMax/BZPopMin：批量弹出最大/最小分数的成员【阻塞】</h4>
+<pre><code class="language-go">func (c redis.cmdable) BZPopMax(ctx context.Context, timeout time.Duration, keys ...string) *redis.ZWithKeyCmd
+func (c redis.cmdable) BZPopMin(ctx context.Context, timeout time.Duration, keys ...string) *redis.ZWithKeyCmd
+</code></pre>
+<h4 id="zpopmaxzpopmin弹出最大最小分数的成员">ZPopMax/ZPopMin：弹出最大/最小分数的成员</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZPopMax(ctx context.Context, key string, count ...int64) *redis.ZSliceCmd
+func (c redis.cmdable) ZPopMin(ctx context.Context, key string, count ...int64) *redis.ZSliceCmd
+</code></pre>
+<p><code>count</code>：要弹出的成员数量（可选）。</p>
+<p>使用示例：<br>
+<code>rdb.ZPopMax(ctx, zset, count)</code><br>
+<code>rdb.ZPopMin(ctx, zset, count)</code></p>
+<h4 id="zrangezrangewithscores获取指定区间内的成员及其分数">ZRange/ZRangeWithScores：获取指定区间内的成员（及其分数）</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZRange(ctx context.Context, key string, start int64, stop int64) *redis.StringSliceCmd
+func (c redis.cmdable) ZRangeWithScores(ctx context.Context, key string, start int64, stop int64) *redis.ZSliceCmd
+</code></pre>
+<p><code>start</code>：开始索引。<br>
+<code>stop</code>：结束索引。</p>
+<p>使用示例：<br>
+<code>rdb.ZRange(ctx, zset, start, stop)</code><br>
+<code>rdb.ZRangeWithScores(ctx, zset, start, stop)</code></p>
+<h4 id="zrangebyscorezrangebylexzrangebyscorewithscores获取指定分数范围指定字典区间内的成员及其分数">ZRangeByScore/ZRangeByLex/ZRangeByScoreWithScores：获取指定分数范围/指定字典区间内的成员(及其分数)</h4>
+<pre><code class="language-go">type ZRangeBy struct {
+    Min, Max      string
+    Offset, Count int64
+}
+
+func (c redis.cmdable) ZRangeByScore(ctx context.Context, key string, opt *redis.ZRangeBy) *redis.StringSliceCmd
+func (c redis.cmdable) ZRangeByLex(ctx context.Context, key string, opt *redis.ZRangeBy) *redis.StringSliceCmd
+func (c redis.cmdable) ZRangeByScoreWithScores(ctx context.Context, key string, opt *redis.ZRangeBy) *redis.ZSliceCmd
+</code></pre>
+<p><code>min</code>：最小分数/最小字典值。<br>
+<code>max</code>：最大分数/最大字典值。</p>
+<p>使用示例：<br>
+<code>rdb.ZRangeByScore(ctx, zset, min, max)</code><br>
+<code>rdb.ZRangeByLex(ctx, zset, min, max)</code><br>
+<code>rdb.ZRangeWithScores(ctx, zset, min, max)</code></p>
+<h4 id="zrangeargszrangeargswithscores根据给定的参数获取有成员及其分数">ZRangeArgs/ZRangeArgsWithScores：根据给定的参数获取有成员(及其分数)</h4>
+<pre><code class="language-go">type ZRangeArgs struct {
+    Key string
+
+    // You can read the documentation for more information: https://redis.io/commands/zrange
+    Start interface{}
+    Stop  interface{}
+
+    // The ByScore and ByLex options are mutually exclusive.
+    ByScore bool
+    ByLex   bool
+
+    Rev bool
+
+    // limit offset count.
+    Offset int64
+    Count  int64
+}
+
+func (c redis.cmdable) ZRangeArgs(ctx context.Context, z redis.ZRangeArgs) *redis.StringSliceCmd
+func (c redis.cmdable) ZRangeArgsWithScores(ctx context.Context, z redis.ZRangeArgs) *redis.ZSliceCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">// 使用 ZRangeArgs 获取有序集合中的成员及其分数
+args := redis.ZRangeArgs{
+    Key:     &quot;zset&quot;,
+    Start:   0,
+    Stop:    -1,
+    ByScore: true,
+}
+rdb.ZRangeArgs(ctx, args)
+rdb.ZRangeArgsWithScores(ctx, args)
+</code></pre>
+<h4 id="zrangestore将指定范围内的成员存储到另一个集合中">ZRangeStore：将指定范围内的成员存储到另一个集合中</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZRangeStore(ctx context.Context, dst string, z redis.ZRangeArgs) *redis.IntCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">// 使用 ZRangeStore 将有序集合中的成员存储到另一个集合中
+args := redis.ZRangeArgs{
+    Key:     &quot;zset&quot;,
+    Start:   0,
+    Stop:    -1,
+    ByScore: true,
+}
+result := rdb.ZRangeStore(ctx, &quot;zset_dest&quot;, args)
+</code></pre>
+<h4 id="zrevrangezrevrangewithscores获取指定范围内的成员及其分数按分数从高到低排序">ZRevRange/ZRevRangeWithScores：获取指定范围内的成员(及其分数)，按分数从高到低排序</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZRevRange(ctx context.Context, key string, start int64, stop int64) *redis.StringSliceCmd
+func (c redis.cmdable) ZRevRangeWithScores(ctx context.Context, key string, start int64, stop int64) *redis.ZSliceCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.ZRevRange(ctx, zset, start, stop)</code><br>
+<code>rdb.ZRevRangeWithScores(ctx, zset, start, stop)</code></p>
+<h4 id="zrevrangebyscorezrevrangebylexzrevrangebyscorewithscores获取指定分数范围指定字典范围内的成员及其分数按分数从高到低排序">ZRevRangeByScore/ZRevRangeByLex/ZRevRangeByScoreWithScores：获取指定分数范围/指定字典范围内的成员(及其分数)，按分数从高到低排序</h4>
+<pre><code class="language-go">type ZRangeBy struct {
+    Min, Max      string
+    Offset, Count int64
+}
+func (c redis.cmdable) ZRevRangeByScore(ctx context.Context, key string, opt *redis.ZRangeBy) *redis.StringSliceCmd
+func (c redis.cmdable) ZRevRangeByLex(ctx context.Context, key string, opt *redis.ZRangeBy) *redis.StringSliceCmd
+func (c redis.cmdable) ZRevRangeByScoreWithScores(ctx context.Context, key string, opt *redis.ZRangeBy) *redis.ZSliceCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">// 获取有序集合中指定分数范围内的成员，按分数从高到低排序
+opt := &amp;redis.ZRangeBy{
+    Min: &quot;-inf&quot;,
+    Max: &quot;+inf&quot;,
+}
+rdb.ZRevRangeByScore(ctx, zset, opt)
+rdb.ZRevRangeByScoreWithScores(ctx, zset, opt)
+// 获取有序集合中指定字典范围内的成员，按字典顺序从高到低排序
+opt2 := &amp;redis.ZRangeBy{
+    Min: &quot;[a&quot;,
+    Max: &quot;[c&quot;,
+}
+rdb.ZRevRangeByLex(ctx, zset, opt)
+</code></pre>
+<h4 id="zrankzrankwithscore获取指定成员的排名及其分数">ZRank/ZRankWithScore：获取指定成员的排名(及其分数)</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZRank(ctx context.Context, key string, member string) *redis.IntCmd
+func (c redis.cmdable) ZRankWithScore(ctx context.Context, key string, member string) *redis.RankWithScoreCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.ZRank(ctx, zset, mem)</code><br>
+<code>rdb.ZRankWithScore(ctx, zset, mem)</code></p>
+<h4 id="zrevrankzrevrankwithscore获取指定成员的逆序排名及其分数">ZRevRank/ZRevRankWithScore：获取指定成员的逆序排名（及其分数）</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZRevRank(ctx context.Context, key string, member string) *redis.IntCmd
+func (c redis.cmdable) ZRevRankWithScore(ctx context.Context, key string, member string) *redis.RankWithScoreCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.ZRevRank(ctx, zset, mem)</code><br>
+<code>rdb.ZRevRankWithScore(ctx, zset, mem)</code></p>
+<h4 id="zremzremrangebyrankzremrangebyscorezremrangebylex移除指定排名范围指定分数范围指定字典范围-内的一个或多个成员">ZRem/ZRemRangeByRank/ZRemRangeByScore/ZRemRangeByLex：移除（指定排名范围/指定分数范围/指定字典范围 内的）一个或多个成员</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZRem(ctx context.Context, key string, members ...interface{}) *redis.IntCmd
+func (c redis.cmdable) ZRemRangeByRank(ctx context.Context, key string, start int64, stop int64) *redis.IntCmd
+func (c redis.cmdable) ZRemRangeByScore(ctx context.Context, key string, min string, max string) *redis.IntCmd
+func (c redis.cmdable) ZRemRangeByLex(ctx context.Context, key string, min string, max string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.ZRem(ctx, zset, mem1, mem2...)</code><br>
+<code>rdb.ZRemRangeByRank(ctx, zset, start, stop)</code><br>
+<code>rdb.ZRemRangeByScore(ctx, zset, min, max)</code><br>
+<code>rdb.ZRemRangeByLex(ctx, zset, min, max)</code></p>
+<h4 id="zrandmemberzrandmemberwithscores随机获取有序集合中的一个或多个成员及其分数">ZRandMember/ZRandMemberWithScores：随机获取有序集合中的一个或多个成员（及其分数）</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZRandMember(ctx context.Context, key string, count int) *redis.StringSliceCmd
+func (c redis.cmdable) ZRandMemberWithScores(ctx context.Context, key string, count int) *redis.ZSliceCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.ZRandMember(ctx, zset, cnt)</code><br>
+<code>rdb.ZRandMemberWithScores(ctx, zset, cnt)</code></p>
+<h4 id="zunionzunionwithscores计算多个有序集合的并集及其分数">ZUnion/ZUnionWithScores：计算多个有序集合的并集（及其分数）</h4>
+<pre><code class="language-go">// ZStore is used as an arg to ZInter/ZInterStore and ZUnion/ZUnionStore.
+type ZStore struct {
+    Keys    []string
+    Weights []float64
+    // Can be SUM, MIN or MAX.
+    Aggregate string
+}
+func (c redis.cmdable) ZUnion(ctx context.Context, store redis.ZStore) *redis.StringSliceCmd
+func (c redis.cmdable) ZUnionWithScores(ctx context.Context, store redis.ZStore) *redis.ZSliceCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">// 计算多个有序集合的并集
+store := redis.ZStore{
+    Keys:    []string{&quot;zset1&quot;, &quot;zset2&quot;},
+    Weights: []float64{1, 1},
+}
+result := rdb.ZUnion(ctx, store)
+result := rdb.ZUnionWithScores(ctx, store)
+</code></pre>
+<h4 id="zunionstore将多个有序集合的并集存储到一个新的有序集合中">ZUnionStore：将多个有序集合的并集存储到一个新的有序集合中</h4>
+<pre><code class="language-go">// ZStore is used as an arg to ZInter/ZInterStore and ZUnion/ZUnionStore.
+type ZStore struct {
+    Keys    []string
+    Weights []float64
+    // Can be SUM, MIN or MAX.
+    Aggregate string
+}
+func (c redis.cmdable) ZUnionStore(ctx context.Context, dest string, store *redis.ZStore) *redis.IntCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">// 将多个有序集合的并集存储到一个新的有序集合中
+store := &amp;redis.ZStore{
+    Keys:    []string{&quot;zset1&quot;, &quot;zset2&quot;},
+    Weights: []float64{1, 1},
+}
+result := rdb.ZUnionStore(ctx, &quot;zunion&quot;, store)
+</code></pre>
+<h4 id="zdiffzdiffwithscores计算多个有序集合的差集及其分数">ZDiff/ZDiffWithScores：计算多个有序集合的差集（及其分数）</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZDiff(ctx context.Context, keys ...string) *redis.StringSliceCmd
+func (c redis.cmdable) ZDiffWithScores(ctx context.Context, keys ...string) *redis.ZSliceCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.ZDiff(ctx, zset1, zset2...)</code><br>
+<code>rdb.ZDiffWithScores(ctx, zset1, zset2...)</code></p>
+<h4 id="zdiffstore将多个有序集合的差集存储到一个新的有序集合中">ZDiffStore：将多个有序集合的差集存储到一个新的有序集合中</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZDiffStore(ctx context.Context, destination string, keys ...string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.ZDiffStore(ctx, zset_dest, zset1, zset2...)</code></p>
+<h4 id="zscan迭代有序集合中的成员">ZScan：迭代有序集合中的成员</h4>
+<pre><code class="language-go">func (c redis.cmdable) ZScan(ctx context.Context, key string, cursor uint64, match string, count int64) *redis.ScanCmd
+</code></pre>
+<p>cursor：迭代游标。<br>
+match：匹配模式。</p>
+<p>使用示例：<br>
+<code>rdb.ZScan(ctx, zset, cursor, &quot;*&quot;, 10)</code></p>
+<h2 id="高级数据结构">高级数据结构</h2>
+<h3 id="位图bitmaps">位图（Bitmaps）</h3>
+<p>Redis 的 bitmap 是一种位数组，通常用于高效地处理大量二进制数据。</p>
+<h4 id="getbit-获取位图中指定偏移量的值">GetBit - 获取位图中指定偏移量的值</h4>
+<pre><code class="language-go">func (c redis.cmdable) GetBit(ctx context.Context, key string, offset int64) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.GetBit(ctx, bitmap, offset)</code></p>
+<h4 id="setbit-设置位图中指定偏移量的值">SetBit - 设置位图中指定偏移量的值</h4>
+<pre><code class="language-go">func (c redis.cmdable) SetBit(ctx context.Context, key string, offset int64, value int) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.GetBit(ctx, bitmap, offset, value)</code></p>
+<h4 id="bitcount-计算位图中值为-1-的位数">BitCount - 计算位图中值为 1 的位数</h4>
+<pre><code class="language-go">type BitCount struct {
+    Start, End int64
+    Unit       string // BYTE(default) | BIT
+}
+func (c redis.cmdable) BitCount(ctx context.Context, key string, bitCount *redis.BitCount) *redis.IntCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">// 计算位图中值为 1 的位数，指定范围为 0 到 7
+bitCount := &amp;redis.BitCount{
+    Start: 0,
+    End:   7,
+}
+rdb.BitCount(ctx, bitmap, bitCount)
+</code></pre>
+<h4 id="bitopand-对一个或多个位图执行-and操作并将结果存储在目标位图中">BitOpAnd - 对一个或多个位图执行 AND操作，并将结果存储在目标位图中</h4>
+<pre><code class="language-go">func (c redis.cmdable) BitOpAnd(ctx context.Context, destKey string, keys ...string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.BitOpAnd(ctx, bitmap_dest, bitmap1, bitmap2...)</code></p>
+<h4 id="bitopor-对一个或多个位图执行-or-操作并将结果存储在目标位图中">BitOpOr - 对一个或多个位图执行 OR 操作，并将结果存储在目标位图中</h4>
+<pre><code class="language-go">func (c redis.cmdable) BitOpOr(ctx context.Context, destKey string, keys ...string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.BitOpOr(ctx, bitmap_dest, bitmap1, bitmap2...)</code></p>
+<h4 id="bitopxor-对一个或多个位图执行-xor-操作并将结果存储在目标位图中">BitOpXor - 对一个或多个位图执行 XOR 操作，并将结果存储在目标位图中</h4>
+<pre><code class="language-go">func (c redis.cmdable) BitOpXor(ctx context.Context, destKey string, keys ...string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.BitOpOr(ctx, bitmap_dest, bitmap1, bitmap2...)</code></p>
+<h4 id="bitopnot-对位图执行取反not操作并将结果存储在目标位图中">BitOpNot - 对位图执行取反(NOT)操作，并将结果存储在目标位图中</h4>
+<pre><code class="language-go">func (c redis.cmdable) BitOpNot(ctx context.Context, destKey string, key string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.BitOpOr(ctx, bitmap_dest, bitmap1   )</code></p>
+<h4 id="bitpos-查找位图中第一个设置为指定值的位的位置">BitPos - 查找位图中第一个设置为指定值的位的位置</h4>
+<pre><code class="language-go">func (c redis.cmdable) BitPos(ctx context.Context, key string, bit int64, pos ...int64) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.BitPos(ctx, bitmap, pos1, pos2...)</code></p>
+<h4 id="bitposspan-查找指定范围内第一个设置为指定值的位的位置">BitPosSpan - 查找指定范围内第一个设置为指定值的位的位置</h4>
+<pre><code class="language-go">func (c redis.cmdable) BitPosSpan(ctx context.Context, key string, bit int8, start int64, end int64, span string) *redis.IntCmd
+</code></pre>
+<p><code>span</code>：字符串，表示跨度（byte | bit，redis 7.0.0）。</p>
+<p>使用示例：<br>
+<code>rdb.BitPosSpan(ctx, bitmap, start, end, span)</code></p>
+<h4 id="bitfield-执行多个位域操作">BitField - 执行多个位域操作</h4>
+<pre><code class="language-go">func (c redis.cmdable) BitField(ctx context.Context, key string, values ...interface{}) *redis.IntSliceCmd
+</code></pre>
+<p><code>values</code>：接口，可变参数，表示多个位域操作。</p>
+<p>使用示例：</p>
+<pre><code class="language-go">BitField(&quot;set&quot;, &quot;i1&quot;, &quot;offset1&quot;, &quot;value1&quot;,&quot;cmd2&quot;, &quot;type2&quot;, &quot;offset2&quot;, &quot;value2&quot;)
+BitField([]string{&quot;cmd1&quot;, &quot;type1&quot;, &quot;offset1&quot;, &quot;value1&quot;,&quot;cmd2&quot;, &quot;type2&quot;, &quot;offset2&quot;, &quot;value2&quot;})
+BitField([]interface{}{&quot;cmd1&quot;, &quot;type1&quot;, &quot;offset1&quot;, &quot;value1&quot;,&quot;cmd2&quot;, &quot;type2&quot;, &quot;offset2&quot;, &quot;value2&quot;})
+</code></pre>
+<h3 id="超日志hyperloglogs">超日志（HyperLogLogs）</h3>
+<p>HyperLogLog 是一种概率数据结构，用于估算基数（即去重后元素的数量）。它在提供极小空间消耗的同时，能够在一定误差范围内高效地计算基数。相较于传统的计数数据结构，HyperLogLog 能在处理海量数据时保持极低的内存消耗。</p>
+<h4 id="基数估算">基数估算</h4>
+<p>基数就是指一个集合中不同值的数目，比如 a, b, c, d 的基数就是 4，a, b, c, d, a 的基数还是 4。虽然 a 出现两次，只会被计算一次。</p>
+<p>基数估算指的是对一个集合中唯一元素数量的估算。传统的计算方法往往需要记录每个元素，从而消耗大量内存。而 HyperLogLog 则通过概率算法提供了一种高效的估算方法，使其能够在有限的内存中处理海量数据。</p>
+<h4 id="pfadd-将指定元素添加到-hyperloglog">PFAdd - 将指定元素添加到 HyperLogLog</h4>
+<pre><code class="language-go">func (c redis.cmdable) PFAdd(ctx context.Context, key string, els ...interface{}) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.PFAdd(ctx, key, els1, els2...)</code></p>
+<p>返回结果：返回一个 <code>*IntCmd</code>，结果为 1 表示 HyperLogLog 被修改，0 表示没有修改。</p>
+<h4 id="pfcount-返回给定-hyperloglog-的基数估算值">PFCount - 返回给定 HyperLogLog 的基数估算值</h4>
+<pre><code class="language-go">func (c redis.cmdable) PFCount(ctx context.Context, keys ...string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.PFCount(ctx, key)</code></p>
+<h4 id="pfmerge-将多个-hyperloglog-合并为一个">PFMerge - 将多个 HyperLogLog 合并为一个</h4>
+<pre><code class="language-go">func (c redis.cmdable) PFMerge(ctx context.Context, dest string, keys ...string) *redis.StatusCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.PFCount(ctx, key_dest, key1, key2...)</code></p>
+<h3 id="地理空间geospatial">地理空间（Geospatial）</h3>
+<p>Redis 的 GEO 地理空间数据结构允许我们存储、查询和操作地理空间信息。通过 GEO 命令，我们可以实现类似于地理信息系统（GIS）的一些功能，比如添加地理位置、计算距离、查询附近的点等。</p>
+<h4 id="geoadd-添加地理空间位置">GeoAdd - 添加地理空间位置</h4>
+<pre><code class="language-go">type GeoLocation struct {
+    Name                      string
+    Longitude, Latitude, Dist float64
+    GeoHash                   int64
+}
+
+func (c redis.cmdable) GeoAdd(ctx context.Context, key string, geoLocation ...*redis.GeoLocation) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.GeoAdd(ctx, geo, loc1, loc2...)</code></p>
+<h4 id="geopos-获取地理空间位置">GeoPos - 获取地理空间位置</h4>
+<pre><code class="language-go">func (c redis.cmdable) GeoPos(ctx context.Context, key string, members ...string) *redis.GeoPosCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.GeoAdd(ctx, geo, mem1, mem2...)</code></p>
+<h4 id="georadius-根据经纬度查询附近的地理位置">GeoRadius - 根据经纬度查询附近的地理位置</h4>
+<pre><code class="language-go">type GeoRadiusQuery struct {
+    Radius float64
+    // Can be m, km, ft, or mi. Default is km.
+    Unit        string
+    WithCoord   bool
+    WithDist    bool
+    WithGeoHash bool
+    Count       int
+    // Can be ASC or DESC. Default is no sort order.
+    Sort      string
+    Store     string
+    StoreDist string
+
+    // WithCoord+WithDist+WithGeoHash
+    withLen int
+}
+
+func (c redis.cmdable) GeoRadius(ctx context.Context, key string, longitude float64, latitude float64, query *redis.GeoRadiusQuery) *redis.GeoLocationCmd
+</code></pre>
+<p><code>longitude</code>：查询中心点的经度。<br>
+<code>latitude</code>：查询中心点的纬度。<br>
+<code>query</code>：查询参数，类型为<code>*GeoRadiusQuery</code>，包含半径、单位等。</p>
+<p>使用示例：</p>
+<pre><code class="language-go">query := &amp;redis.GeoRadiusQuery{
+        Radius:      1,
+        Unit:        &quot;km&quot;, // Can be m, km, ft, or mi. Default is km.
+        WithCoord:   true,
+        WithDist:    true,
+        WithGeoHash: true,
+        Count:       10,
+        Sort:        &quot;asc&quot;, // Can be ASC or DESC. Default is no sort order.
+    }
+rdb.GeoRadius(ctx, geo, longitude, latitude, query)
+</code></pre>
+<h4 id="georadiusstore-根据经纬度查询附近的地理位置并存储结果">GeoRadiusStore - 根据经纬度查询附近的地理位置并存储结果</h4>
+<pre><code class="language-go">func (c redis.cmdable) GeoRadiusStore(ctx context.Context, key string, longitude float64, latitude float64, query *redis.GeoRadiusQuery) *redis.IntCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">query := &amp;redis.GeoRadiusQuery{
+    Radius: 1, // 1公里半径
+    Unit:   &quot;km&quot;,
+    Store:  &quot;china:beijing:nearby&quot;, // 存储结果的key
+}
+
+result, err := rdb.GeoRadiusStore(ctx, &quot;china:beijing&quot;, 116.4039, 39.915, query).Result()
+</code></pre>
+<h4 id="georadiusbymember-根据已有成员的位置查询附近的地理位置">GeoRadiusByMember - 根据已有成员的位置查询附近的地理位置</h4>
+<pre><code class="language-go">func (c redis.cmdable) GeoRadiusByMember(ctx context.Context, key string, member string, query *redis.GeoRadiusQuery) *redis.GeoLocationCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">query := &amp;redis.GeoRadiusQuery{
+    Radius:      1,
+    Unit:        &quot;km&quot;,
+    WithCoord:   true,
+    WithDist:    true,
+    WithGeoHash: true,
+    Sort:        &quot;asc&quot;,
+}
+
+rdb.GeoRadiusByMember(ctx, &quot;china:beijing&quot;, &quot;PalaceMuseum&quot;, query)
+</code></pre>
+<h4 id="georadiusbymemberstore-根据已有成员的位置查询附近的地理位置并存储结果">GeoRadiusByMemberStore - 根据已有成员的位置查询附近的地理位置并存储结果</h4>
+<pre><code class="language-go">func (c redis.cmdable) GeoRadiusByMemberStore(ctx context.Context, key string, member string, query *redis.GeoRadiusQuery) *redis.IntCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">query := &amp;redis.GeoRadiusQuery{
+    Radius: 1, // 1公里半径
+    Unit:   &quot;km&quot;,
+    Store:  &quot;china:beijing:nearby&quot;, // 存储结果的key
+}
+
+rdb.GeoRadiusByMemberStore(ctx, &quot;china:beijing&quot;, &quot;PalaceMuseum&quot;, query)
+</code></pre>
+<h4 id="geosearch-根据不同条件搜索地理位置">GeoSearch - 根据不同条件搜索地理位置</h4>
+<pre><code class="language-go">type GeoSearchQuery struct {
+    Member string
+
+    // Latitude and Longitude when using FromLonLat option.
+    Longitude float64
+    Latitude  float64
+
+    // Distance and unit when using ByRadius option.
+    // Can use m, km, ft, or mi. Default is km.
+    Radius     float64
+    RadiusUnit string
+
+    // Height, width and unit when using ByBox option.
+    // Can be m, km, ft, or mi. Default is km.
+    BoxWidth  float64
+    BoxHeight float64
+    BoxUnit   string
+
+    // Can be ASC or DESC. Default is no sort order.
+    Sort     string
+    Count    int
+    CountAny bool
+}
+
+func (c redis.cmdable) GeoSearch(ctx context.Context, key string, q *redis.GeoSearchQuery) *redis.StringSliceCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">query = &amp;redis.GeoSearchQuery{
+  Member:     &quot;&quot;,
+  Longitude:  116.4039,
+  Latitude:   39.915,
+  Radius:     1,
+  RadiusUnit: &quot;km&quot;,
+  BoxWidth:   0.0,
+  BoxHeight:  0.0,
+  BoxUnit:    &quot;&quot;,
+  Sort:       &quot;asc&quot;,
+  Count:      0,  // 指定查询结果返回的最大数量。
+  CountAny:   false,  // CountAny为false或未设置，则只会返回精确匹配的结果，数量等于Count指定的数量。当CountAny设置为true时，Redis将尽可能返回接近Count指定数量的结果，允许结果集包含不精确的匹配。
+ }
+rdb.GeoSearch(ctx, &quot;china:beijing&quot;, query).Result()
+</code></pre>
+<h4 id="geosearchlocation-根据不同条件搜索地理位置并返回详细信息">GeoSearchLocation - 根据不同条件搜索地理位置并返回详细信息</h4>
+<pre><code class="language-go">type GeoSearchLocationQuery struct {
+    GeoSearchQuery
+
+    WithCoord bool
+    WithDist  bool
+    WithHash  bool
+}
+// Embedded fields:
+Member     string  // through GeoSearchQuery 
+Longitude  float64 // through GeoSearchQuery 
+Latitude   float64 // through GeoSearchQuery 
+Radius     float64 // through GeoSearchQuery 
+RadiusUnit string  // through GeoSearchQuery 
+BoxWidth   float64 // through GeoSearchQuery 
+BoxHeight  float64 // through GeoSearchQuery 
+BoxUnit    string  // through GeoSearchQuery 
+Sort       string  // through GeoSearchQuery 
+Count      int     // through GeoSearchQuery 
+CountAny   bool    // through GeoSearchQuery 
+
+func (c redis.cmdable) GeoSearchLocation(ctx context.Context, key string, q *redis.GeoSearchLocationQuery) *redis.GeoSearchLocationCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">query = &amp;redis.GeoSearchLocationQuery{
+    GeoSearchQuery: redis.GeoSearchQuery{
+        Member:     &quot;&quot;,
+        Longitude:  116.4039,
+        Latitude:   39.915,
+        Radius:     1, // 1公里半径
+        RadiusUnit: &quot;km&quot;,
+        BoxWidth:   0.0,
+        BoxHeight:  0.0,
+        BoxUnit:    &quot;&quot;,
+        Sort:       &quot;asc&quot;,
+        Count:      0,
+        CountAny:   false,
+    },
+    WithCoord: true,
+    WithDist:  true,
+    WithHash:  true,
+}
+rdb.GeoSearchLocation(ctx, &quot;china:beijing&quot;, query)
+</code></pre>
+<h4 id="geosearchstore-根据不同条件搜索地理位置并存储结果">GeoSearchStore - 根据不同条件搜索地理位置并存储结果</h4>
+<pre><code class="language-go">func (c redis.cmdable) GeoSearchStore(ctx context.Context, key string, store string, q *redis.GeoSearchStoreQuery) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>rdb.GeoSearchStore(ctx, geo, geo_store, query)</code></p>
+<h4 id="geodist-计算两个地理位置之间的距离">GeoDist - 计算两个地理位置之间的距离</h4>
+<pre><code class="language-go">func (c redis.cmdable) GeoDist(ctx context.Context, key string, member1 string, member2 string, unit string) *redis.FloatCmd
+</code></pre>
+<p><code>unit</code>：距离单位，如m（米）、km（公里）、mi（英里）、ft（英尺）。<br>
+使用示例：<br>
+<code>rdb.GeoDist(ctx, geo, mem1, mem2, unit)</code></p>
+<h4 id="geohash-获取地理位置的哈希表示">GeoHash - 获取地理位置的哈希表示</h4>
+<pre><code class="language-go">func (c redis.cmdable) GeoHash(ctx context.Context, key string, members ...string) *redis.StringSliceCmd
+</code></pre>
+<p>使用方法：<br>
+<code>rdb.GeoDist(ctx, geo, mem1, mem2...)</code></p>
+<h3 id="流streams">流（Streams）</h3>
+<p>Redis Stream 主要用于消息队列（MQ，Message Queue）,提供了消息的持久化和主备复制功能，可以让任何客户端访问任何时刻的数据，并且能记住每一个客户端的访问位置，还能保证消息不丢失。</p>
+<h4 id="redisxaddargs">redis.XAddArgs</h4>
+<pre><code class="language-go">type XAddArgs struct {
+    Stream     string
+    NoMkStream bool
+    MaxLen     int64 // MAXLEN N
+    MinID      string
+    // Approx causes MaxLen and MinID to use &quot;~&quot; matcher (instead of &quot;=&quot;).
+    Approx bool
+    Limit  int64
+    ID     string
+    Values interface{}
+}
+</code></pre>
+<ul>
+<li><code>Stream</code>      插入的stream键值</li>
+<li><code>NoMkStream</code>  如果设置了 NoMkStream 为 true，并且目标 Stream 不存在，则 XADD 命令将返回一个错误，而不是创建一个新的 Stream</li>
+<li><code>MaxLen</code>      最大长度</li>
+<li><code>MinID</code>       读取时指定最小的条目 ID</li>
+<li><code>Approx</code>      当 MaxLen 设置时，此标志指示是否使用近似裁剪策略。</li>
+<li><code>Limit</code>       限制从 Stream 中读取的条目数量</li>
+<li><code>ID</code>          指定条目的 ID。如果为空，则由 Redis 自动生成。</li>
+</ul>
+<p>XAddArgs 接受如下格式的值:</p>
+<pre><code class="language-go">XAddArgs.Values = []interface{}{&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;}
+XAddArgs.Values = []string(&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;)
+XAddArgs.Values = map[string]interface{}{&quot;key1&quot;: &quot;value1&quot;, &quot;key2&quot;: &quot;value2&quot;}
+</code></pre>
+<p>注意，map不会保留键值对的顺序。MaxLen/MaxLenApprox和MinID冲突，只能使用其中一个。</p>
+<h4 id="redisxreadargs">redis.XReadArgs</h4>
+<pre><code class="language-go">type XReadArgs struct {
+    Streams []string // list of streams and ids, e.g. stream1 stream2 id1 id2
+    Count   int64
+    Block   time.Duration
+    ID      string
+}
+</code></pre>
+<ul>
+<li><code>Streams</code> stream和id的列表 e.g. stream1 stream2 id1 id2</li>
+<li><code>Count</code>   读取数量</li>
+<li><code>Block</code>   阻塞时间</li>
+<li><code>ID</code>      从哪个 ID 开始读取条目。如果设置了 Streams 映射，则 ID 字段将被忽略。</li>
+</ul>
+<h4 id="redisxreadgroupargs">redis.XReadGroupArgs</h4>
+<pre><code class="language-go">type XReadGroupArgs struct {
+    Group    string
+    Consumer string
+    Streams  []string // list of streams and ids, e.g. stream1 stream2 id1 id2
+    Count    int64
+    Block    time.Duration
+    NoAck    bool
+}
+</code></pre>
+<ul>
+<li><code>Group</code> 指定</li>
+<li><code>Consumer</code> 指定消费者</li>
+<li><code>Streams</code> 用于指定从哪些 Stream 读取条目以及从哪个最小 ID 开始读取。</li>
+<li><code>Count</code> 返回的条目数量。</li>
+<li><code>Block</code> 指定阻塞时间。</li>
+<li><code>NoAck</code> 禁用自动确认。</li>
+</ul>
+<h4 id="xadd-添加消息到末尾">XAdd - 添加消息到末尾</h4>
+<pre><code class="language-go">func (c redis.cmdable) XAdd(ctx context.Context, a *redis.XAddArgs) *redis.StringCmd
+</code></pre>
+<p>使用示例：</p>
+<pre><code class="language-go">xAddArgs := &amp;redis.XAddArgs{
+    Stream: &quot;stream&quot;,
+    MaxLen: 1000,
+    Approx: true,
+    ID:     &quot;&quot;,
+    Values: []interface{}{&quot;key1&quot;, &quot;valve1&quot;, &quot;key2&quot;, &quot;value2&quot;},
+}
+rdb.XAdd(ctx, xAddArgs)
+</code></pre>
+<h4 id="xtrimmaxlenxtrimmaxlenapprox-基于长度裁剪">XTrimMaxLen/XTrimMaxLenApprox 基于长度裁剪</h4>
+<pre><code class="language-go">func (c redis.cmdable) XTrimMaxLen(ctx context.Context, key string, maxLen int64) *redis.IntCmd
+func (c redis.cmdable) XTrimMaxLenApprox(ctx context.Context, key string, maxLen int64, limit int64) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>cdb.XTrimMaxLen(ctx, stream, maxLen)</code><br>
+<code>cdb.XTrimMaxLenApprox(ctx, stream, maxLen, limit)</code></p>
+<h4 id="xtrimminidxtrimminidapprox-基于id裁剪">XTrimMinID/XTrimMinIDApprox 基于ID裁剪</h4>
+<pre><code class="language-go">func (c redis.cmdable) XTrimMinID(ctx context.Context, key string, minID string) *redis.IntCmd
+func (c redis.cmdable) XTrimMinIDApprox(ctx context.Context, key string, minID string, limit int64) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>cdb.XTrimMinID(ctx, stream, minID)</code><br>
+<code>cdb.XTrimMinIDApprox(ctx, stream, minID, limit)</code></p>
+<h4 id="xdel-删除消息">XDel 删除消息</h4>
+<pre><code class="language-go">func (c redis.cmdable) XDel(ctx context.Context, stream string, ids ...string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>cdb.XDel(ctx, stream, id1, id2...)</code></p>
+<h4 id="xlen-获取流包含的元素数量即消息长度">XLen 获取流包含的元素数量，即消息长度</h4>
+<pre><code class="language-go">func (c redis.cmdable) XLen(ctx context.Context, stream string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<br>
+<code>cdb.XLen(ctx, stream)</code></p>
+<h4 id="xrangexrevrange-获取消息列表会自动过滤已经删除的消息">XRange/XRevRange 获取消息列表，会自动过滤已经删除的消息</h4>
+<pre><code class="language-go">func (c redis.cmdable) XRange(ctx context.Context, stream string, start string, stop string) *redis.XMessageSliceCmd
+func (c redis.cmdable) XRevRange(ctx context.Context, stream string, start string, stop string) *redis.XMessageSliceCmd
+</code></pre>
+<p><code>start</code> ：开始值， - 表示最小值<br>
+<code>end</code> ：结束值， + 表示最大值</p>
+<p>使用示例：<br>
+<code>rdb.XRange(ctx, stream, &quot;0-0&quot;, &quot;+&quot;)</code><br>
+<code>rdb.XRevRange(ctx, stream, &quot;+&quot;, &quot;-&quot;)</code></p>
+<h4 id="xreadxreadgroupxreadstreams-获取消息列表">XRead/XReadGroup/XReadStreams 获取消息列表</h4>
+<pre><code class="language-go">func (c redis.cmdable) XRead(ctx context.Context, a *redis.XReadArgs) *redis.XStreamSliceCmd
+func (c redis.cmdable) XReadGroup(ctx context.Context, a *redis.XReadGroupArgs) *redis.XStreamSliceCmd
+func (c redis.cmdable) XReadStreams(ctx context.Context, streams ...string) *redis.XStreamSliceCmd
+</code></pre>
+<h4 id="xgroupcreatexgroupcreateconsumerxgroupcreatemkstream-创建消费者组">XGroupCreate/XGroupCreateConsumer/XGroupCreateMkStream 创建消费者（组）</h4>
+<pre><code class="language-go">func (c redis.cmdable) XGroupCreate(ctx context.Context, stream string, group string, start string) *redis.StatusCmd
+func (c redis.cmdable) XGroupCreateConsumer(ctx context.Context, stream string, group string, consumer string) *redis.IntCmd
+func (c redis.cmdable) XGroupCreateMkStream(ctx context.Context, stream string, group string, start string) *redis.StatusCmd
+</code></pre>
+<p><code>XGroupCreateMkStream</code>：如果 Stream 不存在，则会自动创建一个新的 Stream。</p>
+<h4 id="xack-将消息标记为已处理">XAck 将消息标记为&quot;已处理&quot;</h4>
+<pre><code class="language-go">func (c redis.cmdable) XAck(ctx context.Context, stream string, group string, ids ...string) *redis.IntCmd
+</code></pre>
+<h4 id="xgroupsetid-为消费者组设置新的最后递送消息id">XGroupSetID 为消费者组设置新的最后递送消息ID</h4>
+<pre><code class="language-go">func (c redis.cmdable) XGroupSetID(ctx context.Context, stream string, group string, start string) *redis.StatusCmd
+</code></pre>
+<h4 id="xgroupdelconsumer-删除消费者">XGroupDelConsumer 删除消费者</h4>
+<pre><code class="language-go">func (c redis.cmdable) XGroupDelConsumer(ctx context.Context, stream string, group string, consumer string) *redis.IntCmd
+</code></pre>
+<h4 id="xgroupdestroy-删除消费者组">XGroupDestroy 删除消费者组</h4>
+<pre><code class="language-go">func (c redis.cmdable) XGroupDestroy(ctx context.Context, stream string, group string) *redis.IntCmd
+</code></pre>
+<h4 id="xpendingxpendingext-示待处理消息的相关信息">XPending/XPendingExt 示待处理消息的相关信息</h4>
+<h4 id="xclaimxclaimjustid-转移消息的归属权">XClaim/XClaimJustID/ 转移消息的归属权</h4>
+<h4 id="xautoclaimxautojustid-转移消息的归属权">XAutoClaim/XAutoJustID/ 转移消息的归属权</h4>
+<h4 id="xinfostreamxinfogroupsxinfoconsumers-打印信息">XInfoStream/XInfoGroups/XInfoConsumers 打印信息</h4>
+<h2 id="其他">其他</h2>
+<h3 id="键key">键（key）</h3>
+<h4 id="del-删除键">Del 删除键</h4>
+<pre><code class="language-go">func (c redis.cmdable) Del(ctx context.Context, keys ...string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.LRem(ctx,key)</code></p>
+<p>返回值：被删除 key 的数量。</p>
+<h4 id="dump-序列化键">Dump 序列化键</h4>
+<ul>
+<li>序列化：把对象转化为可传输的字节序列过程称为序列化。</li>
+<li>反序列化：把字节序列还原为对象的过程称为反序列化。</li>
+</ul>
+<p>序列化最终的目的是为了对象可以跨平台存储，和进行网络传输。而我们进行跨平台存储和网络传输的方式就是IO，而我们的IO支持的数据格式就是字节数组。</p>
+<pre><code class="language-go">func (c redis.cmdable) Dump(ctx context.Context, key string) *redis.StringCmd
+</code></pre>
+<p>使用示例：<code>rdb.Dump(ctx,key)</code></p>
+<p>返回值：如果 key 不存在，那么返回 nil 。 否则，返回序列化之后的值。</p>
+<h4 id="exists-检查键是否存在">Exists 检查键是否存在</h4>
+<pre><code class="language-go">func (c redis.cmdable) Exists(ctx context.Context, keys ...string) *redis.IntCmd
+</code></pre>
+<p>使用示例：<code>rdb.Exists(ctx,key)</code></p>
+<p>返回值：若 key 存在返回 1 ，否则返回 0 。</p>
+<h4 id="expire-设置过期时间">Expire 设置过期时间</h4>
+<pre><code class="language-go">func (c redis.cmdable) Expire(ctx context.Context, key string, expiration time.Duration) *redis.BoolCmd
+</code></pre>
+<p>使用示例：<code>rdb.Expire(ctx,key 5*Time.Second)</code></p>
+<p>返回值：设置成功返回 1 。 当 key 不存在或者不能为 key 设置过期时间时返回 0 。</p>
+<h4 id="expireat-设置过期时间时间戳">ExpireAt 设置过期时间（时间戳）</h4>
+<pre><code class="language-go">func (c redis.cmdable) ExpireAt(ctx context.Context, key string, tm time.Time) *redis.BoolCmd
+</code></pre>
+<p>使用示例：<code>rdb.ExpireAt(ctx,key，time.Now().Add(10*time.Second))</code></p>
+<p>返回值：设置成功返回 1 。 当 key 不存在或者不能为 key 设置过期时间时返回 0 。</p>
+<h4 id="keys-查找符合模式的key">Keys 查找符合模式的key</h4>
+<pre><code class="language-go">func (c redis.cmdable) Keys(ctx context.Context, pattern string) *redis.StringSliceCmd
+</code></pre>
+<p><code>pattern</code>表示匹配模式，语法见下。</p>
+<p>使用示例：<code>rdb.Keys(ctx, &quot;user:*&quot;)</code></p>
+<p>返回值：符合给定模式的 key 列表。</p>
+<h4 id="move-移动数据至另一数据库">Move 移动数据至另一数据库</h4>
+<pre><code class="language-go">func (c redis.cmdable) Move(ctx context.Context, key string, db int) *redis.BoolCmd
+</code></pre>
+<p>使用示例：<code>rdb.Move(ctx, key, num_db)</code></p>
+<p>返回值：移动成功返回 1 ，失败则返回 0 。</p>
+<h4 id="persist-移除过期时间">Persist 移除过期时间</h4>
+<pre><code class="language-go">func (c redis.cmdable) Persist(ctx context.Context, key string) *redis.BoolCmd
+</code></pre>
+<p>使用示例：<code>rdb.Persist(ctx, key)</code></p>
+<p>返回值：移动成功返回 1 ，失败则返回 0 。</p>
+<h4 id="ttl-返回剩余生存时间">TTL 返回剩余生存时间</h4>
+<p><code>PTTL</code>：以毫秒为单位返回 key 的剩余过期时间。</p>
+<pre><code class="language-go">func (c redis.cmdable) TTL(ctx context.Context, key string) *redis.DurationCmd
+func (c redis.cmdable) PTTL(ctx context.Context, key string) *redis.DurationCmd
+</code></pre>
+<p>使用示例：<code>rdb.TTL(ctx, key)</code></p>
+<p>返回值：当 key 不存在时，返回 -2 。 当 key 存在但没有设置剩余生存时间时，返回 -1 。 否则，以秒为单位，返回 key 的剩余生存时间。</p>
+<h4 id="randomkey-随机返回一个key">RandomKey 随机返回一个key</h4>
+<pre><code class="language-go">func (c redis.cmdable) RandomKey(ctx context.Context) *redis.StringCmd
+</code></pre>
+<p>使用示例：<code>rdb.RandomKey(ctx)</code></p>
+<p>返回值：当数据库不为空时，返回一个 key 。 当数据库为空时，返回 nil 。</p>
+<h4 id="rename-修改键的名称">Rename 修改键的名称</h4>
+<pre><code class="language-go">func (c redis.cmdable) Rename(ctx context.Context, key string, newkey string) *redis.StatusCmd
+</code></pre>
+<p>使用示例：<code>rdb.Rename(ctx, key, newkey)</code></p>
+<p>返回值：成功返回OK，失败返回错误。</p>
+<h4 id="renamenx-修改键的名称仅当新键不存在时">RenameNX 修改键的名称（仅当新键不存在时）</h4>
+<pre><code class="language-go">func (c redis.cmdable) RenameNX(ctx context.Context, key string, newkey string) *redis.BoolCmd
+</code></pre>
+<p>使用示例：<code>rdb.RenameNX(ctx, key, newkey)</code></p>
+<p>返回值：成功返回1，新键已存在返回0。</p>
+<h4 id="scan-迭代数据库中的键">Scan 迭代数据库中的键</h4>
+<pre><code class="language-go">func (c redis.cmdable) Scan(ctx context.Context, cursor uint64, match string, count int64) *redis.ScanCmd
+</code></pre>
+<p>使用示例：<code>rdb.Scan(ctx, cursor, match, count)</code></p>
+<p>返回值：数组列表。</p>
+<h4 id="type-返回key所储存的值的类型">Type 返回key所储存的值的类型</h4>
+<pre><code class="language-go">func (c redis.cmdable) Type(ctx context.Context, key string) *redis.StatusCmd
+</code></pre>
+<p>使用示例：<code>rdb.Type(ctx, key)</code></p>
+<p>返回值：数组列表。</p>
+<h4 id="匹配模式">匹配模式</h4>
+<ul>
+<li><code>*</code>：匹配零个或多个任意字符。</li>
+<li><code>?</code>：匹配单个任意字符。</li>
+<li><code>[set]</code>：匹配括号内的任何一个字符。</li>
+<li><code>[!set]</code>：匹配不在括号内的任何一个字符。</li>
+</ul>
+<h3 id="发布订阅pubsub">发布/订阅（Pub/Sub）</h3>
+<ul>
+<li><code>Subscribe</code> - 订阅一个或多个频道，返回一个 PubSub 对象。</li>
+<li><code>PSubscribe</code> - 订阅一个或多个模式匹配的频道。</li>
+<li><code>Unsubscribe</code> - 取消订阅一个或多个频道。</li>
+<li><code>PUnsubscribe</code> - 取消订阅一个或多个模式匹配的频道。</li>
+<li><code>Publish</code> - 向一个频道发布消息。</li>
+<li><code>ReceiveMessage</code> - 接收订阅频道的消息。</li>
+<li><code>Close</code> - 关闭 PubSub 对象，取消所有订阅。</li>
+<li><code>PubSubChannels</code> - 查询活跃的频道。</li>
+<li><code>PubSubNumSub</code> - 查询指定频道有多少个订阅者。</li>
+<li><code>ReceiveTimeout</code> - 在指定时间内接收消息，超时则返回错误。</li>
+<li><code>Receive</code> - 接收消息或返回其他类型的信息，如 Subscription、Message、Pong 等。</li>
+<li><code>Channel</code> - 返回一个 Go channel，用于并发接收消息。</li>
+<li><code>ChannelWithSubscriptions</code> - 返回一个 Go channel，消息类型包括<em>Subscription和</em>Message，用于检测重新连接。</li>
+</ul>
+<h4 id="接收发布示例">接收发布示例</h4>
+<pre><code class="language-go"> ctx := context.Background()
+ rdb := redis.NewClient(&amp;redis.Options{
+  Addr: &quot;localhost:6379&quot;, // Redis 服务器地址
+ })
+ // 启动订阅者
+ go subscriber(ctx, rdb)
+ // 启动发布者
+ go publisher(ctx, rdb)
+
+// subscriber 订阅频道并接收消息
+func subscriber(ctx context.Context, rdb *redis.Client) {
+ pubsub := rdb.Subscribe(ctx, &quot;mychannel&quot;)
+ defer pubsub.Close()
+ ch := pubsub.Channel()
+ for msg := range ch {
+  fmt.Printf(&quot;Received message from channel %s: %s\n&quot;, msg.Channel, msg.Payload)
+ }
+}
+
+// publisher 发布消息到频道
+func publisher(ctx context.Context, rdb *redis.Client) {
+ messages := []string{&quot;Hello&quot;, &quot;World&quot;, &quot;Redis&quot;, &quot;PubSub&quot;, &quot;Example&quot;}
+ for _, msg := range messages {
+  fmt.Printf(&quot;Publishing message: %s\n&quot;, msg)
+  err := rdb.Publish(ctx, &quot;mychannel&quot;, msg).Err()
+  time.Sleep(1 * time.Second) // 等待1秒钟再发布下一个消息
+ }
+ fmt.Println(&quot;All messages published.&quot;)
+}
+</code></pre>
+<h4 id="不同接收方法区别">不同接收方法区别</h4>
+<ul>
+<li><code>Receive</code>：用于接收所有类型的消息（<code>*redis.Message</code>、<code>*redis.Subscription</code>、<code>*redis.Pong</code>）。</li>
+<li><code>ReceiveMessage</code>：用于接收 <code>*redis.Message</code> 类型的消息，专注于 PubSub 消息。</li>
+<li><code>ReceiveTimeout</code>：类似于 Receive，但支持超时控制，适用于需要等待消息但希望避免长时间阻塞的场景。</li>
+<li><code>Channel</code>：提供了异步和并发接收消息的机制，适合需要处理消息流的场景。</li>
+</ul>
+<p><strong>Receive</strong><br>
+功能：<code>Receive</code> 是一个通用的方法，用于接收任何类型的消息。它可以返回 <code>*redis.Message</code>（消息类型）、<code>*redis.Subscription</code>（订阅类型）或 <code>*redis.Pong</code>（Pong 类型）。<br>
+适用场景：当你需要处理多种类型的 PubSub 消息时使用，特别是当你需要从 PubSub 订阅中接收连接检测响应（<code>*redis.Pong</code>）时。</p>
+<p><strong>ReceiveMessage</strong><br>
+功能：<code>ReceiveMessage</code> 方法专门用于接收 <code>*redis.Message</code> 类型的消息。如果接收到其他类型的消息（如 <code>*redis.Subscription</code> 或 <code>*redis.Pong</code>），它将返回错误。<br>
+适用场景：当你只关心 PubSub 消息，而不需要处理其他类型的消息时使用。</p>
+<p><strong>ReceiveTimeout</strong><br>
+功能：<code>ReceiveTimeout</code> 方法类似于 Receive，但它支持超时控制。如果在指定的时间内未收到任何消息，将返回 <code>context.DeadlineExceeded</code> 错误。它可以接收 <code>*redis.Message</code>、<code>*redis.Subscription</code> 和 <code>*redis.Pong</code> 类型的消息。<br>
+适用场景：当你希望在指定时间内等待消息时使用，适用于高延迟或网络不稳定的环境，能够防止因长时间等待而阻塞程序。</p>
+<p><strong>Channel</strong><br>
+功能：通过 <code>Channel</code> 方法，你可以获取一个 Go channel 用于并发接收 PubSub 消息。该 channel 会持续接收 <code>*redis.Message</code> 和 <code>*redis.Subscription</code> 类型的消息。<br>
+适用场景：当你需要并发处理消息，或者希望以异步方式处理消息流时使用。使用 channel 还可以让你更方便地处理消息，并在处理过程中实现更好的消息同步。<br>
+示例：</p>
+<h3 id="管道和事务">管道和事务</h3>
+<h3 id="redis集群">Redis集群</h3>
+<h3 id="redis哨兵">Redis哨兵</h3>
+<h3 id="redis分片">Redis分片</h3>
+<h3 id="aof-日志">AOF 日志</h3>
+<p>AOF 默认不开启，需要修改<code>redis.conf</code></p>
+<pre><code class="language-conf">appendonly      yes                 // 表示是否开启AOF持久化，默认关闭
+appendfilename  &quot;appendonly.aof&quot;    // AOF持久化文件名称
+</code></pre>
+<p>顺序：<strong>先执行命令，再写入日志</strong></p>
+<p>好处：</p>
+<ul>
+<li>避免额外的检查开销</li>
+<li>不会阻塞当前写操作命令的执行</li>
+</ul>
+<p>风险：</p>
+<ul>
+<li>丢失的风险</li>
+<li>可能会给「下一个」命令带来阻塞风险。</li>
+</ul>
+<h4 id="三种写回策略">三种写回策略</h4>
+<ul>
+<li><code>Always</code>      操作命令执行完后，同步写回硬盘</li>
+<li><code>Everysec</code>    先写入内核缓冲区，每隔一秒写回硬盘</li>
+<li><code>No</code>          不由redis控制，由操作系统决定</li>
+</ul>
+<p>业务场景选择：</p>
+<ul>
+<li>如果要高性能，就选择 No 策略；</li>
+<li>如果要高可靠，就选择 Always 策略；</li>
+<li>如果允许数据丢失一点，但又想性能高，就选择 Everysec 策略。</li>
+</ul>
+<h4 id="aof重写机制">AOF重写机制</h4>
+<h3 id="rdb-快照">RDB 快照</h3>
+<p>RDB快照记录某一时刻的内存数据。</p>
+<p>有<code>save</code>和<code>bgsave</code>两种命令，区别在后者创建子进程来生成RDB文件 <strong>避免阻塞</strong> 。</p>
+<p>Redis 的快照是<strong>全量快照</strong>，也就是说每次执行快照，都是把内存中的「所有数据」都记录到磁盘中。所以不能频繁执行影响性能。</p>
+<h4 id="写时复制技术">写时复制技术</h4>
+<p>（Copy-On-Write, COW）</p>
+<p>（Copy-On-Write, COW）</p>
+<p>执行 <code>bgsave</code> 命令的时候，会通过 <code>fork()</code> 创建子进程，此时子进程和父进程是共享同一片内存数据的，因为创建子进程的时候，会复制父进程的页表，但是页表指向的物理内存还是一个。只有在发生修改内存数据的情况时，物理内存才会被复制一份。</p>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#go-redis%E7%AC%94%E8%AE%B0">go-redis笔记</a>
+<ul>
+<li><a href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8">快速入门</a></li>
+<li><a href="#%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">基础数据结构</a>
+<ul>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2string">字符串（string）</a>
+<ul>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E9%94%AE%E5%80%BC%E5%AF%B9set">设置键值对：Set</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E9%94%AE%E5%80%BC%E5%AF%B9get">获取键值对：Get</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4%E9%94%AE%E5%80%BC%E5%AF%B9del">删除键值对：Del</a></li>
+<li><a href="#%E9%80%92%E5%A2%9E%E5%92%8C%E9%80%92%E5%87%8Fincrdecr">递增和递减：Incr/Decr</a></li>
+<li><a href="#%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9Cmsetmget">批量操作：MSet/MGet</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%B9%B6%E8%AE%BE%E7%BD%AEgetset">获取并设置：GetSet</a></li>
+<li><a href="#%E8%BF%BD%E5%8A%A0%E5%80%BCappend">追加值：Append</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%95%BF%E5%BA%A6strlen">获取字符串长度：StrLen</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E7%9A%84%E5%80%BCsetrange">设置字符串指定位置的值：SetRange</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E9%83%A8%E5%88%86%E5%80%BCgetrange">获取字符串的部分值：GetRange</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%B9%B6%E5%88%A0%E9%99%A4getdel">获取并删除：GetDel</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E6%9C%80%E5%B0%8F%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2lcs">获取最小公共子串：LCS</a></li>
+<li><a href="#%E9%80%92%E5%A2%9E%E6%B5%AE%E7%82%B9%E6%95%B0%E5%80%BCincrbyfloat">递增浮点数值：IncrByFloat</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%B8%A6%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4%E7%9A%84%E5%80%BCsetex">设置带过期时间的值：SetEx</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E5%80%BCsetnx">设置不存在的值：SetNX</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%AD%98%E5%9C%A8%E7%9A%84%E5%80%BCsetxx">设置存在的值：SetXX</a></li>
+<li><a href="#%E6%89%B9%E9%87%8F%E8%AE%BE%E7%BD%AE%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E5%80%BCmsetnx">批量设置不存在的值：MSetNX</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E5%80%BCsetargs">设置带参数的值：SetArgs</a></li>
+</ul>
+</li>
+<li><a href="#%E5%93%88%E5%B8%8Chash">哈希（hash）</a>
+<ul>
+<li><a href="#hset-%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E5%80%BC">HSet 设置指定字段的值</a></li>
+<li><a href="#hmset-%E6%89%B9%E9%87%8F%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E5%80%BC">HMSet 批量设置指定字段的值</a></li>
+<li><a href="#hget-%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E5%80%BC">HGet 获取指定字段的值</a></li>
+<li><a href="#hmget-%E6%89%B9%E9%87%8F%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E5%80%BC">HMGet 批量获取指定字段的值</a></li>
+<li><a href="#hsetnx%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E5%80%BC%E4%BB%85%E5%BD%93%E5%AD%97%E6%AE%B5%E4%B8%8D%E5%AD%98%E5%9C%A8%E6%97%B6">HSetNX设置指定字段的值（仅当字段不存在时）</a></li>
+<li><a href="#hlen-%E8%8E%B7%E5%8F%96%E5%AD%97%E6%AE%B5%E6%95%B0%E9%87%8F">HLen 获取字段数量</a></li>
+<li><a href="#hexists-%E6%A3%80%E6%9F%A5%E5%AD%97%E6%AE%B5%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8">HExists 检查字段是否存在</a></li>
+<li><a href="#hdel-%E5%88%A0%E9%99%A4%E5%AD%97%E6%AE%B5">HDel 删除字段</a></li>
+<li><a href="#hkeys-%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E5%AD%97%E6%AE%B5">HKeys 获取所有字段</a></li>
+<li><a href="#hvals-%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E5%80%BC">HVals 获取所有值</a></li>
+<li><a href="#hgetall-%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E5%AD%97%E6%AE%B5%E5%92%8C%E5%80%BC">HGetAll 获取所有字段和值</a></li>
+<li><a href="#hincrby-%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E6%95%B4%E6%95%B0%E5%80%BC%E5%A2%9E%E9%87%8F">HIncrBy 指定字段的整数值增量</a></li>
+<li><a href="#hincrbyfloat-%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5%E7%9A%84%E6%B5%AE%E7%82%B9%E6%95%B0%E5%80%BC%E5%A2%9E%E9%87%8F">HIncrByFloat 指定字段的浮点数值增量</a></li>
+<li><a href="#hscan-%E5%A2%9E%E9%87%8F%E8%BF%AD%E4%BB%A3%E5%AD%97%E6%AE%B5">HScan 增量迭代字段</a></li>
+<li><a href="#hscannovalues-%E5%A2%9E%E9%87%8F%E8%BF%AD%E4%BB%A3%E5%AD%97%E6%AE%B5%E4%B8%8D%E5%8C%85%E6%8B%AC%E5%80%BC">HScanNoValues 增量迭代字段（不包括值）</a></li>
+<li><a href="#hrandfield-%E9%9A%8F%E6%9C%BA%E8%8E%B7%E5%8F%96%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%AD%97%E6%AE%B5">HRandField 随机获取一个或多个字段</a></li>
+<li><a href="#hrandfieldwithvalues-%E9%9A%8F%E6%9C%BA%E8%8E%B7%E5%8F%96%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%AD%97%E6%AE%B5%E5%8F%8A%E5%85%B6%E5%80%BC">HRandFieldWithValues 随机获取一个或多个字段及其值</a></li>
+<li><a href="#hash-%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4%E7%9B%B8%E5%85%B3">Hash 过期时间相关</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%97%E8%A1%A8list">列表（list）</a>
+<ul>
+<li><a href="#llen%E8%8E%B7%E5%8F%96%E5%88%97%E8%A1%A8%E9%95%BF%E5%BA%A6">LLen：获取列表长度</a></li>
+<li><a href="#lindex%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E7%9A%84%E5%85%83%E7%B4%A0">LIndex：获取指定位置的元素</a></li>
+<li><a href="#lpos%E6%9F%A5%E6%89%BE%E6%8C%87%E5%AE%9A%E5%80%BC%E7%9A%84%E4%BD%8D%E7%BD%AE">LPos：查找指定值的位置</a></li>
+<li><a href="#lposcount%E6%9F%A5%E6%89%BE%E6%8C%87%E5%AE%9A%E5%80%BC%E7%9A%84%E4%BD%8D%E7%BD%AE%E9%99%90%E5%88%B6%E8%BF%94%E5%9B%9E%E6%95%B0%E9%87%8F">LPosCount：查找指定值的位置（限制返回数量）</a></li>
+<li><a href="#linsert%E5%9C%A8%E5%88%97%E8%A1%A8%E4%B8%AD%E6%8F%92%E5%85%A5%E5%85%83%E7%B4%A0">LInsert：在列表中插入元素</a></li>
+<li><a href="#linsertbefore%E5%9C%A8%E6%8C%87%E5%AE%9A%E5%85%83%E7%B4%A0%E5%89%8D%E6%8F%92%E5%85%A5%E6%96%B0%E5%85%83%E7%B4%A0">LInsertBefore：在指定元素前插入新元素</a></li>
+<li><a href="#linsertafter%E5%9C%A8%E6%8C%87%E5%AE%9A%E5%85%83%E7%B4%A0%E5%90%8E%E6%8F%92%E5%85%A5%E6%96%B0%E5%85%83%E7%B4%A0">LInsertAfter：在指定元素后插入新元素</a></li>
+<li><a href="#lpush%E5%B0%86%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E6%8F%92%E5%85%A5%E5%88%B0%E5%88%97%E8%A1%A8%E7%9A%84%E5%A4%B4%E9%83%A8">LPush：将一个或多个元素插入到列表的头部</a></li>
+<li><a href="#lpop%E4%BB%8E%E5%88%97%E8%A1%A8%E7%9A%84%E5%A4%B4%E9%83%A8%E5%BC%B9%E5%87%BA%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0">LPop：从列表的头部弹出一个元素</a></li>
+<li><a href="#lmpop%E4%BB%8E%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%88%97%E8%A1%A8%E4%B8%AD%E5%BC%B9%E5%87%BA%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0">LMPop：从一个或多个列表中弹出多个元素</a></li>
+<li><a href="#rpush%E5%B0%86%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E6%8F%92%E5%85%A5%E5%88%B0%E5%88%97%E8%A1%A8%E7%9A%84%E5%B0%BE%E9%83%A8">RPush：将一个或多个元素插入到列表的尾部</a></li>
+<li><a href="#rpop%E4%BB%8E%E5%88%97%E8%A1%A8%E7%9A%84%E5%B0%BE%E9%83%A8%E5%BC%B9%E5%87%BA%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0">RPop：从列表的尾部弹出一个元素</a></li>
+<li><a href="#rpoplpush%E4%BB%8E%E6%BA%90%E5%88%97%E8%A1%A8%E4%B8%AD%E5%BC%B9%E5%87%BA%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0%E5%B9%B6%E6%8E%A8%E9%80%81%E5%88%B0%E7%9B%AE%E6%A0%87%E5%88%97%E8%A1%A8%E7%9A%84%E5%A4%B4%E9%83%A8">RPopLPush：从源列表中弹出一个元素并推送到目标列表的头部</a></li>
+<li><a href="#lpopcount%E4%BB%8E%E5%88%97%E8%A1%A8%E7%9A%84%E5%A4%B4%E9%83%A8%E5%BC%B9%E5%87%BA%E6%8C%87%E5%AE%9A%E6%95%B0%E9%87%8F%E7%9A%84%E5%85%83%E7%B4%A0">LPopCount：从列表的头部弹出指定数量的元素</a></li>
+<li><a href="#rpopcount%E4%BB%8E%E5%88%97%E8%A1%A8%E7%9A%84%E5%B0%BE%E9%83%A8%E5%BC%B9%E5%87%BA%E6%8C%87%E5%AE%9A%E6%95%B0%E9%87%8F%E7%9A%84%E5%85%83%E7%B4%A0">RPopCount：从列表的尾部弹出指定数量的元素</a></li>
+<li><a href="#lpushx%E5%B0%86%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E6%8F%92%E5%85%A5%E5%88%B0%E5%88%97%E8%A1%A8%E7%9A%84%E5%A4%B4%E9%83%A8%E4%BB%85%E5%9C%A8%E5%88%97%E8%A1%A8%E5%AD%98%E5%9C%A8%E6%97%B6%E7%94%9F%E6%95%88">LPushX：将一个或多个元素插入到列表的头部，仅在列表存在时生效</a></li>
+<li><a href="#rpushx%E5%B0%86%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E6%8F%92%E5%85%A5%E5%88%B0%E5%88%97%E8%A1%A8%E7%9A%84%E5%B0%BE%E9%83%A8%E4%BB%85%E5%9C%A8%E5%88%97%E8%A1%A8%E5%AD%98%E5%9C%A8%E6%97%B6%E7%94%9F%E6%95%88">RPushX：将一个或多个元素插入到列表的尾部，仅在列表存在时生效</a></li>
+<li><a href="#lrange%E8%8E%B7%E5%8F%96%E5%88%97%E8%A1%A8%E4%B8%AD%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E7%9A%84%E5%85%83%E7%B4%A0">LRange：获取列表中指定范围的元素</a></li>
+<li><a href="#lrem%E4%BB%8E%E5%88%97%E8%A1%A8%E4%B8%AD%E7%A7%BB%E9%99%A4%E6%8C%87%E5%AE%9A%E6%95%B0%E9%87%8F%E7%9A%84%E6%9F%90%E4%B8%AA%E5%85%83%E7%B4%A0">LRem：从列表中移除指定数量的某个元素</a></li>
+<li><a href="#lset%E8%AE%BE%E7%BD%AE%E5%88%97%E8%A1%A8%E4%B8%AD%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E7%9A%84%E5%85%83%E7%B4%A0">LSet：设置列表中指定位置的元素</a></li>
+<li><a href="#ltrim%E5%AF%B9%E5%88%97%E8%A1%A8%E8%BF%9B%E8%A1%8C%E4%BF%AE%E5%89%AA%E4%BF%9D%E7%95%99%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E5%86%85%E7%9A%84%E5%85%83%E7%B4%A0">LTrim：对列表进行修剪，保留指定范围内的元素</a></li>
+<li><a href="#lmove%E4%BB%8E%E4%B8%80%E4%B8%AA%E5%88%97%E8%A1%A8%E7%A7%BB%E5%8A%A8%E5%85%83%E7%B4%A0%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E5%88%97%E8%A1%A8%E5%B9%B6%E6%8C%87%E5%AE%9A%E6%BA%90%E5%92%8C%E7%9B%AE%E6%A0%87%E4%BD%8D%E7%BD%AE">LMove：从一个列表移动元素到另一个列表，并指定源和目标位置</a></li>
+<li><a href="#%E9%98%BB%E5%A1%9E%E7%89%B9%E6%80%A7%E6%96%B9%E6%B3%95">阻塞特性方法</a></li>
+</ul>
+</li>
+<li><a href="#%E9%9B%86%E5%90%88set">集合（set）</a>
+<ul>
+<li><a href="#sadd-%E6%B7%BB%E5%8A%A0%E5%85%83%E7%B4%A0-scard-%E8%8E%B7%E5%8F%96%E5%85%83%E7%B4%A0%E6%95%B0%E9%87%8F">SAdd 添加元素 / SCard 获取元素数量</a></li>
+<li><a href="#smembers-%E8%8E%B7%E5%8F%96%E9%9B%86%E5%90%88%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E6%88%90%E5%91%98">SMembers 获取集合中的所有成员</a></li>
+<li><a href="#sunion-%E8%AE%A1%E7%AE%97%E5%B9%B6%E9%9B%86-sinter-%E8%AE%A1%E7%AE%97%E4%BA%A4%E9%9B%86">SUnion 计算并集 / SInter 计算交集</a></li>
+<li><a href="#sdiff-%E8%AE%A1%E7%AE%97%E9%9B%86%E5%90%88%E7%9A%84%E5%B7%AE%E9%9B%86">SDiff 计算集合的差集</a></li>
+<li><a href="#sismember-%E5%92%8C-smismember-%E6%A3%80%E6%9F%A5%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E6%98%AF%E5%90%A6%E6%98%AF%E9%9B%86%E5%90%88%E7%9A%84%E6%88%90%E5%91%98">SIsMember 和 SMIsMember 检查一个或多个元素是否是集合的成员</a></li>
+<li><a href="#smove-%E5%B0%86%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0%E4%BB%8E%E4%B8%80%E4%B8%AA%E9%9B%86%E5%90%88%E7%A7%BB%E5%8A%A8%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E9%9B%86%E5%90%88">SMove 将一个元素从一个集合移动到另一个集合</a></li>
+<li><a href="#spopspopn-%E4%BB%8E%E9%9B%86%E5%90%88%E4%B8%AD%E9%9A%8F%E6%9C%BA%E7%A7%BB%E9%99%A4%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0">SPop/SPopN 从集合中随机移除一个或多个元素</a></li>
+<li><a href="#srandmembersrandmembern-%E4%BB%8E%E9%9B%86%E5%90%88%E4%B8%AD%E9%9A%8F%E6%9C%BA%E8%8E%B7%E5%8F%96%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E4%BD%86%E4%B8%8D%E7%A7%BB%E9%99%A4%E5%AE%83%E4%BB%AC">SRandMember/SRandMemberN 从集合中随机获取一个或多个元素，但不移除它们</a></li>
+<li><a href="#srem-%E4%BB%8E%E9%9B%86%E5%90%88%E4%B8%AD%E7%A7%BB%E9%99%A4%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0">SRem 从集合中移除一个或多个元素</a></li>
+<li><a href="#sscan-%E5%A2%9E%E9%87%8F%E8%BF%AD%E4%BB%A3%E9%9B%86%E5%90%88%E4%B8%AD%E7%9A%84%E5%85%83%E7%B4%A0">SScan 增量迭代集合中的元素</a></li>
+<li><a href="#sunionstore-sinterstore-%E5%B0%86%E5%A4%9A%E4%B8%AA%E9%9B%86%E5%90%88%E7%9A%84%E5%B9%B6%E9%9B%86%E6%88%96%E4%BA%A4%E9%9B%86%E5%AD%98%E5%82%A8%E5%88%B0%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E9%9B%86%E5%90%88%E4%B8%AD">SUnionStore / SInterStore 将多个集合的并集或交集存储到一个新的集合中</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88zset">有序集合（zset）</a>
+<ul>
+<li><a href="#zadd%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E6%88%90%E5%91%98">ZAdd：添加一个或多个成员</a></li>
+<li><a href="#zaddltzaddgt%E6%B7%BB%E5%8A%A0%E6%88%90%E5%91%98%E6%A0%B9%E6%8D%AE%E5%88%86%E6%95%B0%E6%9B%B4%E6%96%B0">ZAddLT/ZAddGT：添加成员，根据分数更新</a></li>
+<li><a href="#zaddnxzaddxx%E6%B7%BB%E5%8A%A0%E6%88%90%E5%91%98%E4%BB%85%E5%BD%93%E6%88%90%E5%91%98%E4%B8%8D%E5%AD%98%E5%9C%A8%E5%AD%98%E5%9C%A8%E6%97%B6%E6%89%8D%E6%89%A7%E8%A1%8C">ZAddNX/ZAddXX：添加成员，仅当成员不存在/存在时才执行</a></li>
+<li><a href="#zaddargszaddargsincr%E6%B7%BB%E5%8A%A0%E6%88%90%E5%91%98%E5%B9%B6%E4%BD%BF%E7%94%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE%E8%8B%A5%E5%B7%B2%E5%AD%98%E5%9C%A8%E5%88%99%E5%88%86%E6%95%B0%E5%A2%9E%E5%8A%A0">ZAddArgs/ZAddArgsIncr：添加成员，并使用参数配置（若已存在则分数增加。）</a></li>
+<li><a href="#zincrby%E6%88%90%E5%91%98%E5%88%86%E6%95%B0%E5%A2%9E%E5%8A%A0%E6%8C%87%E5%AE%9A%E7%9A%84%E5%A2%9E%E9%87%8F">ZIncrBy：成员分数增加指定的增量</a></li>
+<li><a href="#zscorezmscore%E8%8E%B7%E5%8F%96%E5%A4%9A%E4%B8%AA%E6%88%90%E5%91%98%E7%9A%84%E5%88%86%E6%95%B0">ZScore/ZMScore：获取（多个）成员的分数</a></li>
+<li><a href="#zcard%E8%8E%B7%E5%8F%96%E6%88%90%E5%91%98%E6%95%B0%E9%87%8F">ZCard：获取成员数量</a></li>
+<li><a href="#zcountzlexcount%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E5%88%86%E6%95%B0%E8%8C%83%E5%9B%B4%E6%8C%87%E5%AE%9A%E5%AD%97%E5%85%B8%E5%8C%BA%E9%97%B4%E5%86%85%E7%9A%84%E6%88%90%E5%91%98%E6%95%B0%E9%87%8F">ZCount/ZLexCount：获取指定分数范围/指定字典区间内的成员数量</a></li>
+<li><a href="#zinterzinterwithscores%E8%AE%A1%E7%AE%97%E5%A4%9A%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E7%9A%84%E4%BA%A4%E9%9B%86%E5%B9%B6%E8%BF%94%E5%9B%9E%E5%B8%A6%E5%88%86%E6%95%B0%E7%BB%93%E6%9E%9C">ZInter/ZInterWithScores：计算多个有序集合的交集，并返回（带分数）结果</a></li>
+<li><a href="#zintercard%E8%AE%A1%E7%AE%97%E4%BA%A4%E9%9B%86%E6%95%B0%E9%87%8F">ZInterCard：计算交集数量</a></li>
+<li><a href="#zinterstore%E8%AE%A1%E7%AE%97%E4%BA%A4%E9%9B%86%E5%B9%B6%E5%B0%86%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%9C">ZInterStore：计算交集并将存储结果</a></li>
+<li><a href="#zmpop%E6%89%B9%E9%87%8F%E5%BC%B9%E5%87%BA%E6%9C%80%E5%B0%8F%E6%88%96%E6%9C%80%E5%A4%A7%E7%9A%84%E5%A4%9A%E4%B8%AA%E6%88%90%E5%91%98">ZMPop：批量弹出最小或最大的多个成员</a></li>
+<li><a href="#bzmpop%E6%89%B9%E9%87%8F%E5%BC%B9%E5%87%BA%E6%9C%80%E5%A4%A7%E6%88%96%E6%9C%80%E5%B0%8F%E5%88%86%E6%95%B0%E7%9A%84%E6%88%90%E5%91%98%E9%98%BB%E5%A1%9E">BZMPop：批量弹出最大或最小分数的成员【阻塞】</a></li>
+<li><a href="#bzpopmaxbzpopmin%E6%89%B9%E9%87%8F%E5%BC%B9%E5%87%BA%E6%9C%80%E5%A4%A7%E6%9C%80%E5%B0%8F%E5%88%86%E6%95%B0%E7%9A%84%E6%88%90%E5%91%98%E9%98%BB%E5%A1%9E">BZPopMax/BZPopMin：批量弹出最大/最小分数的成员【阻塞】</a></li>
+<li><a href="#zpopmaxzpopmin%E5%BC%B9%E5%87%BA%E6%9C%80%E5%A4%A7%E6%9C%80%E5%B0%8F%E5%88%86%E6%95%B0%E7%9A%84%E6%88%90%E5%91%98">ZPopMax/ZPopMin：弹出最大/最小分数的成员</a></li>
+<li><a href="#zrangezrangewithscores%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E5%8C%BA%E9%97%B4%E5%86%85%E7%9A%84%E6%88%90%E5%91%98%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZRange/ZRangeWithScores：获取指定区间内的成员（及其分数）</a></li>
+<li><a href="#zrangebyscorezrangebylexzrangebyscorewithscores%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E5%88%86%E6%95%B0%E8%8C%83%E5%9B%B4%E6%8C%87%E5%AE%9A%E5%AD%97%E5%85%B8%E5%8C%BA%E9%97%B4%E5%86%85%E7%9A%84%E6%88%90%E5%91%98%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZRangeByScore/ZRangeByLex/ZRangeByScoreWithScores：获取指定分数范围/指定字典区间内的成员(及其分数)</a></li>
+<li><a href="#zrangeargszrangeargswithscores%E6%A0%B9%E6%8D%AE%E7%BB%99%E5%AE%9A%E7%9A%84%E5%8F%82%E6%95%B0%E8%8E%B7%E5%8F%96%E6%9C%89%E6%88%90%E5%91%98%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZRangeArgs/ZRangeArgsWithScores：根据给定的参数获取有成员(及其分数)</a></li>
+<li><a href="#zrangestore%E5%B0%86%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E5%86%85%E7%9A%84%E6%88%90%E5%91%98%E5%AD%98%E5%82%A8%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E9%9B%86%E5%90%88%E4%B8%AD">ZRangeStore：将指定范围内的成员存储到另一个集合中</a></li>
+<li><a href="#zrevrangezrevrangewithscores%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E5%86%85%E7%9A%84%E6%88%90%E5%91%98%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0%E6%8C%89%E5%88%86%E6%95%B0%E4%BB%8E%E9%AB%98%E5%88%B0%E4%BD%8E%E6%8E%92%E5%BA%8F">ZRevRange/ZRevRangeWithScores：获取指定范围内的成员(及其分数)，按分数从高到低排序</a></li>
+<li><a href="#zrevrangebyscorezrevrangebylexzrevrangebyscorewithscores%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E5%88%86%E6%95%B0%E8%8C%83%E5%9B%B4%E6%8C%87%E5%AE%9A%E5%AD%97%E5%85%B8%E8%8C%83%E5%9B%B4%E5%86%85%E7%9A%84%E6%88%90%E5%91%98%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0%E6%8C%89%E5%88%86%E6%95%B0%E4%BB%8E%E9%AB%98%E5%88%B0%E4%BD%8E%E6%8E%92%E5%BA%8F">ZRevRangeByScore/ZRevRangeByLex/ZRevRangeByScoreWithScores：获取指定分数范围/指定字典范围内的成员(及其分数)，按分数从高到低排序</a></li>
+<li><a href="#zrankzrankwithscore%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E6%88%90%E5%91%98%E7%9A%84%E6%8E%92%E5%90%8D%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZRank/ZRankWithScore：获取指定成员的排名(及其分数)</a></li>
+<li><a href="#zrevrankzrevrankwithscore%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E6%88%90%E5%91%98%E7%9A%84%E9%80%86%E5%BA%8F%E6%8E%92%E5%90%8D%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZRevRank/ZRevRankWithScore：获取指定成员的逆序排名（及其分数）</a></li>
+<li><a href="#zremzremrangebyrankzremrangebyscorezremrangebylex%E7%A7%BB%E9%99%A4%E6%8C%87%E5%AE%9A%E6%8E%92%E5%90%8D%E8%8C%83%E5%9B%B4%E6%8C%87%E5%AE%9A%E5%88%86%E6%95%B0%E8%8C%83%E5%9B%B4%E6%8C%87%E5%AE%9A%E5%AD%97%E5%85%B8%E8%8C%83%E5%9B%B4-%E5%86%85%E7%9A%84%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E6%88%90%E5%91%98">ZRem/ZRemRangeByRank/ZRemRangeByScore/ZRemRangeByLex：移除（指定排名范围/指定分数范围/指定字典范围 内的）一个或多个成员</a></li>
+<li><a href="#zrandmemberzrandmemberwithscores%E9%9A%8F%E6%9C%BA%E8%8E%B7%E5%8F%96%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E4%B8%AD%E7%9A%84%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E6%88%90%E5%91%98%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZRandMember/ZRandMemberWithScores：随机获取有序集合中的一个或多个成员（及其分数）</a></li>
+<li><a href="#zunionzunionwithscores%E8%AE%A1%E7%AE%97%E5%A4%9A%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E7%9A%84%E5%B9%B6%E9%9B%86%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZUnion/ZUnionWithScores：计算多个有序集合的并集（及其分数）</a></li>
+<li><a href="#zunionstore%E5%B0%86%E5%A4%9A%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E7%9A%84%E5%B9%B6%E9%9B%86%E5%AD%98%E5%82%A8%E5%88%B0%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E4%B8%AD">ZUnionStore：将多个有序集合的并集存储到一个新的有序集合中</a></li>
+<li><a href="#zdiffzdiffwithscores%E8%AE%A1%E7%AE%97%E5%A4%9A%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E7%9A%84%E5%B7%AE%E9%9B%86%E5%8F%8A%E5%85%B6%E5%88%86%E6%95%B0">ZDiff/ZDiffWithScores：计算多个有序集合的差集（及其分数）</a></li>
+<li><a href="#zdiffstore%E5%B0%86%E5%A4%9A%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E7%9A%84%E5%B7%AE%E9%9B%86%E5%AD%98%E5%82%A8%E5%88%B0%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E4%B8%AD">ZDiffStore：将多个有序集合的差集存储到一个新的有序集合中</a></li>
+<li><a href="#zscan%E8%BF%AD%E4%BB%A3%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E4%B8%AD%E7%9A%84%E6%88%90%E5%91%98">ZScan：迭代有序集合中的成员</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">高级数据结构</a>
+<ul>
+<li><a href="#%E4%BD%8D%E5%9B%BEbitmaps">位图（Bitmaps）</a>
+<ul>
+<li><a href="#getbit-%E8%8E%B7%E5%8F%96%E4%BD%8D%E5%9B%BE%E4%B8%AD%E6%8C%87%E5%AE%9A%E5%81%8F%E7%A7%BB%E9%87%8F%E7%9A%84%E5%80%BC">GetBit - 获取位图中指定偏移量的值</a></li>
+<li><a href="#setbit-%E8%AE%BE%E7%BD%AE%E4%BD%8D%E5%9B%BE%E4%B8%AD%E6%8C%87%E5%AE%9A%E5%81%8F%E7%A7%BB%E9%87%8F%E7%9A%84%E5%80%BC">SetBit - 设置位图中指定偏移量的值</a></li>
+<li><a href="#bitcount-%E8%AE%A1%E7%AE%97%E4%BD%8D%E5%9B%BE%E4%B8%AD%E5%80%BC%E4%B8%BA-1-%E7%9A%84%E4%BD%8D%E6%95%B0">BitCount - 计算位图中值为 1 的位数</a></li>
+<li><a href="#bitopand-%E5%AF%B9%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E4%BD%8D%E5%9B%BE%E6%89%A7%E8%A1%8C-and%E6%93%8D%E4%BD%9C%E5%B9%B6%E5%B0%86%E7%BB%93%E6%9E%9C%E5%AD%98%E5%82%A8%E5%9C%A8%E7%9B%AE%E6%A0%87%E4%BD%8D%E5%9B%BE%E4%B8%AD">BitOpAnd - 对一个或多个位图执行 AND操作，并将结果存储在目标位图中</a></li>
+<li><a href="#bitopor-%E5%AF%B9%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E4%BD%8D%E5%9B%BE%E6%89%A7%E8%A1%8C-or-%E6%93%8D%E4%BD%9C%E5%B9%B6%E5%B0%86%E7%BB%93%E6%9E%9C%E5%AD%98%E5%82%A8%E5%9C%A8%E7%9B%AE%E6%A0%87%E4%BD%8D%E5%9B%BE%E4%B8%AD">BitOpOr - 对一个或多个位图执行 OR 操作，并将结果存储在目标位图中</a></li>
+<li><a href="#bitopxor-%E5%AF%B9%E4%B8%80%E4%B8%AA%E6%88%96%E5%A4%9A%E4%B8%AA%E4%BD%8D%E5%9B%BE%E6%89%A7%E8%A1%8C-xor-%E6%93%8D%E4%BD%9C%E5%B9%B6%E5%B0%86%E7%BB%93%E6%9E%9C%E5%AD%98%E5%82%A8%E5%9C%A8%E7%9B%AE%E6%A0%87%E4%BD%8D%E5%9B%BE%E4%B8%AD">BitOpXor - 对一个或多个位图执行 XOR 操作，并将结果存储在目标位图中</a></li>
+<li><a href="#bitopnot-%E5%AF%B9%E4%BD%8D%E5%9B%BE%E6%89%A7%E8%A1%8C%E5%8F%96%E5%8F%8Dnot%E6%93%8D%E4%BD%9C%E5%B9%B6%E5%B0%86%E7%BB%93%E6%9E%9C%E5%AD%98%E5%82%A8%E5%9C%A8%E7%9B%AE%E6%A0%87%E4%BD%8D%E5%9B%BE%E4%B8%AD">BitOpNot - 对位图执行取反(NOT)操作，并将结果存储在目标位图中</a></li>
+<li><a href="#bitpos-%E6%9F%A5%E6%89%BE%E4%BD%8D%E5%9B%BE%E4%B8%AD%E7%AC%AC%E4%B8%80%E4%B8%AA%E8%AE%BE%E7%BD%AE%E4%B8%BA%E6%8C%87%E5%AE%9A%E5%80%BC%E7%9A%84%E4%BD%8D%E7%9A%84%E4%BD%8D%E7%BD%AE">BitPos - 查找位图中第一个设置为指定值的位的位置</a></li>
+<li><a href="#bitposspan-%E6%9F%A5%E6%89%BE%E6%8C%87%E5%AE%9A%E8%8C%83%E5%9B%B4%E5%86%85%E7%AC%AC%E4%B8%80%E4%B8%AA%E8%AE%BE%E7%BD%AE%E4%B8%BA%E6%8C%87%E5%AE%9A%E5%80%BC%E7%9A%84%E4%BD%8D%E7%9A%84%E4%BD%8D%E7%BD%AE">BitPosSpan - 查找指定范围内第一个设置为指定值的位的位置</a></li>
+<li><a href="#bitfield-%E6%89%A7%E8%A1%8C%E5%A4%9A%E4%B8%AA%E4%BD%8D%E5%9F%9F%E6%93%8D%E4%BD%9C">BitField - 执行多个位域操作</a></li>
+</ul>
+</li>
+<li><a href="#%E8%B6%85%E6%97%A5%E5%BF%97hyperloglogs">超日志（HyperLogLogs）</a>
+<ul>
+<li><a href="#%E5%9F%BA%E6%95%B0%E4%BC%B0%E7%AE%97">基数估算</a></li>
+<li><a href="#pfadd-%E5%B0%86%E6%8C%87%E5%AE%9A%E5%85%83%E7%B4%A0%E6%B7%BB%E5%8A%A0%E5%88%B0-hyperloglog">PFAdd - 将指定元素添加到 HyperLogLog</a></li>
+<li><a href="#pfcount-%E8%BF%94%E5%9B%9E%E7%BB%99%E5%AE%9A-hyperloglog-%E7%9A%84%E5%9F%BA%E6%95%B0%E4%BC%B0%E7%AE%97%E5%80%BC">PFCount - 返回给定 HyperLogLog 的基数估算值</a></li>
+<li><a href="#pfmerge-%E5%B0%86%E5%A4%9A%E4%B8%AA-hyperloglog-%E5%90%88%E5%B9%B6%E4%B8%BA%E4%B8%80%E4%B8%AA">PFMerge - 将多个 HyperLogLog 合并为一个</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9C%B0%E7%90%86%E7%A9%BA%E9%97%B4geospatial">地理空间（Geospatial）</a>
+<ul>
+<li><a href="#geoadd-%E6%B7%BB%E5%8A%A0%E5%9C%B0%E7%90%86%E7%A9%BA%E9%97%B4%E4%BD%8D%E7%BD%AE">GeoAdd - 添加地理空间位置</a></li>
+<li><a href="#geopos-%E8%8E%B7%E5%8F%96%E5%9C%B0%E7%90%86%E7%A9%BA%E9%97%B4%E4%BD%8D%E7%BD%AE">GeoPos - 获取地理空间位置</a></li>
+<li><a href="#georadius-%E6%A0%B9%E6%8D%AE%E7%BB%8F%E7%BA%AC%E5%BA%A6%E6%9F%A5%E8%AF%A2%E9%99%84%E8%BF%91%E7%9A%84%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE">GeoRadius - 根据经纬度查询附近的地理位置</a></li>
+<li><a href="#georadiusstore-%E6%A0%B9%E6%8D%AE%E7%BB%8F%E7%BA%AC%E5%BA%A6%E6%9F%A5%E8%AF%A2%E9%99%84%E8%BF%91%E7%9A%84%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E5%B9%B6%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%9C">GeoRadiusStore - 根据经纬度查询附近的地理位置并存储结果</a></li>
+<li><a href="#georadiusbymember-%E6%A0%B9%E6%8D%AE%E5%B7%B2%E6%9C%89%E6%88%90%E5%91%98%E7%9A%84%E4%BD%8D%E7%BD%AE%E6%9F%A5%E8%AF%A2%E9%99%84%E8%BF%91%E7%9A%84%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE">GeoRadiusByMember - 根据已有成员的位置查询附近的地理位置</a></li>
+<li><a href="#georadiusbymemberstore-%E6%A0%B9%E6%8D%AE%E5%B7%B2%E6%9C%89%E6%88%90%E5%91%98%E7%9A%84%E4%BD%8D%E7%BD%AE%E6%9F%A5%E8%AF%A2%E9%99%84%E8%BF%91%E7%9A%84%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E5%B9%B6%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%9C">GeoRadiusByMemberStore - 根据已有成员的位置查询附近的地理位置并存储结果</a></li>
+<li><a href="#geosearch-%E6%A0%B9%E6%8D%AE%E4%B8%8D%E5%90%8C%E6%9D%A1%E4%BB%B6%E6%90%9C%E7%B4%A2%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE">GeoSearch - 根据不同条件搜索地理位置</a></li>
+<li><a href="#geosearchlocation-%E6%A0%B9%E6%8D%AE%E4%B8%8D%E5%90%8C%E6%9D%A1%E4%BB%B6%E6%90%9C%E7%B4%A2%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E5%B9%B6%E8%BF%94%E5%9B%9E%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF">GeoSearchLocation - 根据不同条件搜索地理位置并返回详细信息</a></li>
+<li><a href="#geosearchstore-%E6%A0%B9%E6%8D%AE%E4%B8%8D%E5%90%8C%E6%9D%A1%E4%BB%B6%E6%90%9C%E7%B4%A2%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E5%B9%B6%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%9C">GeoSearchStore - 根据不同条件搜索地理位置并存储结果</a></li>
+<li><a href="#geodist-%E8%AE%A1%E7%AE%97%E4%B8%A4%E4%B8%AA%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E4%B9%8B%E9%97%B4%E7%9A%84%E8%B7%9D%E7%A6%BB">GeoDist - 计算两个地理位置之间的距离</a></li>
+<li><a href="#geohash-%E8%8E%B7%E5%8F%96%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E7%9A%84%E5%93%88%E5%B8%8C%E8%A1%A8%E7%A4%BA">GeoHash - 获取地理位置的哈希表示</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B5%81streams">流（Streams）</a>
+<ul>
+<li><a href="#redisxaddargs">redis.XAddArgs</a></li>
+<li><a href="#redisxreadargs">redis.XReadArgs</a></li>
+<li><a href="#redisxreadgroupargs">redis.XReadGroupArgs</a></li>
+<li><a href="#xadd-%E6%B7%BB%E5%8A%A0%E6%B6%88%E6%81%AF%E5%88%B0%E6%9C%AB%E5%B0%BE">XAdd - 添加消息到末尾</a></li>
+<li><a href="#xtrimmaxlenxtrimmaxlenapprox-%E5%9F%BA%E4%BA%8E%E9%95%BF%E5%BA%A6%E8%A3%81%E5%89%AA">XTrimMaxLen/XTrimMaxLenApprox 基于长度裁剪</a></li>
+<li><a href="#xtrimminidxtrimminidapprox-%E5%9F%BA%E4%BA%8Eid%E8%A3%81%E5%89%AA">XTrimMinID/XTrimMinIDApprox 基于ID裁剪</a></li>
+<li><a href="#xdel-%E5%88%A0%E9%99%A4%E6%B6%88%E6%81%AF">XDel 删除消息</a></li>
+<li><a href="#xlen-%E8%8E%B7%E5%8F%96%E6%B5%81%E5%8C%85%E5%90%AB%E7%9A%84%E5%85%83%E7%B4%A0%E6%95%B0%E9%87%8F%E5%8D%B3%E6%B6%88%E6%81%AF%E9%95%BF%E5%BA%A6">XLen 获取流包含的元素数量，即消息长度</a></li>
+<li><a href="#xrangexrevrange-%E8%8E%B7%E5%8F%96%E6%B6%88%E6%81%AF%E5%88%97%E8%A1%A8%E4%BC%9A%E8%87%AA%E5%8A%A8%E8%BF%87%E6%BB%A4%E5%B7%B2%E7%BB%8F%E5%88%A0%E9%99%A4%E7%9A%84%E6%B6%88%E6%81%AF">XRange/XRevRange 获取消息列表，会自动过滤已经删除的消息</a></li>
+<li><a href="#xreadxreadgroupxreadstreams-%E8%8E%B7%E5%8F%96%E6%B6%88%E6%81%AF%E5%88%97%E8%A1%A8">XRead/XReadGroup/XReadStreams 获取消息列表</a></li>
+<li><a href="#xgroupcreatexgroupcreateconsumerxgroupcreatemkstream-%E5%88%9B%E5%BB%BA%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84">XGroupCreate/XGroupCreateConsumer/XGroupCreateMkStream 创建消费者（组）</a></li>
+<li><a href="#xack-%E5%B0%86%E6%B6%88%E6%81%AF%E6%A0%87%E8%AE%B0%E4%B8%BA%E5%B7%B2%E5%A4%84%E7%90%86">XAck 将消息标记为&quot;已处理&quot;</a></li>
+<li><a href="#xgroupsetid-%E4%B8%BA%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E8%AE%BE%E7%BD%AE%E6%96%B0%E7%9A%84%E6%9C%80%E5%90%8E%E9%80%92%E9%80%81%E6%B6%88%E6%81%AFid">XGroupSetID 为消费者组设置新的最后递送消息ID</a></li>
+<li><a href="#xgroupdelconsumer-%E5%88%A0%E9%99%A4%E6%B6%88%E8%B4%B9%E8%80%85">XGroupDelConsumer 删除消费者</a></li>
+<li><a href="#xgroupdestroy-%E5%88%A0%E9%99%A4%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84">XGroupDestroy 删除消费者组</a></li>
+<li><a href="#xpendingxpendingext-%E7%A4%BA%E5%BE%85%E5%A4%84%E7%90%86%E6%B6%88%E6%81%AF%E7%9A%84%E7%9B%B8%E5%85%B3%E4%BF%A1%E6%81%AF">XPending/XPendingExt 示待处理消息的相关信息</a></li>
+<li><a href="#xclaimxclaimjustid-%E8%BD%AC%E7%A7%BB%E6%B6%88%E6%81%AF%E7%9A%84%E5%BD%92%E5%B1%9E%E6%9D%83">XClaim/XClaimJustID/ 转移消息的归属权</a></li>
+<li><a href="#xautoclaimxautojustid-%E8%BD%AC%E7%A7%BB%E6%B6%88%E6%81%AF%E7%9A%84%E5%BD%92%E5%B1%9E%E6%9D%83">XAutoClaim/XAutoJustID/ 转移消息的归属权</a></li>
+<li><a href="#xinfostreamxinfogroupsxinfoconsumers-%E6%89%93%E5%8D%B0%E4%BF%A1%E6%81%AF">XInfoStream/XInfoGroups/XInfoConsumers 打印信息</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%85%B6%E4%BB%96">其他</a>
+<ul>
+<li><a href="#%E9%94%AEkey">键（key）</a>
+<ul>
+<li><a href="#del-%E5%88%A0%E9%99%A4%E9%94%AE">Del 删除键</a></li>
+<li><a href="#dump-%E5%BA%8F%E5%88%97%E5%8C%96%E9%94%AE">Dump 序列化键</a></li>
+<li><a href="#exists-%E6%A3%80%E6%9F%A5%E9%94%AE%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8">Exists 检查键是否存在</a></li>
+<li><a href="#expire-%E8%AE%BE%E7%BD%AE%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4">Expire 设置过期时间</a></li>
+<li><a href="#expireat-%E8%AE%BE%E7%BD%AE%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4%E6%97%B6%E9%97%B4%E6%88%B3">ExpireAt 设置过期时间（时间戳）</a></li>
+<li><a href="#keys-%E6%9F%A5%E6%89%BE%E7%AC%A6%E5%90%88%E6%A8%A1%E5%BC%8F%E7%9A%84key">Keys 查找符合模式的key</a></li>
+<li><a href="#move-%E7%A7%BB%E5%8A%A8%E6%95%B0%E6%8D%AE%E8%87%B3%E5%8F%A6%E4%B8%80%E6%95%B0%E6%8D%AE%E5%BA%93">Move 移动数据至另一数据库</a></li>
+<li><a href="#persist-%E7%A7%BB%E9%99%A4%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4">Persist 移除过期时间</a></li>
+<li><a href="#ttl-%E8%BF%94%E5%9B%9E%E5%89%A9%E4%BD%99%E7%94%9F%E5%AD%98%E6%97%B6%E9%97%B4">TTL 返回剩余生存时间</a></li>
+<li><a href="#randomkey-%E9%9A%8F%E6%9C%BA%E8%BF%94%E5%9B%9E%E4%B8%80%E4%B8%AAkey">RandomKey 随机返回一个key</a></li>
+<li><a href="#rename-%E4%BF%AE%E6%94%B9%E9%94%AE%E7%9A%84%E5%90%8D%E7%A7%B0">Rename 修改键的名称</a></li>
+<li><a href="#renamenx-%E4%BF%AE%E6%94%B9%E9%94%AE%E7%9A%84%E5%90%8D%E7%A7%B0%E4%BB%85%E5%BD%93%E6%96%B0%E9%94%AE%E4%B8%8D%E5%AD%98%E5%9C%A8%E6%97%B6">RenameNX 修改键的名称（仅当新键不存在时）</a></li>
+<li><a href="#scan-%E8%BF%AD%E4%BB%A3%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E9%94%AE">Scan 迭代数据库中的键</a></li>
+<li><a href="#type-%E8%BF%94%E5%9B%9Ekey%E6%89%80%E5%82%A8%E5%AD%98%E7%9A%84%E5%80%BC%E7%9A%84%E7%B1%BB%E5%9E%8B">Type 返回key所储存的值的类型</a></li>
+<li><a href="#%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F">匹配模式</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85pubsub">发布/订阅（Pub/Sub）</a>
+<ul>
+<li><a href="#%E6%8E%A5%E6%94%B6%E5%8F%91%E5%B8%83%E7%A4%BA%E4%BE%8B">接收发布示例</a></li>
+<li><a href="#%E4%B8%8D%E5%90%8C%E6%8E%A5%E6%94%B6%E6%96%B9%E6%B3%95%E5%8C%BA%E5%88%AB">不同接收方法区别</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AE%A1%E9%81%93%E5%92%8C%E4%BA%8B%E5%8A%A1">管道和事务</a></li>
+<li><a href="#redis%E9%9B%86%E7%BE%A4">Redis集群</a></li>
+<li><a href="#redis%E5%93%A8%E5%85%B5">Redis哨兵</a></li>
+<li><a href="#redis%E5%88%86%E7%89%87">Redis分片</a></li>
+<li><a href="#aof-%E6%97%A5%E5%BF%97">AOF 日志</a>
+<ul>
+<li><a href="#%E4%B8%89%E7%A7%8D%E5%86%99%E5%9B%9E%E7%AD%96%E7%95%A5">三种写回策略</a></li>
+<li><a href="#aof%E9%87%8D%E5%86%99%E6%9C%BA%E5%88%B6">AOF重写机制</a></li>
+</ul>
+</li>
+<li><a href="#rdb-%E5%BF%AB%E7%85%A7">RDB 快照</a>
+<ul>
+<li><a href="#%E5%86%99%E6%97%B6%E5%A4%8D%E5%88%B6%E6%8A%80%E6%9C%AF">写时复制技术</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://jinvic.github.io/post/gorm-notes/">
+              <span class="post-title">
+                GORM速查笔记&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>

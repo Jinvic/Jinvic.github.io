@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>go库速查笔记 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="go库速查笔记 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="go库速查笔记" />
+  <meta property="og:url" content="https://jinvic.github.io/post/go-package-notes/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1734579477304"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1734579477304"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+                <a href="https://jinvic.github.io/tag/2vaencnsMM/" class="tag">Go</a>
+                
+                <a href="https://jinvic.github.io/tag/KbkCyWeWckl/" class="tag">笔记</a>
+                
+              </span>
+              <h1>go库速查笔记</h1>
+              <span class="meta">
+                Posted on
+                2024-09-16，12 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <h1 id="go库速查笔记">go库速查笔记</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#go%E5%BA%93%E9%80%9F%E6%9F%A5%E7%AC%94%E8%AE%B0">go库速查笔记</a>
+<ul>
+<li><a href="#web%E5%BC%80%E5%8F%91">web开发</a>
+<ul>
+<li><a href="#gorillawebsocket">gorilla/websocket</a></li>
+<li><a href="#gorillasession">gorilla/session</a></li>
+<li><a href="#gin-contribsessions">gin-contrib/sessions</a></li>
+<li><a href="#go-restyrestyv2">go-resty/resty/v2</a></li>
+</ul>
+</li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E9%AA%8C%E8%AF%81">数据验证</a>
+<ul>
+<li><a href="#asaskevichgovalidator">asaskevich/govalidator</a></li>
+<li><a href="#go-playgroundvalidatorv10">go-playground/validator/v10</a></li>
+</ul>
+</li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86">配置管理</a>
+<ul>
+<li><a href="#viper">viper</a></li>
+</ul>
+</li>
+<li><a href="#%E6%97%A5%E5%BF%97%E5%BA%93">日志库</a>
+<ul>
+<li><a href="#logrus">logrus</a></li>
+<li><a href="#zap">zap</a></li>
+</ul>
+</li>
+<li><a href="#%E8%AE%A4%E8%AF%81%E9%89%B4%E6%9D%83">认证鉴权</a>
+<ul>
+<li><a href="#casbin">casbin</a></li>
+<li><a href="#jwt">jwt</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%BE%E5%83%8F%E7%95%8C%E9%9D%A2">图像界面</a>
+<ul>
+<li><a href="#fyne">fyne</a></li>
+<li><a href="#gio-ui">Gio UI</a></li>
+<li><a href="#govcl">govcl</a></li>
+<li><a href="#andlabsui">andlabs/ui</a></li>
+</ul>
+</li>
+<li><a href="#uuid">UUID</a>
+<ul>
+<li><a href="#googleuuid">google/uuid</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%89%E5%8D%93%E7%9B%B8%E5%85%B3">安卓相关</a>
+<ul>
+<li><a href="#avastapkverifier">avast/apkverifier</a></li>
+</ul>
+</li>
+<li><a href="#%E6%96%87%E4%BB%B6%E5%A4%84%E7%90%86">文件处理</a>
+<ul>
+<li><a href="#archivezip">archive/zip</a></li>
+</ul>
+</li>
+<li><a href="#%E9%9D%99%E6%80%81%E6%A3%80%E6%9F%A5">静态检查</a>
+<ul>
+<li><a href="#staticcheck">staticcheck</a></li>
+<li><a href="#golangci-lint">golangci-lint</a></li>
+<li><a href="#nilaway">NilAway</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<p>因为很多库教程就几句话，单开一页太麻烦就记在一起了。</p>
+<h2 id="web开发">web开发</h2>
+<h3 id="gorillawebsocket">gorilla/websocket</h3>
+<p><code>go get github.com/gorilla/websocket</code></p>
+<p><a href="https://cloud.tencent.com/developer/article/2365666">参考</a></p>
+<p><strong>Upgrader</strong><br>
+<code>Upgrader</code>指定用于将 HTTP 连接升级到 WebSocket 连接</p>
+<pre><code class="language-go">type Upgrader struct {
+    HandshakeTimeout time.Duration
+    ReadBufferSize, WriteBufferSize int
+    WriteBufferPool BufferPool
+    Subprotocols []string
+    Error func(w http.ResponseWriter, r *http.Request, status int, reason error)
+    CheckOrigin func(r *http.Request) bool
+    EnableCompression bool
+}
+</code></pre>
+<ul>
+<li><code>HandshakeTimeout：</code> 握手完成的持续时间</li>
+<li><code>ReadBufferSize</code>和<code>WriteBufferSize</code>：以字节为单位指定I/O缓冲区大小。如果缓冲区大小为零，则使用HTTP服务器分配的缓冲区</li>
+<li><code>CheckOrigin</code> ： 函数应仔细验证请求来源 防止跨站点请求伪造</li>
+</ul>
+<p>这里一般会设置下CheckOrigin来解决跨域问题,也可以<code>var upgrader = websocket.Upgrader{} // use default options</code>使用默认配置。</p>
+<p><strong>Conn</strong><br>
+<code>Conn</code>类型表示WebSocket连接，这个结构体的组成包括两部分，写入字段（Write fields）和 读取字段（Read  fields）</p>
+<pre><code class="language-go">type Conn struct {
+ conn        net.Conn
+ isServer    bool
+ ...
+
+ // Write fields
+ writeBuf      []byte        
+ writePool     BufferPool
+ writeBufSize  int
+ writer        io.WriteCloser 
+ isWriting     bool           
+ ...
+ // Read fields
+ readRemaining int64
+ readFinal     bool  
+ readLength    int64 
+ messageReader *messageReader 
+ ...
+}
+</code></pre>
+<p>isServer  ： 字段来区分我们是否用Conn作为客户端还是服务端，也就是说说gorilla/websocket中同时编写客户端程序和服务器程序，但是一般是Web应用程序使用单独的前端作为客户端程序</p>
+<p><strong>服务端示例</strong><br>
+以gin框架为例</p>
+<pre><code class="language-go">var upgrader = websocket.Upgrader{} // use default options
+
+func main() {
+ route := gin.Default()
+ router.GET(&quot;/ws&quot;, func(c *gin.Context) {
+  wsHandler(c.Writer, c.Request)
+ })
+ route.Run(&quot;localhost:8080&quot;)
+}
+
+func wsHandler(w http.ResponseWriter, r *http.Request) {
+ //转换为升级为websocket
+ conn, err := upGrader.Upgrade(w, r, nil)
+ //释放连接
+ defer conn.Close()
+
+ for {
+  //接收消息
+  messageType, message, err := conn.ReadMessage()
+  log.Println(&quot;server receive messageType&quot;, messageType, &quot;message&quot;, string(message))
+  //发送消息
+  err = conn.WriteMessage(messageType, []byte(&quot;pong&quot;))
+ }
+}
+</code></pre>
+<p><strong>客户端示例</strong><br>
+以gin框架为例</p>
+<pre><code class="language-go"> //服务器地址 websocket 统一使用 ws://
+ url := &quot;ws://localhost:8080/ws&quot;
+ //使用默认拨号器，向服务器发送连接请求
+ conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+ //关闭连接
+ defer conn.Close()
+ //发送消息
+ go func() {
+  for {
+   err := conn.WriteMessage(websocket.BinaryMessage, []byte(&quot;ping&quot;))
+   time.Sleep(time.Second * 2)
+  }
+ }()
+ //接收消息
+ for {
+  _, data, err := conn.ReadMessage()
+  fmt.Println(&quot;client receive message: &quot;, string(data))
+ }
+</code></pre>
+<h3 id="gorillasession">gorilla/session</h3>
+<p><a href="https://cloud.tencent.com/developer/article/2211987">「Go工具箱」web中的session管理，推荐使用gorilla/sessions包</a><br>
+<a href="https://darjun.github.io/2021/07/25/godailylib/gorilla/sessions/">Go 每日一库之 gorilla/sessions</a><br>
+<a href="https://www.topgoer.com/gin%E6%A1%86%E6%9E%B6/%E4%BC%9A%E8%AF%9D%E6%8E%A7%E5%88%B6/Sessions.html">Go语言中文文档</a></p>
+<p>几篇教程都讲的session原理还行但实现就很一般了，还是记一下。</p>
+<p><strong>初始化会话仓库</strong>：</p>
+<pre><code class="language-go">func sessions.NewFilesystemStore(path string, keyPairs ...[]byte) *sessions.FilesystemStore
+</code></pre>
+<p>这里使用的是本地文件存储会话为例，mysql或redis实现可以去查原项目的API。<br>
+<code>path</code>为存储路径，<code>keyPairs</code>为密钥，测试用的话随便设一个就行。</p>
+<p><strong>新建/获取session</strong>：</p>
+<pre><code class="language-go">func (s *FilesystemStore) New(r *http.Request, name string) (*Session, error)
+func (s *FilesystemStore) Get(r *http.Request, name string) (*Session, error)
+</code></pre>
+<p><code>Get</code>方法其实复合了<code>New</code>方法，当request中没有对应会话时返回一个新会话。name参数用来区别不同的会话，比如你要管理的是用户状态就可以用user之类。</p>
+<p><strong>保存session</strong>：</p>
+<pre><code class="language-go">func (s *FilesystemStore) Save(r *http.Request, w http.ResponseWriter, session *Session) error
+</code></pre>
+<p>这个方法同时将会话保存到本地和request。</p>
+<p><strong>操作session</strong>：</p>
+<p>session的定义如下：</p>
+<pre><code class="language-go">type Session struct {
+ // The ID of the session, generated by stores. It should not be used for
+ // user data.
+ ID string
+ // Values contains the user-data for the session.
+ Values  map[interface{}]interface{}
+ Options *Options
+ IsNew   bool
+ // contains filtered or unexported fields
+}
+</code></pre>
+<p>关于<code>Session.ID</code>，它说是说会由store自动生成，可是我试了无论是<code>Store.New()</code>方法还是<code>sessions.NewSession()</code>方法生成的session的ID都是空的。所以还是建议手动赋值一个id，可以使用<code>jakehl/goid</code>生成一个uuid。</p>
+<p>要为session赋值或者从session中取出值，只需要操作<code>session.Values</code>就行，例如：</p>
+<pre><code class="language-go">session, err := Store.New(ctx.Request, &quot;user&quot;)
+session.Values[&quot;userid&quot;]=123  // 赋值
+userid = session.Values[&quot;userid&quot;]  // 取值
+</code></pre>
+<p><strong>删除session</strong>：</p>
+<p>将session的过期时间设置为-1即可，store将自动从本地删除session，同时清空request里的session。</p>
+<pre><code class="language-go">session.Options.MaxAge = -1
+</code></pre>
+<h3 id="gin-contribsessions">gin-contrib/sessions</h3>
+<p><a href="https://golang.halfiisland.com/community/pkgs/web/gin.html#session">Golang中文学习文档</a><br>
+<a href="https://cloud.tencent.com/developer/article/2381258">Gin 框架之Cookie与Session</a></p>
+<h3 id="go-restyrestyv2">go-resty/resty/v2</h3>
+<p>restful http 客户端</p>
+<p><a href="https://darjun.github.io/2021/06/26/godailylib/resty/">Go 每日一库之 resty</a></p>
+<h2 id="数据验证">数据验证</h2>
+<h3 id="asaskevichgovalidator">asaskevich/govalidator</h3>
+<p>验证器<br>
+<a href="https://juejin.cn/post/7289249524325711908">Go每日一库之82：govalidator</a></p>
+<h3 id="go-playgroundvalidatorv10">go-playground/validator/v10</h3>
+<p>另一个验证器，刚开始把这两个搞混了。<br>
+gin 框架的默认验证器<br>
+<a href="https://golang.halfiisland.com/community/pkgs/validate/Validator.html">Validator | Go中文学习文档</a><br>
+<a href="https://learnku.com/articles/78391">Go 验证器 validator 详解</a></p>
+<h2 id="配置管理">配置管理</h2>
+<h3 id="viper">viper</h3>
+<p><a href="https://github.com/spf13/viper">viper</a></p>
+<p><a href="https://golang.halfiisland.com/community/pkgs/config/Viper.html">Golang中文学习文档</a></p>
+<p>基本用法如下：</p>
+<p><strong>设置默认值</strong>：</p>
+<p><code>viper.SetDefault(key,value)</code></p>
+<p><strong>读取配置文件</strong>：</p>
+<pre><code class="language-go">viper.SetConfigName(&quot;config.yml&quot;) // 读取名为config的配置文件，没有设置特定的文件后缀名
+viper.SetConfigType(&quot;yaml&quot;)       // 当没有设置特定的文件后缀名时，必须要指定文件类型
+viper.AddConfigPath(&quot;./&quot;)         // 在当前文件夹下寻找
+viper.AddConfigPath(&quot;$HOME/&quot;)     // 使用变量
+viper.AddConfigPath(&quot;.&quot;)          // 在工作目录下查找
+err := viper.ReadInConfig() //读取配置
+</code></pre>
+<p><strong>访问配置方法</strong>：</p>
+<ul>
+<li><code>Get(key string) : interface{}</code></li>
+<li><code>GetBool(key string) : bool</code></li>
+<li><code>GetFloat64(key string) : float64</code></li>
+<li><code>GetInt(key string) : int</code></li>
+<li><code>GetIntSlice(key string) : []int</code></li>
+<li><code>GetString(key string) : string</code></li>
+<li><code>GetStringMap(key string) : map[string]interface{}</code></li>
+<li><code>GetStringMapString(key string) : map[string]string</code></li>
+<li><code>GetStringSlice(key string) : []string</code></li>
+<li><code>GetTime(key string) : time.Time</code></li>
+<li><code>GetDuration(key string) : time.Duration</code></li>
+<li><code>IsSet(key string) : bool</code></li>
+<li><code>AllSettings() : map[string]interface{}</code></li>
+</ul>
+<p>当访问嵌套配置的时候通过.分隔符进行访问，例如<code>GetString(&quot;server.database.url&quot;)</code>。</p>
+<p>进阶用法详见文档。</p>
+<h2 id="日志库">日志库</h2>
+<h3 id="logrus">logrus</h3>
+<p><a href="https://github.com/sirupsen/logrus">logrus</a></p>
+<p>顺手记一下。</p>
+<h3 id="zap">zap</h3>
+<ul>
+<li><a href="https://github.com/uber-go/zap">zap</a></li>
+<li><a href="https://golang.halfiisland.com/community/pkgs/logs/Zap.html">Golang中文学习文档</a></li>
+<li><a href="https://www.topgoer.com/%E9%A1%B9%E7%9B%AE/log/ZapLogger.html">Go语言中文文档</a><br>
+第二个教程更好理解。</li>
+</ul>
+<p>zap有sugar和logger两种写法。sugar支持printf风格但性能相对较低。这里以logger为例。</p>
+<p><strong>快速入门</strong>：</p>
+<pre><code class="language-go">logger, err := zap.NewProduction()
+if err != nil {
+ log.Fatalf(&quot;Error creating logger: %v&quot;, err)
+}
+defer logger.Sync() 
+</code></pre>
+<p>这样就创建了一个最基础的logger，把日志写入到标准输出。语法如下：<br>
+<code>func (log *Logger) MethodXXX(msg string, fields ...Field)</code><br>
+MethodXXX是方法名,即Info/Error/Debug/Panic等，msg是日志内容，fields是一些额外的信息，比如时间戳、日志级别、错误信息等。每个zapcore.Field其实就是一组键值对参数。</p>
+<p><strong>高级配置</strong>：</p>
+<p>可以通过<code>zap.New(core)</code>方法自定义配置，需要先创建一个core。</p>
+<pre><code class="language-go">core := zapcore.NewCore(encoder, writer, level)
+logger := zap.New(core)
+</code></pre>
+<p><code>encoder</code>：编码器(如何写入日志)<br>
+<code>writer</code>：指定日志将写入的地方<br>
+<code>level</code>：指定日志级别</p>
+<p>JSON Encoder：<code>zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())</code><br>
+Console Encoder：<code>zapcore.NewConsoleEncoder(zap.NewProductionEncoderConfig())</code></p>
+<p>写入文件：<code>zapcore.AddSync(file)</code><br>
+多重写入：<code>zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(file))</code></p>
+<p>level使用默认值就行 <code>zapcore.InfoLevel</code></p>
+<h2 id="认证鉴权">认证鉴权</h2>
+<h3 id="casbin">casbin</h3>
+<p><a href="https://casbin.org/docs/overview">casbin</a></p>
+<h3 id="jwt">jwt</h3>
+<p><a href="https://pkg.go.dev/github.com/golang-jwt/jwt/v5">jwt</a></p>
+<p>教程：<br>
+<a href="https://golang.halfiisland.com/community/pkgs/auth/jwt.html">Golang中文学习文档</a></p>
+<p><strong>JWT结构</strong>：</p>
+<p>在RFC标准中，JWT由<code>Header</code> 头部,<code>Payload</code> 载荷,<code>Signature</code> 签名组成一个字符串，格式就是<code>header.payload.signature</code>，这就是一个JWT令牌的标准结构。<br>
+头部只是声明一些基本信息，通常由两部分组成，令牌的类型，和签名所使用的加密算法。<br>
+JWT的第二部分是载荷部分，主要包含声明(claims)部分，声明部分通常是关于一个实体的数据，比如一个用户。<br>
+在获得了编码的头部和编码的载荷部分后，就可以通过头部所指明的签名算法根据前两个部分的内容再加上密钥进行加密签名，所以一旦JWT的内容有任何变化，解密时得到的签名都会不一样。</p>
+<p>这里以HMAC对称加密为示例，使用类型[]byte的值用于签名和验证。</p>
+<p><strong>创建与签名token</strong>：</p>
+<p><code>func NewWithClaims(method SigningMethod, claims Claims) *Token</code></p>
+<p>其中<code>method</code>是签名方法，<code>claims</code>是载荷部分，返回一个<code>Token</code>结构体。</p>
+<p>claims可以使用预定义的<code>jwt.RegisteredClaims</code>，也可以使用<code>jwt.MapClaims</code>快捷定义，本质是一个<code>map[string]interface{}</code>。又或者自定义一个Claims结构体，将预定义的<code>jwt.RegisteredClaims</code>作为匿名字段嵌入，从而实现扩展。</p>
+<pre><code class="language-go">secret := []byte(&quot;my secret&quot;)
+token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+ &quot;username&quot;: &quot;admin&quot;,
+ &quot;password&quot;: &quot;123456&quot;,
+ &quot;role&quot;: &quot;admin&quot;,
+})
+tokenString, err := token.SignedString(secret)
+</code></pre>
+<p><strong>解析token与错误处理</strong>：</p>
+<pre><code class="language-go">// 传入token字符串和验证钩子函数，返回值就是一个Token结构体
+token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+    // 验证签名算法是否匹配
+    if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+        return nil, fmt.Errorf(&quot;不匹配的签名算法: %s&quot;, token.Header[&quot;alg&quot;])
+    }
+    // 返回验证密钥
+    return secret, nil
+})
+
+if token.Valid {
+    fmt.Println(&quot;token合法&quot;)
+} else if errors.Is(err, jwt.ErrTokenMalformed) {
+    fmt.Println(&quot;传入的字符串甚至连一个token都不是...&quot;)
+} else if errors.Is(err, jwt.ErrTokenExpired) || errors.Is(err, jwt.ErrTokenNotValidYet) {
+    fmt.Println(&quot;token已经过期或者还没有生效&quot;)
+} else {
+    fmt.Println(&quot;token处理异常...&quot;)
+}
+</code></pre>
+<p><strong>自定义Claim解析</strong>：</p>
+<pre><code class="language-go">token, err := jwt.ParseWithClaims(tokenstring, &amp;MyClaims{}, func(token *jwt.Token) (interface{}, error) {
+    return secret, nil
+}, jwt.WithValidMethods([]string{&quot;HS256&quot;})) // 使用option进行验证
+
+// 类型断言
+if claims, ok := token.Claims.(*MyClaims); ok &amp;&amp; token.Valid {
+    fmt.Println(claims)
+} else {
+    fmt.Println(err)
+}
+</code></pre>
+<p><strong>注意</strong>：使用自定义Claim需要定义一系列方法来实现<code>jwt.Claims</code>接口。</p>
+<h2 id="图像界面">图像界面</h2>
+<p>还没决定学哪个包。</p>
+<h3 id="fyne">fyne</h3>
+<p><a href="https://github.com/fyne-io/fyne">fyne</a></p>
+<p>Go跨平台GUI工具包<br>
+看起来很不错，大概会选择这个包。</p>
+<h3 id="gio-ui">Gio UI</h3>
+<p><a href="https://gioui.org/">gio</a></p>
+<p>听说不错但是文档太少了，而且没有中文文档，看起来比较劝退。</p>
+<h3 id="govcl">govcl</h3>
+<p><a href="https://github.com/ying32/govcl">govcl</a></p>
+<p>中文支持很好，但star数太少。</p>
+<h3 id="andlabsui">andlabs/ui</h3>
+<p><a href="https://github.com/andlabs/ui">andlabs/ui</a></p>
+<p>应该是个比较轻量的包，有空看看。</p>
+<h2 id="uuid">UUID</h2>
+<h3 id="googleuuid">google/uuid</h3>
+<p><code>github.com/google/uuid</code></p>
+<pre><code class="language-go">uuid := uuid.New()
+fmt.Println(uuid)
+</code></pre>
+<h2 id="安卓相关">安卓相关</h2>
+<h3 id="avastapkverifier">avast/apkverifier</h3>
+<p><a href="https://pkg.go.dev/github.com/avast/apkverifier">apkverifier</a></p>
+<p>用的这个</p>
+<p><a href="https://pkg.go.dev/github.com/morrildl/playground-android/apksign">apksign</a></p>
+<p>犄角旮旯里翻出来的，没用过，记一下</p>
+<p><a href="https://github.com/obfusk/test-apks/tree/master">test-apks</a></p>
+<p>测试用的安装包</p>
+<h2 id="文件处理">文件处理</h2>
+<h3 id="archivezip">archive/zip</h3>
+<p><a href="https://pkg.go.dev/archive/zip">archive/zip</a></p>
+<p>压缩解压,go的标准库</p>
+<p><strong>解压</strong>：</p>
+<p>使用<code>reader,err := zip.OpenReader(path)</code>打开压缩包，之后遍历<code>_, file := range reader.File</code>，就可以正常使用文件句柄file。如果需要解压文件出来，就新建文件后复制过去。</p>
+<p><strong>压缩</strong>：</p>
+<p>首先新建空文件，用<code>zipWriter, err := zip.NewWriter(path)</code>方法打开。对需要压缩的文件，打开后用<code>info, err := file.Stat()</code>方法获取文件信息，<code>header, err := zip.FileInfoHeader(info)</code>方法转换成文件头，<code>fileWriter, err := zipWriter.CreateWriter(header)</code>方法转换成压缩包内的写入接口，最后<code>io.Copy(fileWriter, file)</code>复制文件进去。</p>
+<h2 id="静态检查">静态检查</h2>
+<h3 id="staticcheck">staticcheck</h3>
+<p><a href="https://github.com/dominikh/go-tools">staticcheck</a></p>
+<h3 id="golangci-lint">golangci-lint</h3>
+<p><a href="https://github.com/golangci/golangci-lint">golangci-lint</a></p>
+<h3 id="nilaway">NilAway</h3>
+<p><a href="https://github.com/uber-go/nilaway">NilAway</a></p>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#go%E5%BA%93%E9%80%9F%E6%9F%A5%E7%AC%94%E8%AE%B0">go库速查笔记</a>
+<ul>
+<li><a href="#web%E5%BC%80%E5%8F%91">web开发</a>
+<ul>
+<li><a href="#gorillawebsocket">gorilla/websocket</a></li>
+<li><a href="#gorillasession">gorilla/session</a></li>
+<li><a href="#gin-contribsessions">gin-contrib/sessions</a></li>
+<li><a href="#go-restyrestyv2">go-resty/resty/v2</a></li>
+</ul>
+</li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E9%AA%8C%E8%AF%81">数据验证</a>
+<ul>
+<li><a href="#asaskevichgovalidator">asaskevich/govalidator</a></li>
+<li><a href="#go-playgroundvalidatorv10">go-playground/validator/v10</a></li>
+</ul>
+</li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86">配置管理</a>
+<ul>
+<li><a href="#viper">viper</a></li>
+</ul>
+</li>
+<li><a href="#%E6%97%A5%E5%BF%97%E5%BA%93">日志库</a>
+<ul>
+<li><a href="#logrus">logrus</a></li>
+<li><a href="#zap">zap</a></li>
+</ul>
+</li>
+<li><a href="#%E8%AE%A4%E8%AF%81%E9%89%B4%E6%9D%83">认证鉴权</a>
+<ul>
+<li><a href="#casbin">casbin</a></li>
+<li><a href="#jwt">jwt</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%BE%E5%83%8F%E7%95%8C%E9%9D%A2">图像界面</a>
+<ul>
+<li><a href="#fyne">fyne</a></li>
+<li><a href="#gio-ui">Gio UI</a></li>
+<li><a href="#govcl">govcl</a></li>
+<li><a href="#andlabsui">andlabs/ui</a></li>
+</ul>
+</li>
+<li><a href="#uuid">UUID</a>
+<ul>
+<li><a href="#googleuuid">google/uuid</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%89%E5%8D%93%E7%9B%B8%E5%85%B3">安卓相关</a>
+<ul>
+<li><a href="#avastapkverifier">avast/apkverifier</a></li>
+</ul>
+</li>
+<li><a href="#%E6%96%87%E4%BB%B6%E5%A4%84%E7%90%86">文件处理</a>
+<ul>
+<li><a href="#archivezip">archive/zip</a></li>
+</ul>
+</li>
+<li><a href="#%E9%9D%99%E6%80%81%E6%A3%80%E6%9F%A5">静态检查</a>
+<ul>
+<li><a href="#staticcheck">staticcheck</a></li>
+<li><a href="#golangci-lint">golangci-lint</a></li>
+<li><a href="#nilaway">NilAway</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>

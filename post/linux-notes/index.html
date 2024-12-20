@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>Linux笔记 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="Linux笔记 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="Linux笔记" />
+  <meta property="og:url" content="https://jinvic.github.io/post/linux-notes/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1734678270501"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1734678270501"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+                <a href="https://jinvic.github.io/tag/47cAf1nsEU/" class="tag">Linux</a>
+                
+                <a href="https://jinvic.github.io/tag/KbkCyWeWckl/" class="tag">笔记</a>
+                
+              </span>
+              <h1>Linux笔记</h1>
+              <span class="meta">
+                Posted on
+                2024-11-02，7 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <h1 id="linux笔记">Linux笔记</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#linux%E7%AC%94%E8%AE%B0">Linux笔记</a>
+<ul>
+<li><a href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">常用命令</a></li>
+<li><a href="#%E9%83%A8%E5%88%86%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85">部分应用安装</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85vfox">安装vfox</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85make">安装make</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85protobuf">安装protobuf</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85go">安装go</a></li>
+</ul>
+</li>
+<li><a href="#wsl2%E9%87%8D%E8%A3%85%E7%B3%BB%E7%BB%9F">WSL2重装系统</a></li>
+<li><a href="#wsl2%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86">WSL2配置代理</a></li>
+<li><a href="#linux%E5%AE%89%E8%A3%85homebrew">Linux安装homebrew</a></li>
+<li><a href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86">用户管理</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p>本来最开始学Linux时用VMware装了个ubuntu镜像，但用起来卡卡的。虽然最开始时冲着图像界面去的，但后来发现用命令行操作更常用。于是又装了个WSL2学习命令行操作。而且挂载磁盘也比VMware方便。官方文档也很详细，中文支持很好，所以学习起来也很方便。<br>
+这里记一下使用过程中遇到的一些问题。</p>
+<h2 id="常用命令">常用命令</h2>
+<p>并没打算搞个命令大全之类的，只是记一下最常用且有用的几个。用多了随时添，没必要整一大堆跟背单词一样。</p>
+<ul>
+<li>
+<p>ls 列出目录中的文件</p>
+</li>
+<li>
+<p>cd 更改当前目录</p>
+</li>
+<li>
+<p>pwd 打印当前工作目录</p>
+</li>
+<li>
+<p>cat 显示文件的内容</p>
+</li>
+<li>
+<p>rm 删除文件</p>
+</li>
+<li>
+<p>find 在目录层次结构中搜索文件</p>
+</li>
+<li>
+<p>whereis 在特定目录中查找符合条件的文件</p>
+</li>
+<li>
+<p>sudo 以超级用户身份执行命令</p>
+</li>
+<li>
+<p>touch 创建文件/修改文件属性</p>
+</li>
+<li>
+<p>nohup 在系统后台不挂断地运行命令</p>
+</li>
+<li>
+<p>htop 交互式进程查看器，支持鼠标操作</p>
+</li>
+</ul>
+<h2 id="部分应用安装">部分应用安装</h2>
+<p>只是做个集合整理，避免每次重装时一个个去翻文档和官网。</p>
+<h3 id="安装vfox">安装vfox</h3>
+<p><a href="https://vfox.lhan.me/zh-hans/guides/quick-start.html">来源</a></p>
+<p><strong>安装vfox</strong>：</p>
+<p>apt安装命令：</p>
+<pre><code class="language-bash">echo &quot;deb [trusted=yes] https://apt.fury.io/versionfox/ /&quot; | sudo tee /etc/apt/sources.list.d/versionfox.list
+ sudo apt-get update
+ sudo apt-get install vfox
+</code></pre>
+<p><strong>挂载vfox到Shell</strong>：</p>
+<pre><code class="language-bash">echo 'eval &quot;$(vfox activate bash)&quot;' &gt;&gt; ~/.bashrc
+</code></pre>
+<h3 id="安装make">安装make</h3>
+<p>这里使用vfox安装并进行版本管理。<br>
+同时作个vfox安装应用教程。</p>
+<pre><code class="language-bash"># 添加插件
+vfox add make
+# 查看所有可用版本
+# vfox search make
+# 安装最新版本
+vfox install make@latest
+# 设置使用版本
+vfox use -g make
+</code></pre>
+<p>其中作用域参数有<code>-p -g -s</code>三种，分别表示项目，全局，会话。详情略。</p>
+<h3 id="安装protobuf">安装protobuf</h3>
+<p><a href="https://grpc.org.cn/docs/protoc-installation/">来源</a></p>
+<p>虽然vfox提供了unofficial的protobuf插件，但好像有bug安装不了，还是用apt了。</p>
+<pre><code class="language-bash">sudo apt install -y protobuf-compiler
+</code></pre>
+<p>如果要进行go开发，还需要额外安装插件：</p>
+<pre><code class="language-bash">go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+</code></pre>
+<h3 id="安装go">安装go</h3>
+<p>还是使用vfox，见上<a href="#%E5%AE%89%E8%A3%85make">安装make</a>。</p>
+<p>不要忘了更新path，虽然好像不加这行也能在其他目录调用。可能vfox时默认加的：</p>
+<pre><code class="language-bash">export PATH=&quot;$PATH:$(go env GOPATH)/bin&quot;
+</code></pre>
+<p>如果要进行grpc开发，还需要安装对应插件：</p>
+<pre><code class="language-bash">go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+</code></pre>
+<h2 id="wsl2重装系统">WSL2重装系统</h2>
+<p>有种说法是再ubuntu的应用设置中选择重置，亲测无效。</p>
+<p>后来又找到别的方法。输入<code>wsl.exe --unregister Ubuntu</code>，再<code>wsl --install</code>就能重新注册用户了。</p>
+<p>后续流程按官方的<a href="https://learn.microsoft.com/zh-cn/windows/wsl/setup/environment">最佳实践</a>来就行。</p>
+<h2 id="wsl2配置代理">WSL2配置代理</h2>
+<ol>
+<li>
+<p>如clash等代理软件打开Allow LAN（允许局域网链接）选项</p>
+</li>
+<li>
+<p>在wsl中，使用 <code>cd~</code> 进入用户目录</p>
+</li>
+<li>
+<p>编辑<code>.bashrc</code>文件，在末尾添加如下内容：</p>
+<pre><code class="language-bash">hostip=$(ip route show | grep -i default | awk '{ print $3}')
+ export https_proxy=&quot;http://${hostip}:7890&quot;
+ export http_proxy=&quot;http://${hostip}:7890&quot;
+ export all_proxy=&quot;socks5://${hostip}:7890&quot;
+</code></pre>
+</li>
+<li>
+<p>保存退出，执行 <code>source ~/.bashrc</code> 使配置生效</p>
+</li>
+<li>
+<p>使用<code>wget www.google.com</code>测试是否成功</p>
+</li>
+</ol>
+<p>我看很多教程获取ip地址都用的<br>
+<code>cat /etc/resolv.conf |grep -oP '(?&lt;=nameserver\ ).*'</code><br>
+可我看<a href="https://learn.microsoft.com/zh-cn/windows/wsl/networking#default-networking-mode-nat">官方教程</a>是<br>
+<code>ip route show | grep -i default | awk '{ print $3}'</code><br>
+也不知道为什么，反正我用前一个不行后一个行。</p>
+<h2 id="linux安装homebrew">Linux安装homebrew</h2>
+<p>虽然<a href="https://brew.sh/zh-cn/">Homebrew官网</a>上就一句话：</p>
+<p><code>/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;</code></p>
+<p>但如果你真的直接把这行代码复制粘贴到终端，大概率看到如下报错：</p>
+<pre><code class="language-text">Error: Failed to install Homebrew Portable Ruby and cannot find another Ruby 3.3!
+If there's no Homebrew Portable Ruby available for your processor:
+- install Ruby 3.3 with your system package manager (or rbenv/ruby-build)
+- make it first in your PATH
+- try again
+</code></pre>
+<p>提示说找不到适合你的处理器架构的Ruby 3.3版本，所以我们需要先安装一个Ruby 3.3版本。这里顺便推荐一个版本管理工具<a href="https://vfox.lhan.me/zh-hans/">vfox</a>。</p>
+<p>安装Ruby后再安装Homebrew，在茫茫的返回中你找到一行：</p>
+<p><code>==&gt; Installation successful!</code></p>
+<p>但是当你再次输入<code>brew -v</code>命令时，却提示<code>command not found</code>。再看一眼发现了在这行上面还有个报错：</p>
+<pre><code class="language-text">Warning: /home/linuxbrew/.linuxbrew/bin is not in your PATH.
+  Instructions on how to configure your shell for Homebrew
+  can be found in the 'Next steps' section below.
+</code></pre>
+<p>这是因为Homebrew的安装路径不在你的PATH环境变量中，所以需要手动添加。</p>
+<pre><code class="language-bash">echo 'export PATH=&quot;/home/linuxbrew/.linuxbrew/bin:$PATH&quot;' &gt;&gt; ~/.bashrc
+source ~/.bashrc
+</code></pre>
+<p>执行如上命令将homebrew添加到path。这时再执行<code>brew -v</code>就能看到版本号了。</p>
+<h2 id="用户管理">用户管理</h2>
+<p>当然可以一个root打天下。但我还是想为不同用途分下多用户。记一下用户操作。</p>
+<p><strong>新建用户</strong>：<code>useradd 选项 用户名</code>。可选项如下：</p>
+<ul>
+<li><code>-c</code> comment 指定一段注释性描述。</li>
+<li><code>-d</code> 目录 指定用户主目录，如果此目录不存在，则同时使用-m选项，可以创建主目录。</li>
+<li><code>-g</code> 用户组 指定用户所属的用户组。</li>
+<li><code>-G</code> 用户组，用户组 指定用户所属的附加组。</li>
+<li><code>-s</code> Shell文件 指定用户的登录Shell。</li>
+<li><code>-u</code> 用户号 指定用户的用户号，如果同时有-o选项，则可以重复使用其他用户的标识号。</li>
+</ul>
+<p>推荐操作：<code>sudo useradd -m username -s /bin/bash -g sudo</code>，创建用户的同时新建主目录并设置bash。</p>
+<p><strong>删除用户</strong>：<code>userdel 选项 用户名</code>。推荐操作<code>userdel -r username</code>，<code>-r</code>选项将连主目录一起删除。</p>
+<p><strong>修改用户</strong>：<code>usermod 选项 用户名</code>。选项同上。</p>
+<p><strong>修改密码</strong>：<code>passwd 选项 用户名</code>。可选项如下：</p>
+<ul>
+<li><code>-l</code> 锁定口令，即禁用账号。</li>
+<li><code>-u</code> 口令解锁。</li>
+<li><code>-d</code> 使账号无口令。</li>
+<li><code>-f</code> 强迫用户下次登录时修改口令。</li>
+</ul>
+<p><strong>查看用户组</strong>：<code>group username</code>或<code>id username</code></p>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#linux%E7%AC%94%E8%AE%B0">Linux笔记</a>
+<ul>
+<li><a href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">常用命令</a></li>
+<li><a href="#%E9%83%A8%E5%88%86%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85">部分应用安装</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85vfox">安装vfox</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85make">安装make</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85protobuf">安装protobuf</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85go">安装go</a></li>
+</ul>
+</li>
+<li><a href="#wsl2%E9%87%8D%E8%A3%85%E7%B3%BB%E7%BB%9F">WSL2重装系统</a></li>
+<li><a href="#wsl2%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86">WSL2配置代理</a></li>
+<li><a href="#linux%E5%AE%89%E8%A3%85homebrew">Linux安装homebrew</a></li>
+<li><a href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86">用户管理</a></li>
+</ul>
+</li>
+</ul>
+</div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://jinvic.github.io/post/micro-blog-2024-11/">
+              <span class="post-title">
+                碎碎念 2024-11&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>

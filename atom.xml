@@ -1,0 +1,1500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://jinvic.github.io</id>
+    <title>Jinvic&apos;s Blog</title>
+    <updated>2025-01-04T00:22:43.249Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://jinvic.github.io"/>
+    <link rel="self" href="https://jinvic.github.io/atom.xml"/>
+    <subtitle>记录学习与生活</subtitle>
+    <logo>https://jinvic.github.io/images/avatar.png</logo>
+    <icon>https://jinvic.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2025, Jinvic&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Linux配置ClashMeta内核]]></title>
+        <id>https://jinvic.github.io/post/configure-clashmeta-kernel-for-linux/</id>
+        <link href="https://jinvic.github.io/post/configure-clashmeta-kernel-for-linux/">
+        </link>
+        <updated>2024-12-20T03:33:14.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="linux配置clashmeta内核">Linux配置ClashMeta内核</h1>
+<blockquote>
+<p>配置项没弄好，换 <s>数据删除</s> <!-- [ShellCrash](https://github.com/juewuy/ShellCrash/tree/dev) --> 解决了，感觉前面的工作都白干了。但写都写了还是发篇博客。</p>
+</blockquote>
+<h2 id="安装homebrew">安装homebrew</h2>
+<p>使用<code>homebrew</code>安装mihomo。注意：<code>homebrew</code>不建议使用root用户直接安装，建议新创建一个用户再添加到sudo用户组。例如创建新用户<code>brew</code>:</p>
+<pre><code class="language-bash">sudo useradd brew
+sudo passwd brew # 设置新用户的密码
+sudo usermod -aG sudo brew
+</code></pre>
+<p>完成后使用新用户账号密码登录，可以使用<code>groups</code>命令检查用户是否属于sudo组。</p>
+<p>使用如下命令安装<code>homebrew</code>：</p>
+<pre><code class="language-bash">/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;
+</code></pre>
+<p>如果出现如下报错：</p>
+<pre><code class="language-txt">Error: Failed to install Homebrew Portable Ruby and cannot find another Ruby 3.3!
+If there's no Homebrew Portable Ruby available for your processor:
+- install Ruby 3.3 with your system package manager (or rbenv/ruby-build)
+- make it first in your PATH
+- try again
+</code></pre>
+<p>提示说找不到适合你的处理器架构的Ruby 3.3版本，需要自已装一个ruby，安装方法不在此赘述。我是在wsl上出现这个问题的，云服务器上没有出现。</p>
+<p>安装Homebrew成功后，需要手动将其添加到PATH路径：</p>
+<pre><code class="language-bash">echo 'export PATH=&quot;/home/linuxbrew/.linuxbrew/bin:$PATH&quot;' &gt;&gt; ~/.bashrc
+source ~/.bashrc
+</code></pre>
+<p>然后使用<code>brew -v</code>验证homebrew是否能够正常使用。</p>
+<h2 id="安装mihomo">安装mihomo</h2>
+<p>使用homebrew可以很方便地安装mihomo：</p>
+<p><code>homebrew install mihomo</code></p>
+<p>安装完成后提示信息如下：</p>
+<pre><code class="language-text">You need to customize /home/linuxbrew/.linuxbrew/etc/mihomo/config.yaml.
+
+To start mihomo now and restart at login:
+  brew services start mihomo
+Or, if you don't want/need a background service you can just run:
+  /home/linuxbrew/.linuxbrew/opt/mihomo/bin/mihomo -d /home/linuxbrew/.linuxbrew/etc/mihomo
+</code></pre>
+<p>提示你配置文件创建在<code>/home/linuxbrew/.linuxbrew/etc/mihomo/config.yaml</code>。有需要可以参考<a href="https://wiki.metacubex.one/config/">文档</a>进行修改。</p>
+<p>如下是一些使用<code>homebrew services</code>操作mihomo的命令：</p>
+<pre><code class="language-bash">brew services start mihomo      # 启动服务
+brew services stop mihomo       # 停止服务
+brew services list              # 查看服务状态
+brew services restart mihomo·   # 重启服务
+</code></pre>
+<p><strong>【可选】：</strong> 个人比较喜欢用<a href="https://just.systems/man/zh/%E8%AF%B4%E6%98%8E.html">just</a>管理命令。<code>.justfile</code>文件如下：</p>
+<pre><code class="language-text">start:
+    brew services start mihomo
+stop:
+    brew services stop mihomo
+list:
+    brew services list
+restart:
+    brew services restart mihomo
+
+alias st:=start
+alias sp:=stop
+alias li:=list
+alias re:=restart
+</code></pre>
+<h2 id="用户界面">用户界面</h2>
+<p>完全靠参数也不方便，我们先来配置ui界面。可选的面板有yacd,metacubexd等。</p>
+<p><s>数据删除</s></p>
+<!-- - [metacubexd](https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip)
+- [Yacd-meta](https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip)
+- [Razord-meta](https://github.com/MetaCubeX/Razord-meta/archive/refs/heads/gh-pages.zip) -->
+<p>下载压缩包并解压。然后往配置文件中添加如下内容：</p>
+<pre><code class="language-yaml">external-controller: 0.0.0.0:9090# RESTful API 监听地址
+secret: your_secret # `Authorization:Bearer ${secret}`  # 设置登录面板的密码
+external-ui: /home/brew/mihomo/metacubexd-gh-pages/     # 换成你压缩包解压出来的文件夹的地址
+</code></pre>
+<p>端口按需求改，地址换成你自己的，保存后重启服务。在防火墙和安全组开放相关端口后，访问<code>http://&lt;你的服务器ip&gt;:9093/ui</code>即可登录面板。</p>
+<h2 id="代理配置">代理配置</h2>
+<p>见 <s>数据删除</s> <!-- [subconverter](https://github.com/tindy2013/subconverter/tree/master) --> 。<br>
+更方便的用法是使用现成的客户端，如 <s>数据删除</s> <!-- clash for windows --> ，<s>数据删除</s> <!-- clash verge rev -->。</p>
+<h2 id="https配置">https配置</h2>
+<p>虽然注释写着要配置tls的证书路径，但实测只要反向代理时配了证书，配置项里写一下https的端口就行。<br>
+如果不进行反向代理直接通过ip和端口号访问才需要在设置里配证书路径。</p>
+<pre><code class="language-yaml"># 直接通过ip访问还需要配置证书
+tls:
+  certificate: string # 证书 PEM 格式，或者 证书的路径
+  private-key: string # 证书对应的私钥 PEM 格式，或者私钥路径
+# 反向代理只需要配置https端口
+external-controller-tls: 0.0.0.0:9443 # RESTful API HTTPS 监听地址，需要配置 tls 部分配置文件
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Certbot申请泛域名SSL证书并自动续期]]></title>
+        <id>https://jinvic.github.io/post/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/</id>
+        <link href="https://jinvic.github.io/post/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/">
+        </link>
+        <updated>2024-12-11T09:15:32.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="certbot申请泛域名ssl证书与自动续期">Certbot申请泛域名SSL证书与自动续期</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#certbot%E7%94%B3%E8%AF%B7%E6%B3%9B%E5%9F%9F%E5%90%8Dssl%E8%AF%81%E4%B9%A6%E4%B8%8E%E8%87%AA%E5%8A%A8%E7%BB%AD%E6%9C%9F">Certbot申请泛域名SSL证书与自动续期</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85-certbot">安装 Certbot</a></li>
+<li><a href="#%E5%9F%9F%E5%90%8D%E9%AA%8C%E8%AF%81%E8%AF%81%E4%B9%A6%E7%94%9F%E6%88%90">域名验证&amp;证书生成</a></li>
+<li><a href="#nginx%E9%85%8D%E7%BD%AE%E8%AF%81%E4%B9%A6">nginx配置证书</a></li>
+<li><a href="#%E8%87%AA%E5%8A%A8%E7%BB%AD%E6%9C%9F">自动续期</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p>参考：<a href="https://www.cnblogs.com/michaelshen/p/18538178">使用 Let’s Encrypt 免费申请泛域名 SSL 证书，并实现自动续期</a></p>
+<p>本来不打算写这篇的，原教程已经很详细了。不过他使用的腾讯云，在自动续期这块有个cli工具可以用。而我用的华为云只能调api，所以还是得自己摸索下顺便记录。</p>
+<h2 id="安装-certbot">安装 Certbot</h2>
+<p>虽然很想用包管理器，但官网都只用snap和pip安装，为了保险还是用到snap。</p>
+<pre><code class="language-bash">sudo snap install --classic certbot #安装Certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot #创建一个符号链接，确保可以执行certbot命令（相当于快捷方式）
+</code></pre>
+<h2 id="域名验证证书生成">域名验证&amp;证书生成</h2>
+<p>Certbot需要验证你申请证书的域名是否确实属于你。具体流程就是给你个随机字符串让你解析到固定域名它再来验证。</p>
+<pre><code class="language-bash">sudo certbot certonly --manual --preferred-challenges dns -d *.example.com -d example.com
+</code></pre>
+<p>记得替换你的邮箱和域名。然后他会请求你的邮箱用于紧急更新和安全提醒。</p>
+<figure data-type="image" tabindex="1"><img src="https://jinvic.github.io/post-images/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/1.png" alt="pic1" loading="lazy"></figure>
+<p>然后是两次确认。第一次是服务条款选是，第二次是问能不能给你邮箱发广告邮件，可以选否。</p>
+<figure data-type="image" tabindex="2"><img src="https://jinvic.github.io/post-images/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/2.png" alt="pic2" loading="lazy"></figure>
+<p>接着就是给你一串字符串去解析到对应域名。例如我就是将那一串解析到<code>_acme-challenge.jinvic.top</code>。具体解析方法看你的DNS服务商，重点是<strong>记录类型</strong>要选<code>TXT</code>。</p>
+<figure data-type="image" tabindex="3"><img src="https://jinvic.github.io/post-images/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/3.png" alt="pic3" loading="lazy"></figure>
+<p>添加解析完成后稍等一会再继续。你也可以在<a href="https://toolbox.googleapps.com/apps/dig/#TXT/">这里</a>验证解析是否成功。</p>
+<p>验证成功后就会自动生成证书，并告诉你证书所在目录和过期时间。</p>
+<figure data-type="image" tabindex="4"><img src="https://jinvic.github.io/post-images/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/4.png" alt="pic4" loading="lazy"></figure>
+<h2 id="nginx配置证书">nginx配置证书</h2>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name example.com www.example.com;
+ 
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+ 
+server {
+    listen 443 ssl;
+    server_name example.com www.example.com;
+ 
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+ 
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+    }
+}
+</code></pre>
+<h2 id="自动续期">自动续期</h2>
+<p>内容有点多，新开了个项目：<a href="https://github.com/Jinvic/certbot-huaweicloud">Jinvic/certbot-huaweicloud</a>。用这个项目生成供certbot钩子运行的程序。</p>
+<pre><code class="language-bash">certbot renew --manual --preferred-challenges=dns \
+--manual-auth-hook /path/to/project/bin/certbot -use auth \
+--manual-cleanup-hook /path/to/project/bin/certbot -use cleanup \
+--deploy-hook &quot;sudo nginx -s reload&quot;
+</code></pre>
+<ul>
+<li><code>/path/to/project/bin/certbot</code> 为你编译生成的程序路径。</li>
+<li><code>sudo nginx -s reload</code> 用于重新加载配置nginx配置。</li>
+</ul>
+<p>编辑生成的程序需要读取配置文件。cd到项目目录或者将配置文件<code>.env</code>放到程序同一目录再执行上述命令。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Linux搭建Webdav服务]]></title>
+        <id>https://jinvic.github.io/post/build-webdav-service-on-linux/</id>
+        <link href="https://jinvic.github.io/post/build-webdav-service-on-linux/">
+        </link>
+        <updated>2024-12-10T00:59:01.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="linux搭建webdav服务">Linux搭建webDav服务</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#linux%E6%90%AD%E5%BB%BAwebdav%E6%9C%8D%E5%8A%A1">Linux搭建webDav服务</a>
+<ul>
+<li><a href="#webdav">webdav</a>
+<ul>
+<li><a href="#webdav%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE">webdav安装配置</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8%E9%87%8D%E5%90%AF%E6%9C%8D%E5%8A%A1">启动&amp;重启服务</a></li>
+<li><a href="#webdav-justfile">webdav justfile</a></li>
+</ul>
+</li>
+<li><a href="#alist">alist</a>
+<ul>
+<li><a href="#alist-%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E7%99%BB%E5%BD%95">alist 安装配置登录</a></li>
+<li><a href="#%E8%BF%9E%E6%8E%A5%E5%AD%98%E5%82%A8">连接存储</a></li>
+<li><a href="#alist-justfile">alist justfile</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%A2%E6%88%B7%E7%AB%AF">客户端</a>
+<ul>
+<li><a href="#raidrive">raidrive</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<p>一直都有一个文件存储传输同步共享的需求，但苦于没有太好的解决方案。qq不安全难预览还会改你压缩包后缀名，纯强盗逻辑逼着你用他家的垃圾产品生态。百度网盘则是众所周知的限速。虽然我有会员，但感觉还是更适合长期大容量存储而非短期临时的频繁存取，自带的同步空间也不好用只能同步固定文件夹。WPS倒是可以自选同步文件夹，但本来就不是做文件管理这行的使用体验极差，遇上个几百兆的pdf就歇菜了，连基础的文档服务都做不好感觉纯噱头。现在打算在服务器上自己搭一个服务，不想再受这些鸟气。</p>
+<p>本次搭建webdav使用<a href="https://github.com/hacdias/webdav/">hacdias/webdav</a>，教程参考readme文件和博客<a href="https://sunjx97.github.io/posts/cb46f731/">使用docker搭建webdav应用</a>。</p>
+<h2 id="webdav">webdav</h2>
+<p>首先准备一个专门的文件目录，用于放置配置文件和作为webdav的存储路径。这里我的路径是<code>service/webdav</code>。</p>
+<h3 id="webdav安装配置">webdav安装配置</h3>
+<p><strong>webdav配置</strong>：</p>
+<p>在目录下新建文件<code>config.yml</code>，写入如下内容：</p>
+<pre><code class="language-yml"># 监听任意网卡，多网卡可指定对应ip
+address: 0.0.0.0
+port: 6065
+auth: true
+prefix: /
+modify: true
+rules: []
+
+# 跨域设置 | 不是很懂
+cors:
+  enabled: true
+  credentials: true
+  allowed_headers:
+    - Depth
+  allowed_hosts:
+    - http://localhost:6065
+  allowed_methods:
+    - GET
+  exposed_headers:
+    - Content-Length
+    - Content-Range
+
+# 用户信息，如果 auth 为 true 生效  
+users:
+  - username: admin
+    password: admin
+    # 配置自己的 webdav 访问范围，此例为 /data 内所有文件
+    scope: /data
+    # 配置用户权限 默认为R（只读）
+    permissions: CRUD
+</code></pre>
+<p>其中port是docker容器内的端口，可以自行修改。cors跨域设置这块不是很懂。后面的用户信息记得改改用户名和密码，以及根据需求配置用户权限。</p>
+<p><strong>docker配置</strong>：</p>
+<p>在目录下新建文件<code>docker-compose.yml</code>，写入如下内容：</p>
+<pre><code class="language-yml">services:
+  webdav:
+    image: hacdias/webdav
+    container_name: webdav
+    restart: always
+    ports:
+      - 6065:6065
+    volumes:
+      - ./data:/data
+      - ./config.yml:/config.yml
+</code></pre>
+<p>其中port前部分改成你在服务器上要使用的端口，记得开放防火墙和安全组。后部分则是docker内端口，和配置文件保持一致。</p>
+<p>volumes的路径我使用的相对路径，也可以根据需求自行修改。第一行是webdav的文件存储位置，第二行是你的配置文件位置。</p>
+<h3 id="启动重启服务">启动&amp;重启服务</h3>
+<p>配置项完成后，使用<code>sudo docker-compose up -d</code>启动服务。</p>
+<p>如果你修改了配置文件，如添加用户或修改密码，可以使用<code>sudo docker-compose restart webdav</code>重启服务。</p>
+<h3 id="webdav-justfile">webdav justfile</h3>
+<blockquote>
+<p>just 为您提供一种保存和运行项目特有命令的便捷方式。</p>
+</blockquote>
+<p><a href="https://github.com/casey/just">just地址</a><br>
+<a href="https://just.systems/man/zh/%E8%AF%B4%E6%98%8E.html">just文档</a></p>
+<p>webdav相关命令的justfile如下：</p>
+<pre><code class="language-yml">alias re := restart
+
+run:
+    sudo docker-compose up -d
+
+restart:
+    sudo docker-compose restart webdav
+
+del:
+    sudo rm -r data/
+</code></pre>
+<h2 id="alist">alist</h2>
+<blockquote>
+<p>alist: 一个支持多种存储的文件列表程序，使用 Gin 和 Solidjs。</p>
+</blockquote>
+<p>搭了个webdav本来该到此为止的，但又发现一个alist好像挺有意思，见猎心喜搭来看看。我就说明明webdav很常用但教程相对偏少，原来都用的这个。相当于一个中间层，使用alist连接不支持webdev的文件存储方案（如百度网盘），就可以把alist当webdev连接了。</p>
+<h3 id="alist-安装配置登录">alist 安装配置登录</h3>
+<p>我是使用的docker安装，直接使用官方提供的docker-compose：</p>
+<pre><code class="language-yml">services:
+    alist:
+        image: 'xhofe/alist:latest'
+        container_name: alist
+        volumes:
+            - '/etc/alist:/opt/alist/data'
+        ports:
+            - '5244:5244'
+        environment:
+            - PUID=0
+            - PGID=0
+            - UMASK=022
+        restart: unless-stopped
+</code></pre>
+<p>使用<code>sudo docker-compose up -d</code>启动服务。然后访问<code>&lt;服务器地址&gt;:5244</code>登录控制台。初始账号为<code>admin</code>，密码随机生成，通过<code>sudo docker logs alist</code>查看日志：</p>
+<figure data-type="image" tabindex="1"><img src="https://jinvic.github.io/post-images/build-webdav-service-on-linux/pic1.png" alt="pic1" loading="lazy"></figure>
+<p>登录后记得修改密码。</p>
+<h3 id="连接存储">连接存储</h3>
+<p>连接存储直接看<a href="https://alist.nn.ci/zh/guide/drivers/common.html">官方文档</a>就行。</p>
+<p>有一点需要注意，我连接自建的webdav时直接用<code>&lt;ip&gt;:&lt;port&gt;</code>报错：<code>first path segment in URL cannot contain colon</code>，需要加上<code>http(s)://</code>协议头。</p>
+<h3 id="alist-justfile">alist justfile</h3>
+<p>alist 相关命令的justfile如下：</p>
+<pre><code class="language-yml">alias re := restart
+alias upd := update
+
+run:
+    sudo docker-compose up -d
+
+restart:
+    sudo docker-compose restart alist
+
+update:
+    sudo docker-compose pull | \
+    sudo docker-compose up -d
+
+log:
+    sudo docker logs alist
+</code></pre>
+<h2 id="客户端">客户端</h2>
+<h3 id="raidrive">raidrive</h3>
+<p>可以使用<a href="https://www.raidrive.com/">raidrive</a>将Webdav挂载到电脑盘。配置示例如下，依次填入你的服务器地址，配置中设置的端口号，账号密码：<br>
+<img src="https://jinvic.github.io/post-images/build-webdav-service-on-linux/pic2.png" alt="pic2" loading="lazy"></p>
+<p><strong>注意</strong>：如果你在配置中没有设置tls，不要勾选&quot;地址&quot;旁边的&quot;安全连接&quot;复选框。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[碎碎念 2024-12]]></title>
+        <id>https://jinvic.github.io/post/micro-blog-2024-12/</id>
+        <link href="https://jinvic.github.io/post/micro-blog-2024-12/">
+        </link>
+        <updated>2024-12-03T00:03:26.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="碎碎念">碎碎念</h1>
+<p><strong>已迁移：</strong> 已经迁移至自部署的<a href="https://mblog.jinvic.top/">微博客</a>项目。</p>
+<hr>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E7%A2%8E%E7%A2%8E%E5%BF%B5">碎碎念</a>
+<ul>
+<li><a href="#2024-12-03">2024-12-03</a>
+<ul>
+<li><a href="#2024-12-03-080400">2024-12-03 08:04:00</a></li>
+</ul>
+</li>
+<li><a href="#2024-12-04">2024-12-04</a>
+<ul>
+<li><a href="#2024-12-04-102655">2024-12-04 10:26:55</a></li>
+</ul>
+</li>
+<li><a href="#2024-12-05">2024-12-05</a>
+<ul>
+<li><a href="#2024-12-05-094054">2024-12-05 09:40:54</a></li>
+<li><a href="#2024-12-05-102413">2024-12-05 10:24:13</a></li>
+<li><a href="#2024-12-05-152443">2024-12-05 15:24:43</a></li>
+</ul>
+</li>
+<li><a href="#2024-12-06">2024-12-06</a>
+<ul>
+<li><a href="#2024-12-06-154909">2024-12-06 15:49:09</a></li>
+</ul>
+</li>
+<li><a href="#2024-12-09">2024-12-09</a>
+<ul>
+<li><a href="#2024-12-09-152624">2024-12-09 15:26:24</a></li>
+<li><a href="#2024-12-09-164053">2024-12-09 16:40:53</a></li>
+</ul>
+</li>
+<li><a href="#2024-12-11">2024-12-11</a>
+<ul>
+<li><a href="#2024-12-11-081514">2024-12-11 08:15:14</a></li>
+<li><a href="#2024-12-11-152417">2024-12-11 15:24:17</a></li>
+</ul>
+</li>
+<li><a href="#2024-12-12">2024-12-12</a>
+<ul>
+<li><a href="#2024-12-12-164734">2024-12-12 16:47:34</a></li>
+</ul>
+</li>
+<li><a href="#2024-12-13">2024-12-13</a>
+<ul>
+<li><a href="#2024-12-13-084454">2024-12-13 08:44:54</a></li>
+<li><a href="#2024-12-13-111842">2024-12-13 11:18:42</a></li>
+<li><a href="#2024-12-13-154309">2024-12-13 15:43:09</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="2024-12-03">2024-12-03</h2>
+<h3 id="2024-12-03-080400">2024-12-03 08:04:00</h3>
+<p>搭了<a href="rustdesk.com">RustDesk</a>的自建服务器，试了一下速度挺快的，比之前的免费服务器好多了。之前卡的几乎用不了，现在虽然还有明显迟滞，但也和蓝牙耳机听歌的延迟差不多完全可以接受。</p>
+<p>说是搭了，其实也是在宝塔的应用市场一键部署的。不是很敢折腾，这段时间已经重装系统好几次了。。。能一键装好就不自己装了，之后也打算搞点版本控制和包管理器来。</p>
+<h2 id="2024-12-04">2024-12-04</h2>
+<h3 id="2024-12-04-102655">2024-12-04 10:26:55</h3>
+<p>查表建树，递归，爽。</p>
+<h2 id="2024-12-05">2024-12-05</h2>
+<h3 id="2024-12-05-094054">2024-12-05 09:40:54</h3>
+<p>因为没问清需求导致这段时间部分工作白做了。</p>
+<p>我倒是没什么，不过前端好像很崩溃的样子（缩头）。</p>
+<h3 id="2024-12-05-102413">2024-12-05 10:24:13</h3>
+<p>花三百多续了一年服务器，服务器好贵。</p>
+<p>花三百多买了十年域名，域名好便宜。</p>
+<p>把博客绑到<a href="blog.jinvic.top">blog.jinvic.top</a>了，欢迎访问。</p>
+<h3 id="2024-12-05-152443">2024-12-05 15:24:43</h3>
+<p>经典踢皮球。</p>
+<p>一些给第三方接口的参数要按照固定格式存json字符串，我懒得解析让前端拼，前端不想拼要传给我来拼。</p>
+<p>所以这到底是前端还是后端的活？</p>
+<h2 id="2024-12-06">2024-12-06</h2>
+<h3 id="2024-12-06-154909">2024-12-06 15:49:09</h3>
+<p>mongoDB真难用，半途接手的我面对一堆稀奇古怪的字段头都大了。</p>
+<p>我很少对某项技术抱有如此大的敌意， 一般不感兴趣就过了去找替代品。但工作嘛，用什么技术栈又不是自己说了算。</p>
+<p>上一个这么讨厌的是ent，感觉可以搞个人红黑榜了。</p>
+<h2 id="2024-12-09">2024-12-09</h2>
+<h3 id="2024-12-09-152624">2024-12-09 15:26:24</h3>
+<p>难得闲了下来，想把之前读了一半的书捡起来继续读。虽然留了书签，但毕竟隔了两个月，看了几段还是大脑一片空白，完全不在状态。没想到只是间隔一段时间影响会这么大，以及自己连一口气读完一本书都做不到。</p>
+<h3 id="2024-12-09-164053">2024-12-09 16:40:53</h3>
+<p>“不要通过共享内存来通信，而应该通过通信来共享内存”<br>
+在学go的竞态时看到这句话，感觉很有道理，记一下。</p>
+<h2 id="2024-12-11">2024-12-11</h2>
+<h3 id="2024-12-11-081514">2024-12-11 08:15:14</h3>
+<p>昨天花时间在服务器上搭了webdav和alist，感觉还不错。虽然好像不怎么用的上，但感觉总会用上的还是搭了。</p>
+<p>感觉多少有点报复性心理存在吧。以前有需要时没那条件，现在有条件了就算没多大需求也要折腾一下。就和买东西一样，一台1060的笔记本陪我征战了五年实在卡的用不了了，干脆把两月工资砸进去换了高配电脑。不过我本来属于对画质不敏感的那类人，2K画质拉满也游戏体验也没什么质变，顶多见到的边角毛糙少了不容易出戏，最近还花了2K+把高中时就在惦记的手台买了回来。感觉再配个数位板打osu就人生圆满了w</p>
+<h3 id="2024-12-11-152417">2024-12-11 15:24:17</h3>
+<p>继续折腾服务器。还是想绑域名，就找了个<a href="https://github.com/imsyy/home">主页项目</a>用于备案。本来是拉到服务器上想试试远程开发，结果<code>pnpm dev</code>一跑直接给我负载和内存干炸了，重启好几次+杀进程才好。看来买的这廉价服务器不太行，还是本地跑好直接部署输出文件好了。顺便把没用的服务，mysql和mongodb这些都卸了，反正我现在又不用。</p>
+<p>还是clone到本地跑，看文档有github集成又去跑github action的ci。不想明文存密钥又研究了一下github的环境变量。然后跑一遍ci成功了，但提示有个组件即将弃用，又更新了一下。总之就是折腾。总算把ci搞好了，以后有机会看能不能整一下cd，现在还是只能手动上传。</p>
+<p>对了，还试着给已经部署的服务绑了下域名，ip+端口敲起来太麻烦了，让gpt写了下nginx的反代也不知道对不对，等备好案试试。</p>
+<p>为了https连接先把证书搞下来。用的是<a href="https://letsencrypt.org/">Let’s Encrypt</a>，参考教程为<a href="https://www.cnblogs.com/michaelshen/p/18538178">使用 Let’s Encrypt 免费申请泛域名 SSL 证书，并实现自动续期</a>。</p>
+<h2 id="2024-12-12">2024-12-12</h2>
+<h3 id="2024-12-12-164734">2024-12-12 16:47:34</h3>
+<p>这个服务器怎么这么容易炸啊，随便跑点啥就炸了必须重启。我都不确定是我的问题还是服务器的问题，又或者是受到攻击了？这么个小服务器有什么好攻击的。</p>
+<h2 id="2024-12-13">2024-12-13</h2>
+<h3 id="2024-12-13-084454">2024-12-13 08:44:54</h3>
+<p>服务器实在用不了了，重装下系统试试。顺便把宝塔换掉，这玩意可以说是恶名鼎鼎了。就是暂时每一个好的替代品。1Panel软广有点多不是很信任。</p>
+<h3 id="2024-12-13-111842">2024-12-13 11:18:42</h3>
+<p>1Panel真香，应用市场比宝塔全多了，很多东西都可以一键配置。而且也没有宝塔那么吃相难看哪哪都要花钱。果然有选择还是开源的好。</p>
+<h3 id="2024-12-13-154309">2024-12-13 15:43:09</h3>
+<p>将微博客改成<a href="https://github.com/kingwrcy/moments">极简朋友圈</a>项目，部署到服务器上了。<br>
+碎碎念功成身退。撒花🎉</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[华为云服务器配置]]></title>
+        <id>https://jinvic.github.io/post/huaweicloud-server-config/</id>
+        <link href="https://jinvic.github.io/post/huaweicloud-server-config/">
+        </link>
+        <updated>2024-11-29T09:54:25.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="华为云服务器配置">华为云服务器配置</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E5%8D%8E%E4%B8%BA%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE">华为云服务器配置</a>
+<ul>
+<li><a href="#mfa%E9%85%8D%E7%BD%AE">MFA配置</a></li>
+<li><a href="#%E5%AE%89%E5%85%A8%E7%BB%84%E9%85%8D%E7%BD%AE">安全组配置</a></li>
+<li><a href="#%E9%87%8D%E7%BD%AE%E5%AF%86%E7%A0%81">重置密码</a></li>
+<li><a href="#ssh%E7%99%BB%E5%BD%95%E5%85%8D%E5%AF%86">ssh登录&amp;免密</a></li>
+<li><a href="#%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BF%E7%99%BB%E5%BD%95">宝塔面板登录</a></li>
+<li><a href="#%E9%98%B2%E7%81%AB%E5%A2%99%E5%BC%80%E6%94%BE%E7%AB%AF%E5%8F%A3">防火墙开放端口</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96%E9%85%8D%E7%BD%AE">其他配置</a>
+<ul>
+<li><a href="#mysql">mysql</a></li>
+<li><a href="#rustdesk">RustDesk</a></li>
+<li><a href="#redis">Redis</a></li>
+<li><a href="#localtunnel">localtunnel</a></li>
+<li><a href="#gotify">gotify</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<p>最近把几个月前买的华为云服务器翻出来了，然后总是搞着搞着就把环境搞得一团糟干脆重装，反正就几分钟的事。顺便写个教程以后自己想再重装回来翻下。</p>
+<h2 id="mfa配置">MFA配置</h2>
+<p>如果你用过github，相信对2FA一定不陌生，而MFA和2FA差不多。简单来说，就是一个定时刷新的验证码。我们在进行一些敏感操作，如重设密码等需要频繁验证，这时MFA就会比收短信验证码或者邮箱验证码这类更方便些，当然MFA不是必须的，使用传统验证方式也行。<br>
+在安全设置-敏感操作中绑定MFA。管理MFA可以使用华为云的官方app。我个人是Google爱好者，使用的是google authenticator，同时管理github在内多项MFA和2FA。</p>
+<figure data-type="image" tabindex="1"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic2.png" alt="pic2" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic3.png" alt="pic3" loading="lazy"></figure>
+<h2 id="安全组配置">安全组配置</h2>
+<p>安全组配置简单来说就是允许哪些ip访问以及开放哪些端口。这个其实刚开始不用管，用默认安全组就行。之后如果添加了某些服务再加上就行。例如你在服务器上装了个，mysql就要开放3306。细节可以参考<a href="https://support.huaweicloud.com/usermanual-flexusl/security_admin_0004.html">官方文档</a>。<br>
+要检查某个端口是否开放可以使用<code>netstat -an | grep 80</code>命令。</p>
+<h2 id="重置密码">重置密码</h2>
+<p>如果你不记得你的密码，可以在【实例概览-服务器操作-更多】中重置密码，只不过会有一个验证，这时之前设的MFA就排上用场了。如果没设MFA可以用手机或邮箱验证码。</p>
+<figure data-type="image" tabindex="3"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic1.png" alt="pic1" loading="lazy"></figure>
+<h2 id="ssh登录免密">ssh登录&amp;免密</h2>
+<p>使用<code>ssh [用户名]@[服务器公网地址]</code>命令就可以远程登录服务器了。默认用户名是root，如果忘了密码可以<a href="#%E9%87%8D%E7%BD%AE%E5%AF%86%E7%A0%81%E5%8F%AF%E9%80%89">重置密码</a>。</p>
+<p>如果觉得每次输密码太麻烦，可以配置免密登录。在本地计算机（<strong>不是服务器</strong>）上启动终端（window用cmd或powershell），<code>cd ~</code>来到用户目录下，一般为C:\User\用户名，<code>cd .ssh</code>进入.ssh文件夹，使用<code>ssh-keygen -t rsa</code>生成密钥，中途要求保存地址和密码不输直接回车也行。</p>
+<p>查看可以发现多出了<code>id_rsa</code>和<code>id_rsa_pub</code>两个文件，分别是私钥和公钥。</p>
+<figure data-type="image" tabindex="4"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic4.png" alt="pic4" loading="lazy"></figure>
+<p>此时可以使用<code>ssh-copy-id</code>命令再次登录服务器将会将生成的公钥复制到服务器，但会覆盖源文件。也可以记事本打开公钥文件将内容手动粘贴到<code>/root/.ssh/authorized_keys</code>文件中。如果不会linux的文件操作，可以使用华为云网页自带的远程登录，自带一个文件树，双击打开后粘贴就行。</p>
+<figure data-type="image" tabindex="5"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic5.png" alt="pic5" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic6.png" alt="pic6" loading="lazy"></figure>
+<p>或者也可以使用echo命令写入，即<code>echo &quot;你的公钥内容&quot; &gt;&gt; ~/.ssh/authorized_keys</code>。</p>
+<p>如上配置完成后再使用ssh命令登录就不需要输入密码了。</p>
+<h2 id="宝塔面板登录">宝塔面板登录</h2>
+<p>我买的Flexus L实例默认镜像是Ubuntu 22.04+宝塔面板。当然宝塔不是必要的，完全可以ssh登陆后自己敲命令装软件，不过为了方便还是先用着宝塔，以后可能会换别的管理软件。</p>
+<p>宝塔面板的默认账密在<code>credentials/password.txt</code>中，可以使用<code>cat</code>命令查看。</p>
+<figure data-type="image" tabindex="7"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic7.png" alt="pic7" loading="lazy"></figure>
+<p>登录后会要你装些软件，选默认配置就行。之后要装什么也可以在软件商店装。</p>
+<h2 id="防火墙开放端口">防火墙开放端口</h2>
+<p>我在使用宝塔面板中安装了mysql，并在ssh登录的终端中成功登录。但是尝试使用公网ip外部登录时失败。这是因为除了安全组配置，还需要在服务器上开放防火墙对应端口。对于Ubuntu系统可以使用ufw命令管理防火墙。如下是一些常用命令。</p>
+<ul>
+<li>sudo ufw enable/disable 启用/禁用ufw</li>
+<li>sudo ufw allow 80/tcp 开放特定端口，如果省略协议类型则同时允许tcp和udp</li>
+<li>sudo ufw status 查看防火墙开放的端口 加个numbered可以看序号</li>
+<li>sudo ufw delete [rule number] 删除某条规则</li>
+<li>sudo ufw reload 重启防火墙</li>
+</ul>
+<p>如果开放端口还是无法连接，可能是mysql本身设置的问题，可以参考<a href="https://www.cnblogs.com/zhangxiaoxia/p/13043508.html">这里</a>，修改访问权限。不建议直接更改root，可以新建一个用户再赋权。</p>
+<h2 id="其他配置">其他配置</h2>
+<h3 id="mysql">mysql</h3>
+<p>除了开放对应端口还需修改user表的host。</p>
+<ol>
+<li>使用<code>mysql -u root -p</code>登录。</li>
+<li><code>use mysql;</code>选择mysql数据库。</li>
+<li><code>select host,user from user</code>查看user表的host。一般这里root的host是localhost，也就是不允许从外部登录。这里个人不建议直接修改root。可以新建一个用户再赋权。</li>
+<li><code>CREATE USER 'newuser'@'%' IDENTIFIED BY 'mypassword';</code>新建用户。</li>
+<li><code>GRANT ALL PRIVILEGES ON *.* TO 'newuser'@'%';</code>赋予新用户所有权限。</li>
+<li><code>FLUSH PRIVILEGES;</code>刷新权限。</li>
+</ol>
+<p>完成如上操作后，就可以使用新用户远程登录mysql数据库了。</p>
+<h3 id="rustdesk">RustDesk</h3>
+<p>RustDesk在宝塔的应用商店里有。先装Docker和Docker Compose，之后就可以一键安装RustDesk了。</p>
+<p>安装RustDesk后要开放对应端口，<code>21115:21119/tcp</code>和<code>21116/udp</code>。防火墙和安全组都要配置。</p>
+<p>服务安装后在docker-容器-hbbs-日志查看api key，ID服务器地址填自己服务器的公网地址就行。</p>
+<figure data-type="image" tabindex="8"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic8.png" alt="pic8" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic9.png" alt="pic9" loading="lazy"></figure>
+<h3 id="redis">Redis</h3>
+<p>开放端口老生常谈了，略。</p>
+<p>在redis的配置文件中也有一行<code>bind 127.0.0.1</code>，限定只能本地登录。可以注释掉这行或者换成自己的ip。</p>
+<p>因为redis默认是不设账号密码的，所以一定要设置一下密码。在配置文件<code>/redis/redis.conf</code>中添加一行<code>requirepass mypassword</code>。如果还想设置用户名，可以使用<code>requireuser username</code>。</p>
+<p>如果使用的是宝塔面板，也可以直接在设置中修改。</p>
+<figure data-type="image" tabindex="10"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic10.png" alt="pic10" loading="lazy"></figure>
+<h3 id="localtunnel">localtunnel</h3>
+<p>localtunnel可以很方便地将本地服务暴露到公网。默认会使用localtunnel官方服务器，为了隐私和效率选择自建服务器。</p>
+<p><strong>拉取项目</strong>：<a href="https://github.com/localtunnel/server">服务端</a>的gitbub地址，使用<code>git clone https://github.com/localtunnel/server.git</code>命令拉取时报错如下：</p>
+<pre><code class="language-bash">error: RPC failed; curl 16 Error in the HTTP2 framing layer
+fatal: expected flush after ref listing
+</code></pre>
+<p>在<a href="https://stackoverflow.com/questions/72987674/git-pull-error-rpc-failed-curl-16-error-in-the-http2-framing-layer-fatal-exp">stackoverflow</a>上看到解决方法，使用<code>git config --global http.version HTTP/1.1</code>强制git使用HTTP 1.1，之后可以使用<code>git config --global http.version HTTP/2</code>改回来。</p>
+<p>刚打算试试，发现又好了。看来是github日常抽风，有空配下代理。</p>
+<p><strong>安装并启动项目</strong>：拉取后的文件夹名为<code>server</code>，我为了方面管理改成了<code>localtunnel-server</code>。cd到这个目录下，使用<code>npm install</code>安装依赖，然后使用<code>node -r esm bin/server --port 1234</code>启动项目。端口可以自定义。</p>
+<p>使用<code>nohup</code>可以在后台不挂起运行程序，退出终端不影响。</p>
+<h3 id="gotify">gotify</h3>
+<p>gotify是一个简单易部署的消息服务。</p>
+<p><strong>服务端</strong>：使用docker部署gotify很方便。只需要一行命令就能完成。不过我们为了可用性还是使用docker-compose。首先新建一个文件夹作为项目位置，然后新建文件<code>docker-compose.yml</code>：</p>
+<pre><code class="language-yml">services:
+  gotify:
+    image: gotify/server
+    container_name: &quot;gotify&quot;
+    restart: always
+    ports:
+      - 28818:80  #可以自定义要映射的端口
+    environment:
+      - GOTIFY_DEFAULTUSER_NAME=admin #默认账号
+      - GOTIFY_DEFAULTUSER_PASS=admin  #默认密码，记得修改一下
+    volumes:
+      - &quot;./gotify_data:/app/data&quot;
+</code></pre>
+<p>然后<code>sudo docker-compose up -d</code>就行。记得开放设置的端口和安全组，之后就可以登录<code>&lt;ip&gt;:&lt;port&gt;</code>查看消息了。</p>
+<p><strong>客户端</strong>：因为我的需求是转发验证码短信，使用的客户端为<a href="https://github.com/pppscn/SmsForwarder">SmsForwarder-短信转发器</a>。</p>
+<p>在导航栏的apps标签中新建应用获取token，然后拼接服务器地址：<code>http://&lt;ip&gt;:&lt;port&gt;/message?token=&lt;apptoken&gt;</code>填入WebServer，测试成功。</p>
+<figure data-type="image" tabindex="11"><img src="https://jinvic.github.io/post-images/huaweicloud-server-config/pic11.png" alt="pic11" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[个人向软件推荐]]></title>
+        <id>https://jinvic.github.io/post/software-personal-recommand/</id>
+        <link href="https://jinvic.github.io/post/software-personal-recommand/">
+        </link>
+        <updated>2024-11-16T02:52:26.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="个人向软件推荐">个人向软件推荐</h1>
+<p>非广，只是偶尔遇到些感兴趣的东西就会存下来，想起来就试试。然后觉得不错的专门拉个清单。<br>
+主要来源于<a href="https://www.ruanyifeng.com/blog/weekly/">科技爱好者周刊</a>和<a href="https://hellogithub.com">HelloGithub</a></p>
+<hr>
+<h2 id="推荐">推荐</h2>
+<ul>
+<li><a href="https://immersivetranslate.com/zh-Hans/">沉浸式翻译</a><br>
+确实是很好用的翻译插件，<code>alt+A</code>全页翻译，翻译就在原文旁边，保持格式一致不会弹窗什么的很突兀。搭个阅读插件使用效果更佳，都能用来专门学外语了。</li>
+<li><a href="https://github.com/fanchenio/DawnLauncher">Dawn Launcher</a><br>
+一个开源的 Windows 快捷启动工具，分门别类管理桌面快捷方式。<br>
+之前用过steam上的SAO那个，帅是帅但用起来其实有点麻烦，基本就开着吃灰。<br>
+有v1v2两个版本，v2付费，三十几块钱。确实挺好用，v1也够用了。</li>
+<li><a href="https://github.com/pot-app/pot-desktop">Pot (Translator of Pylogmon)</a><br>
+一个开源的跨平台桌面软件，用于划词翻译，可以配置多个翻译引擎。<br>
+还不错的翻译软件，跨平台+多插件支持+ocr支持。个人现在一个翻译源一个英汉词典配着感觉还不错，就是翻译速度有点慢，有时会卡一下。</li>
+<li><a href="https://deskpins.fileplanet.com/">deskpins</a><br>
+手动置顶窗口，这个需求偶尔还是有的。用起来很方便，后台挂着也不碍事，推荐。</li>
+<li><a href="https://www.voidtools.com/zh-cn/">everything</a><br>
+windows自带的搜索功能就跟没有一样根本不好用。以至于我第一次用上这个时甚至有点热泪盈眶。</li>
+<li><a href="https://vfox.lhan.me/">vfox</a><br>
+一款跨平台的通用版本管理工具。<br>
+一个软件同时进行多个软件的版本管理，太需要了。以前不了解时东一榔头西一棒槌把环境搞得乱七八糟，现在才觉出版本控制的好。相比于每个软件专门配一个显然这种整合起来的用起来更方便。</li>
+<li><a href="https://devtoys.app/">DevToys</a><br>
+一款 Windows 的小工具集合，收入了开发者会用到的许多小工具。<br>
+很不错的工具集合。我之前用的都是<a href="https://it-tools.tech/">这个</a>，但说实话比起网页还是更偏爱应用，而且我之前常用的功能这里面都有，现在改用这个了。</li>
+<li><a href="https://github.com/marticliment/UniGetUI/tree/3.1.3">UniGetUI</a><br>
+非官方的包管理器GUI界面，以前叫Winget UI，给winget用的。现在也支持scoop等其他包管理器。<br>
+虽然cli也能用，但有gui当然更好啦。</li>
+<li><a href="https://github.com/slc3a2/dimmer">dimmer</a><br>
+开源的 Chrome 浏览器插件，暗黑模式一键切换。<br>
+对长期看电脑的我很实用。</li>
+<li><a href="https://just.systems/">Just</a><br>
+一个命令运行器，类似于 Make，但不具备构建功能。<br>
+它允许把一个项目的所有命令行命令，都写在一个文件里面，并可以指定命令之间的依赖关系，还可以跨平台使用。<br>
+比起使用make构建项目，我所需要的确实只是一个命令运行器而已。而Just完美满足了我的需求，强烈推荐。</li>
+<li><a href="https://dbgate.org/">DBGate</a><br>
+这是款免费、开源的数据库桌面管理工具，支持包括 MySQL、PostgreSQL、SQL Server、MongoDB、SQLite、Redis 等多种数据库，适用于 Windows、Linux、macOS 系统。<br>
+很好用的数据库客户端，支持数据库多，功能全，用起来也十分方便流畅。就是经常不知不觉中在后台闪退了，也不知道是不是我同时连接开太多了(lll￢ω￢)</li>
+<li><a href="app.follow.is">follow</a><br>
+一个新的 RSS 阅读器，在原本的 RSS 阅读器上添加了一些社区、互动的功能，并且引入了一个 Power 的 ERC-20 Token 作为货币系统。<br>
+很久之前就想试试rss了，试了试确实不错。rss这玩意用之前觉得没啥，体验后真香。</li>
+<li><a href="https://inputtip.pages.dev/">InputTip</a><br>
+一个输入法状态(中文/英文/大写锁定)提示工具。Windows 下可用，基于 AutoHotkey 开发。<br>
+终于不用再跟shift较劲了。（此处应有弹窗：是否启用粘滞键）</li>
+<li><a href="https://geekuninstaller.com/">geek</a><br>
+如果只是用软件自带的卸载器，经常只是把程序文件删了，配置和注册表之类还留着。<br>
+geek删的更干净，而且本身小巧轻便用起来很方面。目前遇到过两次流氓软件用geek删了都没什么问题，推荐。</li>
+</ul>
+<h2 id="还行">还行</h2>
+<ul>
+<li><a href="https://theboroer.github.io/localtunnel-www/">Localtunnel</a><br>
+一个 npm 软件包，为你的本地服务分配一个公网的 URL，使得公网可以访问这个本地服务。<br>
+cli运行需要npm安装，也有go客户端 <a href="https://github.com/NoahShen/gotunnelme">客户端1</a> <a href="https://github.com/localtunnel/go-localtunnel">客户端2</a>。<br>
+用起来很方便，<code>lt --port [num]</code>就能将本地端口映射公网，有时需要提供本机公网ip当密码。<br>
+虽然是走它的服务器中转，但也开源了<a href="https://github.com/localtunnel/server">服务器</a>可以自己部署。<br>
+总之临时用一下很方便，长期使用稳定性不确定。</li>
+<li><a href="https://github.com/RGAA-Software/GammaRay/blob/master/docs/Readme_CN.md">GammaRay</a><br>
+一个开源工具，用来把手机和 PC 的桌面传到其他设备，支持远程桌面、视频采集等功能。<br>
+试了试还行，用起来挺方便的。</li>
+<li><a href="https://github.com/JasonGrass/auto-extension-manager">Extension Manager</a><br>
+一个浏览器插件，用来管理浏览器安装的各种插件，弥补系统自带的扩展管理器的不足。<br>
+挺好用的扩展管理工具，推荐。</li>
+<li><a href="https://github.com/vnt-dev/vnt">Vnt</a><br>
+An efficient VPN. 简便高效的异地组网、内网穿透工具。<br>
+如果Localtunnel是一个简便的命令行小工具，那Vnt就是个更专业的应用了。前者侧重公网访问，后者侧重异地组网。而且vnt不仅有官方服务器，也有一些民间中继服务器，也可以自建服务器。<br>
+有图形化页面，支持多平台，更多的配置项，简单快捷的操作，干净利落的风格，这正是我想要的。</li>
+<li><a href="https://github.com/mulaRahul/keyviz">Keyviz</a><br>
+开源的 Windows 软件，在桌面上显示用户实时的按键。<br>
+最然不知道有什么用但总会用上的XD。</li>
+<li><a href="https://xupefei.github.io/Locale-Emulator/">Locale Emulator</a><br>
+转区工具。<br>
+gal玩家大概对它很熟悉了，但我是用来跑LR2的。</li>
+<li><a href="https://github.com/heyman/heynote">heynote</a><br>
+专供开发者的便签应用，它的强大之处在于可以轻松将不同的内容分块暂存起来，支持自动语法高亮、自动格式化、计算器模式、多光标编辑、全局热键等功能，适用于 Windows、macOS 和 Linux。<br>
+现在临时记点什么需求还是有的，用这个比记事本方便。</li>
+<li><a href="https://rustdesk.com/zh/">Rustdesk</a><br>
+RustDesk 是一款可以平替 TeamViewer 的开源软件，旨在提供安全便捷的自建方案。<br>
+官方的公用服务器很卡，不过自部署效果就很好了，有条件的话推荐。</li>
+<li><a href="https://www.dotalk.cn/product/wucai">五彩插件</a><br>
+浏览器插件，用于网页批注、记笔记，支持多终端同步。<br>
+批注+剪藏。正好Omnivore寄了，就换了这个。虽然我用的不多，但确实提升了阅读体验。</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Kratos 快速入门实践]]></title>
+        <id>https://jinvic.github.io/post/kratos-quick-start-practice/</id>
+        <link href="https://jinvic.github.io/post/kratos-quick-start-practice/">
+        </link>
+        <updated>2024-11-11T12:50:17.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="kratos-快速入门实践">Kratos 快速入门实践</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#kratos-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%AE%9E%E8%B7%B5">Kratos 快速入门实践</a>
+<ul>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84">项目结构</a></li>
+<li><a href="#api%E5%B1%82">api层</a></li>
+<li><a href="#ent%E5%B1%82">ent层</a></li>
+<li><a href="#data%E5%B1%82">data层</a></li>
+<li><a href="#biz%E5%B1%82">biz层</a></li>
+<li><a href="#service%E5%B1%82">service层</a></li>
+<li><a href="#%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5">依赖注入</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="前言">前言</h2>
+<p>kratos<a href="https://go-kratos.dev/docs/getting-started/start">官方文档</a>的快速入门主打一个跑起来就算成功，基本没什么内容。本文将基于官方文档快速入门，结合自己的实践，详细说明如何在kratos框架中开发一个新功能。</p>
+<h2 id="项目结构">项目结构</h2>
+<p>如下是 Kratos 的一个典型的 Go 项目布局，也差不多是我们使用<code>kratos new .</code>创建新项目时的默认布局：</p>
+<pre><code class="language-bash">application
+|____api
+| |____helloworld
+| | |____v1
+| | |____errors
+|____cmd
+| |____helloworld
+|____configs
+|____internal
+| |____conf
+| |____data
+| |____biz
+| |____service
+| |____server
+|____test
+|____pkg
+|____go.mod
+|____go.sum
+|____LICENSE
+|____README.md
+</code></pre>
+<p>简单来说，要开发一个新功能就是<code>api-&gt;[service-biz-data]&lt;-ent</code>的流程。其中<code>api</code>层定义外部接口，<code>service</code>层负责与外部接口对接，<code>biz</code>层负责业务逻辑，<code>data</code>层与底层数据操作对接，<code>ent</code>层实现数据库定义与操作。</p>
+<h2 id="api层">api层</h2>
+<p>首先在<code>api/helloworld/v1</code>中定义protobuf文件，并使用 <code>kratos proto client .\api\helloworld\v1\test.proto</code> 生成go代码。</p>
+<pre><code class="language-proto">// api/helloworld/v1/test.proto
+syntax = &quot;proto3&quot;;
+
+package api.helloworld.v1;
+
+import &quot;google/api/annotations.proto&quot;;
+
+option go_package = &quot;helloworld/api/helloworld/v1;v1&quot;;
+
+// The test service definition.
+service Test {
+  rpc GetTest(GetTestRequest) returns (GetTestReply) {
+    option (google.api.http) = {
+      get: &quot;/test/{id}&quot;
+    };
+  };
+}
+
+message GetTestRequest {
+  string id = 1;
+}
+message GetTestReply {
+  string field1 = 1;
+  string field2 = 2;
+}
+</code></pre>
+<p>然后可以通过<code>kratos proto server .\api\helloworld\v1\test.proto -t internal/service</code>在<code>internal\service</code>下生成对应的service文件，这里实现了<code>pb.TestServer</code>接口。</p>
+<pre><code class="language-go">// internal/service/test.go
+package service
+
+import (
+ &quot;context&quot;
+
+ pb &quot;helloworld/api/helloworld/v1&quot;
+)
+
+type TestService struct {
+ pb.UnimplementedTestServer
+}
+
+func NewTestService() *TestService {
+ return &amp;TestService{}
+}
+
+func (s *TestService) GetTest(ctx context.Context, req *pb.GetTestRequest) (*pb.GetTestReply, error) {
+ return &amp;pb.GetTestReply{}, nil
+}
+</code></pre>
+<p>对外的部分就完成了，这是从外部接口到内部逻辑的步骤。</p>
+<p>接下来，我们从最底层的数据库开始，由内向外实现到service层。</p>
+<h2 id="ent层">ent层</h2>
+<p>首先是ent框架的schema定义，在<code>internal/data/ent/schema</code>下定义ent的schema文件。<br>
+关于ent的语法，在此不再赘述。</p>
+<pre><code class="language-go">// internal/data/ent/schema/test.go
+package schema
+
+import (
+ &quot;entgo.io/ent&quot;
+ &quot;entgo.io/ent/dialect&quot;
+ &quot;entgo.io/ent/schema/field&quot;
+)
+
+// Test holds the schema definition for the Test entity.
+type Test struct {
+ ent.Schema
+}
+
+// Fields of the Test.
+func (Test) Fields() []ent.Field {
+
+ return []ent.Field{
+
+  field.Int32(&quot;id&quot;).SchemaType(map[string]string{
+   dialect.MySQL: &quot;int(10)UNSIGNED&quot;, // Override MySQL.
+  }).NonNegative().Unique(),
+
+  field.String(&quot;field1&quot;).SchemaType(map[string]string{
+   dialect.MySQL: &quot;varchar(50)&quot;, // Override MySQL.
+  }),
+
+  field.String(&quot;field2&quot;).SchemaType(map[string]string{
+   dialect.MySQL: &quot;varchar(50)&quot;, // Override MySQL.
+  }),
+ }
+
+}
+
+// Edges of the Test.
+func (Test) Edges() []ent.Edge {
+ return nil
+}
+</code></pre>
+<p>在完成schema定义后，就可以使用ent工具生成用户操作数据库的相关代码。</p>
+<pre><code class="language-bash">ent generate ./internal/data/ent/schema
+</code></pre>
+<p>在<code>internal/data/data.go</code>中实现客户端并装载到Data结构体中,这样就把数据库操作和内部逻辑连接了起来。</p>
+<pre><code class="language-go">// internal/data/data.go
+package data
+
+import (
+    ...
+    _ &quot;github.com/go-sql-driver/mysql&quot; // mysql driver
+)
+
+// Data .
+type Data struct {
+ // TODO wrapped database client
+ db *ent.Client
+}
+
+// NewData .
+func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
+ cleanup := func() {
+  log.NewHelper(logger).Info(&quot;closing the data resources&quot;)
+ }
+ return &amp;Data{
+  db: NewEntClient(c, logger),
+ }, cleanup, nil
+}
+
+// NewEntClient .
+func NewEntClient(c *conf.Data, logger log.Logger) *ent.Client {
+ client, err := ent.Open(c.Database.Driver, c.Database.Source)
+ if err != nil {
+  log.NewHelper(logger).Fatal(err)
+ }
+ return client
+}
+</code></pre>
+<p>别忘了在<code>configs/config.yaml</code>中修改数据库配置。</p>
+<pre><code class="language-yaml">data:   
+  database:
+    driver: mysql
+    source: root:123456@tcp(127.0.0.1:3306)/test?parseTime=True&amp;loc=Local
+</code></pre>
+<p>完成api层和ent层后，程序内外的连接就完成了，接下来就是实现程序内部的逻辑。</p>
+<h2 id="data层">data层</h2>
+<p>在<code>internal/data/test.go</code>中实现数据库操作，这里让<code>testRepo</code>实现<code>GetTest</code>方法，即实现<code>biz.TestRepo</code>接口。</p>
+<pre><code class="language-go">// internal/data/test.go
+package data
+
+type testRepo struct {
+ data *Data
+ log  *log.Helper
+}
+
+func (r *testRepo) GetTest(ctx context.Context, id int32) (*biz.Test, error) {
+ test, err := r.data.db.Test.Query().Where(test.IDEQ(id)).Only(ctx)
+ if err != nil {
+  return nil, err
+ }
+ return &amp;biz.Test{
+  Id:     test.ID,
+  Field1: test.Field1,
+  Field2: test.Field2,
+ }, nil
+}
+
+</code></pre>
+<h2 id="biz层">biz层</h2>
+<p>在<code>internal/biz/test.go</code>中实现业务逻辑，这里因为逻辑很简单，直接调用data层方法就行。</p>
+<pre><code class="language-go">// internal/biz/test.go
+package biz
+
+type Test struct {
+ Id     int32
+ Field1 string
+ Field2 string
+}
+
+type TestRepo interface {
+ GetTest(context.Context, int32) (*Test, error)
+}
+
+type TestUsecase struct {
+ repo TestRepo
+ log  *log.Helper
+}
+
+// // GetTest search and return the Test.
+func (uc *TestUsecase) GetTest(ctx context.Context, id int32) (*Test, error) {
+ return uc.repo.GetTest(ctx, id)
+}
+</code></pre>
+<h2 id="service层">service层</h2>
+<p>最后，将<code>TestUsecase</code>装载到<code>internal/service/test.go</code>中，这样service层就完成了。</p>
+<pre><code class="language-go">// internal/service/test.go
+package service
+
+type TestService struct {
+ pb.UnimplementedTestServer
+ uc *biz.TestUsecase
+}
+
+func (s *TestService) GetTest(ctx context.Context, req *pb.GetTestRequest) (*pb.GetTestReply, error) {
+ id, err := strconv.Atoi(req.Id)
+ if err != nil {
+  return nil, err
+ }
+ test, err := s.uc.GetTest(ctx, int32(id))
+ if err != nil {
+  return nil, err
+ }
+ return &amp;pb.GetTestReply{
+  Field1: test.Field1,
+  Field2: test.Field2,
+ }, nil
+}
+</code></pre>
+<h2 id="依赖注入">依赖注入</h2>
+<p>最后，我们实现每一层的构造函数，并使用<code>wire</code>进行依赖注入。</p>
+<pre><code class="language-go">// internal/servece/test.go
+package service
+
+func NewTestService(
+ uc *biz.TestUsecase,
+) *TestService {
+ return &amp;TestService{
+  uc: uc,
+ }
+}
+// internal/servece/service.go
+package service
+
+import &quot;github.com/google/wire&quot;
+
+// ProviderSet is service providers.
+var ProviderSet = wire.NewSet(NewGreeterService, NewTestService)
+
+// internal/biz/test.go
+package biz
+
+// NewTestUsecase new a Test usecase.
+func NewTestUsecase(repo TestRepo, logger log.Logger) *TestUsecase {
+ return &amp;TestUsecase{repo: repo, log: log.NewHelper(logger)}
+}
+
+// internal/biz/biz.go
+package biz
+
+import &quot;github.com/google/wire&quot;
+
+// ProviderSet is biz providers.
+var ProviderSet = wire.NewSet(NewGreeterUsecase, NewTestUsecase)
+
+// internal/data/test.go
+package data
+
+// NewTestRepo .
+func NewTestRepo(data *Data, logger log.Logger) biz.TestRepo {
+ return &amp;testRepo{
+  data: data,
+  log:  log.NewHelper(logger),
+ }
+}
+
+// internal/data/data.go
+package data
+
+import (
+    ...
+    &quot;github.com/google/wire&quot;
+)
+
+// ProviderSet is data providers.
+var ProviderSet = wire.NewSet(NewData, NewGreeterRepo, NewTestRepo)
+
+// internal/server/http.go
+package server
+
+// NewHTTPServer new an HTTP server.
+func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, test *service.TestService, logger log.Logger) *http.Server {
+ var opts = []http.ServerOption{
+  http.Middleware(
+   recovery.Recovery(),
+  ),
+ }
+ if c.Http.Network != &quot;&quot; {
+  opts = append(opts, http.Network(c.Http.Network))
+ }
+ if c.Http.Addr != &quot;&quot; {
+  opts = append(opts, http.Address(c.Http.Addr))
+ }
+ if c.Http.Timeout != nil {
+  opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
+ }
+ srv := http.NewServer(opts...)
+ v1.RegisterGreeterHTTPServer(srv, greeter)
+ v1.RegisterTestHTTPServer(srv, test)
+ return srv
+}
+
+// internal/server/grpc.go
+package server
+
+// NewGRPCServer new a gRPC server.
+func NewGRPCServer(c *conf.Server, greeter *service.GreeterService, test *service.TestService, logger log.Logger) *grpc.Server {
+ var opts = []grpc.ServerOption{
+  grpc.Middleware(
+   recovery.Recovery(),
+  ),
+ }
+ if c.Grpc.Network != &quot;&quot; {
+  opts = append(opts, grpc.Network(c.Grpc.Network))
+ }
+ if c.Grpc.Addr != &quot;&quot; {
+  opts = append(opts, grpc.Address(c.Grpc.Addr))
+ }
+ if c.Grpc.Timeout != nil {
+  opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
+ }
+ srv := grpc.NewServer(opts...)
+ v1.RegisterGreeterServer(srv, greeter)
+ v1.RegisterTestServer(srv, test)
+ return srv
+}
+</code></pre>
+<p>使用<code>go generate ./...</code>命令更新依赖注入代码后就可以启动服务了。</p>
+<h2 id="总结">总结</h2>
+<p>通过以上步骤，我们完成了从proto文件到最终可运行的服务的整个过程，包括proto文件生成、ent层、data层、biz层、service层以及依赖注入。至于其他内容如<code>cmd</code>和<code>internal/conf</code>文件夹下的内容，在创建项目时已经生成好了不需要过多改动在此便不再赘述，有需要可以自行修改。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ent笔记]]></title>
+        <id>https://jinvic.github.io/post/ent-notes/</id>
+        <link href="https://jinvic.github.io/post/ent-notes/">
+        </link>
+        <updated>2024-11-07T06:41:18.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="ent笔记">ent笔记</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#ent%E7%AC%94%E8%AE%B0">ent笔记</a>
+<ul>
+<li><a href="#%E6%A6%82%E8%BF%B0">概述</a></li>
+<li><a href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8">快速入门</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85ent">安装ent</a></li>
+<li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96ent%E7%9B%AE%E5%BD%95">初始化ent目录</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E5%AE%9E%E4%BD%93">创建实体</a>
+<ul>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E5%AD%97%E6%AE%B5">添加字段</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E8%BE%B9relation">添加边（Relation）</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E9%80%86%E8%BE%B9backref">添加逆边（BackRef）</a></li>
+</ul>
+</li>
+<li><a href="#%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81">生成代码</a></li>
+<li><a href="#%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93">连接数据库</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E8%BF%81%E7%A7%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A8%A1%E5%BC%8F">创建&amp;迁移数据库模式</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%B6%E4%BB%96%E5%B7%A5%E5%85%B7">其他工具</a>
+<ul>
+<li><a href="#sql%E8%BD%ACentgo">SQL转entgo</a></li>
+<li><a href="#entimport">entimport</a></li>
+<li><a href="#protoc-gen-ent">protoc-gen-ent</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="概述">概述</h2>
+<blockquote>
+<p>ent 是一个 Go 的实体框架 (ORM)。 ent 可以使用 Go 代码轻松地定义任何数据模型或图结构；schema配置由 entc (ent codegen) 验证，这种配置生成了一个地道的静态类型的 API ，使开发人员能够富有生产性和幸福感。 它支持 MySQL, MariaDB, PostgreSQL, SQLite 和 Gremlin图数据库。</p>
+</blockquote>
+<p>简单来说，ent是Facebook团队开源的一个Go语言ORM框架，类似于Java的Hibernate，Python的SQLAlchemy，Go的GORM等。相比于gorm，ent的特点是专注于使用dsl写schema，关联和约束都写在 Go 代码，而不是结构标签，并用cli工具自动生成和验证代码，以及同样支持从schema构造迁移数据库结构，用户只需要管理好schema就行。缺点是学习成本和上手难度较高，需要理解学习它的schema概念和dls语法，以及面对复杂需求框架生成的代码可能不够灵活有时需要自定义方法。</p>
+<p><s>ent<a href="https://entgo.io/zh/docs/getting-started">官方文档</a>里的中文和没有差不多。这里贴一个民间翻译的<a href="https://ent.ryansu.tech/#/zh-cn/getting-started">中文文档</a>。</s></p>
+<blockquote>
+<p>241107: 才注意到ent主页挂着支持以色列的横幅，在开源项目中宣扬政治主张实在有点恶心了。<br>
+241114: 中文支持很差，甚至文档进度都不同步，建议看英文文档。为了封装硬生生搞了个语法子集出来，很多功能都无法实现。文档既少又烂，查资料全靠issue。两个字：<strong>快跑</strong></p>
+</blockquote>
+<h2 id="快速入门">快速入门</h2>
+<p>ent使用需要go环境，可以安装go后设置go项目:</p>
+<pre><code class="language-bash">go mod &lt;projectname&gt;
+</code></pre>
+<h3 id="安装ent">安装ent</h3>
+<pre><code class="language-bash">go get entgo.io/ent/cmd/ent
+</code></pre>
+<p>使用<code>ent -h</code>查看是否安装成功。如果提示找不到可以使用如下命令代替ent命令：</p>
+<pre><code class="language-bash">go run entgo.io/ent/cmd/ent
+</code></pre>
+<p>或者使用go install添加到%GOPATH/bin目录：</p>
+<pre><code class="language-bash">go install entgo.io/ent/cmd/ent
+</code></pre>
+<h3 id="初始化ent目录">初始化ent目录</h3>
+<pre><code class="language-bash">ent new
+</code></pre>
+<p>目录如下：</p>
+<pre><code class="language-bash">.
+└── ent
+    ├── generate.go
+    └── schema
+</code></pre>
+<h3 id="创建实体">创建实体</h3>
+<pre><code class="language-bash">ent new &lt;entityname&gt;
+</code></pre>
+<p>可以使用如上命令同时创建多个实体。它们将被创建在schema目录下。假设我们创建了一个User实体（<strong>首字母必须大写</strong>）<code>ent new User</code>：</p>
+<pre><code class="language-bash">.
+└── ent
+    ├── generate.go
+    └── schema
+        └── user.go
+</code></pre>
+<p>代码如下：</p>
+<pre><code class="language-go">
+package schema
+
+import &quot;entgo.io/ent&quot;
+
+// User holds the schema definition for the User entity.
+type User struct {
+    ent.Schema
+}
+
+// Fields of the User.
+func (User) Fields() []ent.Field {
+    return nil
+}
+
+// Edges of the User.
+func (User) Edges() []ent.Edge {
+    return nil
+}
+</code></pre>
+<p>其中Fields和Edges方法分别定义了实体的字段和关联关系。</p>
+<h4 id="添加字段">添加字段</h4>
+<p>直接修改各实体<code>Fields</code>方法的返回值即可。例如，我们给User实体添加age和name字段：</p>
+<pre><code class="language-go">// Fields of the User.
+func (User) Fields() []ent.Field {
+ return []ent.Field{
+  field.Int(&quot;age&quot;).
+   Positive(),
+  field.String(&quot;name&quot;).
+   Default(&quot;unknown&quot;),
+ }
+}
+</code></pre>
+<p>关于字段，详情见<a href="#fields">Fields</a>。</p>
+<h4 id="添加边relation">添加边（Relation）</h4>
+<p>直接修改各实体<code>Edges</code>方法的返回值即可。例如，我们给User实体添加一个一对多关系到Car：</p>
+<pre><code class="language-go">// Edges of the User.
+func (User) Edges() []ent.Edge {
+ return []ent.Edge{
+  edge.To(&quot;cars&quot;, Car.Type),
+ }
+}
+</code></pre>
+<p>这时如果我们查看数据库模式，会发现Car实体对应的cars表多了一列<code>user_cars</code>，作为外键约束指向User实体的id。</p>
+<h4 id="添加逆边backref">添加逆边（BackRef）</h4>
+<pre><code class="language-go">// Edges of the Car.
+func (Car) Edges() []ent.Edge {
+ return []ent.Edge{
+  // 创建一个名为 &quot;owner&quot; 的 `User` 反向边
+  // 并关联到 &quot;cars&quot; 边 (在 用户 结构中)
+  // 并显式的使用 `Ref` 方法。
+  edge.From(&quot;owner&quot;, User.Type).
+   Ref(&quot;cars&quot;).
+   // 设置边为唯一确保每辆车都只有一个拥有者
+   Unique(),
+ }
+}
+</code></pre>
+<p>如上代码创建了<code>cars</code>边的逆边<code>owner</code>。这时如果我们查看数据库模式，会发现并没有新增约束，因为这只是对原边的反向引用。</p>
+<p>我们可以通过<code>Unique</code>方法来设置边的唯一性，从而设置一对一，一对多或多对多关系。<br>
+如果是多对多关系将建立一个新的映射表来反映关联关系。</p>
+<p>关于边，详见<a href="#edges">Edges</a>。</p>
+<h3 id="生成代码">生成代码</h3>
+<pre><code class="language-bash">ent generate ./ent/schema
+</code></pre>
+<p>或者：</p>
+<pre><code class="language-bash">go generate ./ent
+</code></pre>
+<p>生成代码后目录如下：</p>
+<pre><code class="language-bash">.
+└── ent
+    ├── client.go
+    ├── ent.go
+    ├── enttest
+    │   └── enttest.go
+    ├── generate.go
+    ├── hook
+    │   └── hook.go
+    ├── migrate
+    │   ├── migrate.go
+    │   └── schema.go
+    ├── mutation.go
+    ├── predicate
+    │   └── predicate.go
+    ├── runtime
+    │   └── runtime.go
+    ├── runtime.go
+    ├── schema
+    │   └── user.go
+    ├── tx.go
+    ├── user            # user
+    │   ├── user.go
+    │   └── where.go        
+    ├── user.go         # user
+    ├── user_create.go  # user
+    ├── user_delete.go  # user
+    ├── user_query.go   # user
+    └── user_update.go  # user
+</code></pre>
+<p>其中，user文件夹及user开头的文件属于User实体，其他的文件则是通用的。</p>
+<p>在编写好schema和生成代码后，就可以使用ent的client进行数据库操作了。</p>
+<h3 id="连接数据库">连接数据库</h3>
+<p>ent支持多种数据库，包括MySQL、PostgreSQL、SQLite等。可以使用<code>ent.Open()</code>建立一个数据库链接并返回客户端：</p>
+<pre><code class="language-go">
+// func ent.Open(driverName string, dataSourceName string, options ...ent.Option) (*ent.Client, error)
+
+client, err := ent.Open(&quot;mysql&quot;, &quot;username:password@tcp(127.0.0.1:3306)/entdemo&quot;)
+defer client.Close()
+</code></pre>
+<h3 id="创建迁移数据库模式">创建&amp;迁移数据库模式</h3>
+<p>可以使用<code>ent.Client.Schema.Create()</code>方法创建数据库模式：</p>
+<pre><code class="language-go">// func (s *Schema) Create(ctx context.Context, opts ...schema.MigrateOption) error
+
+err := client.Schema.Create(context.Background())
+</code></pre>
+<h2 id="其他工具">其他工具</h2>
+<h3 id="sql转entgo">SQL转entgo</h3>
+<p><a href="https://old.printlove.cn/tools/sql2ent">SQL转entgo</a></p>
+<p>这个在线工具可以将sql直接转换成entgo的schema。</p>
+<h3 id="entimport">entimport</h3>
+<p><a href="https://entgo.io/zh/blog/2021/10/11/generating-ent-schemas-from-existing-sql-databases/">blog</a><br>
+<a href="https://github.com/ariga/entimport">github</a></p>
+<p>这个工具可以将数据库中现有的表结构转换成entgo的schema。</p>
+<h3 id="protoc-gen-ent">protoc-gen-ent</h3>
+<p><a href="https://entgo.io/blog/2021/05/04/announcing-schema-imports/">blog</a><br>
+<a href="https://github.com/ent/contrib/tree/master/entproto/cmd/protoc-gen-ent">github</a></p>
+<p>这个工具可以将protobuf文件转换成entgo的schema。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ProtoBuf笔记]]></title>
+        <id>https://jinvic.github.io/post/protobuf-notes/</id>
+        <link href="https://jinvic.github.io/post/protobuf-notes/">
+        </link>
+        <updated>2024-11-04T05:31:35.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="protobuf笔记">ProtoBuf笔记</h1>
+<p><a href="https://protobuf.com.cn/">官方文档</a></p>
+<p>尽量少抄文档吧。。。感觉抄文档的笔记没有一点意义，真要查些什么都直接查文档了。</p>
+<h2 id="概述">概述</h2>
+<h3 id="什么是protobuf">什么是ProtoBuf？</h3>
+<blockquote>
+<p><strong>定义</strong>：Protocol Buffers 是一种与语言无关、与平台无关的可扩展机制，用于序列化结构化数据。</p>
+</blockquote>
+<p>看起来有点懵，举个例子。我们随便定义一个结构体，在不同语言中定义方法是不同的：</p>
+<pre><code class="language-c">struct Person
+{
+    char name[50];
+    int age;
+};
+</code></pre>
+<pre><code class="language-c++">
+struct Person {
+    std::string name;
+    int age;
+};
+</code></pre>
+<pre><code class="language-python">class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+</code></pre>
+<pre><code class="language-go">type Person struct {
+    Name string
+    Age  int
+}
+</code></pre>
+<p>而protobuf提供了一种通用的定义方式，它可以通过工具转换成任意一种语言。</p>
+<pre><code class="language-protobuf">message Person {
+  string name = 1;
+  int32 age = 2;
+}
+</code></pre>
+<h3 id="protobuf有什么用">protobuf有什么用？</h3>
+<p>protobuf本质上是一种序列化技术。什么是序列化？这里不扯定义，简单粗暴地说，就是把数据转换成另一种更方便更通用的形式，方便进行存储和传输。你在程序里有个结构体，你可以把它当参数在这个程序里面传来传去。但如果你要把它存到磁盘，可能就得存一个txt或json，这个过程你就可以理解为序列化。你用另一个程序把这个txt或json读到程序里的结构体，然后就可以自由操作这个结构体了，这个过程就可以理解为反序列化。上面讲的是存储，而传输也是一样的道理。json就是序列化技术之一，而protobuf也是类似的。而相比json的轻量级标记，protobuf则有着更接近编程语言的语法和工具链支持。</p>
+<p>protobuf常用于跨语言，跨项目的通信协议和数据存储，如RPC等。具体什么是RPC这里不予赘述。</p>
+<h2 id="protobuf-go开发">protobuf-go开发</h2>
+<p>protobuf生成go代码时，需要使用 <code>go_package</code> 选项指定生成代码的包的导入路径。包名为最后一个路径组件。如下，包名为<code>tutorialpb</code>。</p>
+<pre><code class="language-proto">option go_package = &quot;github.com/protocolbuffers/protobuf/examples/go/tutorialpb&quot;;
+</code></pre>
+<p>使用protobuf生成go代码，需要额外安装插件<code>protoc-gen-go</code>，如果是gRPC开发还需安装<code>protoc-gen-go-grpc</code>：</p>
+<pre><code class="language-bash">go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+</code></pre>
+<p>编译器插件 <code>protoc-gen-go</code> 将安装在 <code>$GOBIN</code> 中，默认为 <code>$GOPATH/bin</code>。 需要将其添加到<code>$PATH</code> 中，以便协议编译器 <code>protoc</code> 能够找到它。</p>
+<p><strong>Linux添加PATH</strong>：</p>
+<pre><code class="language-bash">export PATH=&quot;$PATH:$(go env GOPATH)/bin&quot;
+</code></pre>
+<p>编译命令中使用<code>--go_out</code>和<code>--go-grpc_out</code>指定输出目录。</p>
+<pre><code class="language-bash">protoc --go_out=proto --go-grpc_out=proto .\proto\test.proto
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Linux笔记]]></title>
+        <id>https://jinvic.github.io/post/linux-notes/</id>
+        <link href="https://jinvic.github.io/post/linux-notes/">
+        </link>
+        <updated>2024-11-02T05:31:03.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="linux笔记">Linux笔记</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#linux%E7%AC%94%E8%AE%B0">Linux笔记</a>
+<ul>
+<li><a href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">常用命令</a></li>
+<li><a href="#%E9%83%A8%E5%88%86%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85">部分应用安装</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85vfox">安装vfox</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85make">安装make</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85protobuf">安装protobuf</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85go">安装go</a></li>
+</ul>
+</li>
+<li><a href="#wsl2%E9%87%8D%E8%A3%85%E7%B3%BB%E7%BB%9F">WSL2重装系统</a></li>
+<li><a href="#wsl2%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86">WSL2配置代理</a></li>
+<li><a href="#linux%E5%AE%89%E8%A3%85homebrew">Linux安装homebrew</a></li>
+<li><a href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86">用户管理</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p>本来最开始学Linux时用VMware装了个ubuntu镜像，但用起来卡卡的。虽然最开始时冲着图像界面去的，但后来发现用命令行操作更常用。于是又装了个WSL2学习命令行操作。而且挂载磁盘也比VMware方便。官方文档也很详细，中文支持很好，所以学习起来也很方便。<br>
+这里记一下使用过程中遇到的一些问题。</p>
+<h2 id="常用命令">常用命令</h2>
+<p>并没打算搞个命令大全之类的，只是记一下最常用且有用的几个。用多了随时添，没必要整一大堆跟背单词一样。</p>
+<ul>
+<li>
+<p>ls 列出目录中的文件</p>
+</li>
+<li>
+<p>cd 更改当前目录</p>
+</li>
+<li>
+<p>pwd 打印当前工作目录</p>
+</li>
+<li>
+<p>cat 显示文件的内容</p>
+</li>
+<li>
+<p>rm 删除文件</p>
+</li>
+<li>
+<p>find 在目录层次结构中搜索文件</p>
+</li>
+<li>
+<p>whereis 在特定目录中查找符合条件的文件</p>
+</li>
+<li>
+<p>sudo 以超级用户身份执行命令</p>
+</li>
+<li>
+<p>touch 创建文件/修改文件属性</p>
+</li>
+<li>
+<p>nohup 在系统后台不挂断地运行命令</p>
+</li>
+<li>
+<p>htop 交互式进程查看器，支持鼠标操作</p>
+</li>
+</ul>
+<h2 id="部分应用安装">部分应用安装</h2>
+<p>只是做个集合整理，避免每次重装时一个个去翻文档和官网。</p>
+<h3 id="安装vfox">安装vfox</h3>
+<p><a href="https://vfox.lhan.me/zh-hans/guides/quick-start.html">来源</a></p>
+<p><strong>安装vfox</strong>：</p>
+<p>apt安装命令：</p>
+<pre><code class="language-bash">echo &quot;deb [trusted=yes] https://apt.fury.io/versionfox/ /&quot; | sudo tee /etc/apt/sources.list.d/versionfox.list
+ sudo apt-get update
+ sudo apt-get install vfox
+</code></pre>
+<p><strong>挂载vfox到Shell</strong>：</p>
+<pre><code class="language-bash">echo 'eval &quot;$(vfox activate bash)&quot;' &gt;&gt; ~/.bashrc
+</code></pre>
+<h3 id="安装make">安装make</h3>
+<p>这里使用vfox安装并进行版本管理。<br>
+同时作个vfox安装应用教程。</p>
+<pre><code class="language-bash"># 添加插件
+vfox add make
+# 查看所有可用版本
+# vfox search make
+# 安装最新版本
+vfox install make@latest
+# 设置使用版本
+vfox use -g make
+</code></pre>
+<p>其中作用域参数有<code>-p -g -s</code>三种，分别表示项目，全局，会话。详情略。</p>
+<h3 id="安装protobuf">安装protobuf</h3>
+<p><a href="https://grpc.org.cn/docs/protoc-installation/">来源</a></p>
+<p>虽然vfox提供了unofficial的protobuf插件，但好像有bug安装不了，还是用apt了。</p>
+<pre><code class="language-bash">sudo apt install -y protobuf-compiler
+</code></pre>
+<p>如果要进行go开发，还需要额外安装插件：</p>
+<pre><code class="language-bash">go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+</code></pre>
+<h3 id="安装go">安装go</h3>
+<p>还是使用vfox，见上<a href="#%E5%AE%89%E8%A3%85make">安装make</a>。</p>
+<p>不要忘了更新path，虽然好像不加这行也能在其他目录调用。可能vfox时默认加的：</p>
+<pre><code class="language-bash">export PATH=&quot;$PATH:$(go env GOPATH)/bin&quot;
+</code></pre>
+<p>如果要进行grpc开发，还需要安装对应插件：</p>
+<pre><code class="language-bash">go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+</code></pre>
+<h2 id="wsl2重装系统">WSL2重装系统</h2>
+<p>有种说法是再ubuntu的应用设置中选择重置，亲测无效。</p>
+<p>后来又找到别的方法。输入<code>wsl.exe --unregister Ubuntu</code>，再<code>wsl --install</code>就能重新注册用户了。</p>
+<p>后续流程按官方的<a href="https://learn.microsoft.com/zh-cn/windows/wsl/setup/environment">最佳实践</a>来就行。</p>
+<h2 id="wsl2配置代理">WSL2配置代理</h2>
+<ol>
+<li>
+<p>如clash等代理软件打开Allow LAN（允许局域网链接）选项</p>
+</li>
+<li>
+<p>在wsl中，使用 <code>cd~</code> 进入用户目录</p>
+</li>
+<li>
+<p>编辑<code>.bashrc</code>文件，在末尾添加如下内容：</p>
+<pre><code class="language-bash">hostip=$(ip route show | grep -i default | awk '{ print $3}')
+ export https_proxy=&quot;http://${hostip}:7890&quot;
+ export http_proxy=&quot;http://${hostip}:7890&quot;
+ export all_proxy=&quot;socks5://${hostip}:7890&quot;
+</code></pre>
+</li>
+<li>
+<p>保存退出，执行 <code>source ~/.bashrc</code> 使配置生效</p>
+</li>
+<li>
+<p>使用<code>wget www.google.com</code>测试是否成功</p>
+</li>
+</ol>
+<p>我看很多教程获取ip地址都用的<br>
+<code>cat /etc/resolv.conf |grep -oP '(?&lt;=nameserver\ ).*'</code><br>
+可我看<a href="https://learn.microsoft.com/zh-cn/windows/wsl/networking#default-networking-mode-nat">官方教程</a>是<br>
+<code>ip route show | grep -i default | awk '{ print $3}'</code><br>
+也不知道为什么，反正我用前一个不行后一个行。</p>
+<h2 id="linux安装homebrew">Linux安装homebrew</h2>
+<p>虽然<a href="https://brew.sh/zh-cn/">Homebrew官网</a>上就一句话：</p>
+<p><code>/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;</code></p>
+<p>但如果你真的直接把这行代码复制粘贴到终端，大概率看到如下报错：</p>
+<pre><code class="language-text">Error: Failed to install Homebrew Portable Ruby and cannot find another Ruby 3.3!
+If there's no Homebrew Portable Ruby available for your processor:
+- install Ruby 3.3 with your system package manager (or rbenv/ruby-build)
+- make it first in your PATH
+- try again
+</code></pre>
+<p>提示说找不到适合你的处理器架构的Ruby 3.3版本，所以我们需要先安装一个Ruby 3.3版本。这里顺便推荐一个版本管理工具<a href="https://vfox.lhan.me/zh-hans/">vfox</a>。</p>
+<p>安装Ruby后再安装Homebrew，在茫茫的返回中你找到一行：</p>
+<p><code>==&gt; Installation successful!</code></p>
+<p>但是当你再次输入<code>brew -v</code>命令时，却提示<code>command not found</code>。再看一眼发现了在这行上面还有个报错：</p>
+<pre><code class="language-text">Warning: /home/linuxbrew/.linuxbrew/bin is not in your PATH.
+  Instructions on how to configure your shell for Homebrew
+  can be found in the 'Next steps' section below.
+</code></pre>
+<p>这是因为Homebrew的安装路径不在你的PATH环境变量中，所以需要手动添加。</p>
+<pre><code class="language-bash">echo 'export PATH=&quot;/home/linuxbrew/.linuxbrew/bin:$PATH&quot;' &gt;&gt; ~/.bashrc
+source ~/.bashrc
+</code></pre>
+<p>执行如上命令将homebrew添加到path。这时再执行<code>brew -v</code>就能看到版本号了。</p>
+<h2 id="用户管理">用户管理</h2>
+<p>当然可以一个root打天下。但我还是想为不同用途分下多用户。记一下用户操作。</p>
+<p><strong>新建用户</strong>：<code>useradd 选项 用户名</code>。可选项如下：</p>
+<ul>
+<li><code>-c</code> comment 指定一段注释性描述。</li>
+<li><code>-d</code> 目录 指定用户主目录，如果此目录不存在，则同时使用-m选项，可以创建主目录。</li>
+<li><code>-g</code> 用户组 指定用户所属的用户组。</li>
+<li><code>-G</code> 用户组，用户组 指定用户所属的附加组。</li>
+<li><code>-s</code> Shell文件 指定用户的登录Shell。</li>
+<li><code>-u</code> 用户号 指定用户的用户号，如果同时有-o选项，则可以重复使用其他用户的标识号。</li>
+</ul>
+<p>推荐操作：<code>sudo useradd -m username -s /bin/bash -g sudo</code>，创建用户的同时新建主目录并设置bash。</p>
+<p><strong>删除用户</strong>：<code>userdel 选项 用户名</code>。推荐操作<code>userdel -r username</code>，<code>-r</code>选项将连主目录一起删除。</p>
+<p><strong>修改用户</strong>：<code>usermod 选项 用户名</code>。选项同上。</p>
+<p><strong>修改密码</strong>：<code>passwd 选项 用户名</code>。可选项如下：</p>
+<ul>
+<li><code>-l</code> 锁定口令，即禁用账号。</li>
+<li><code>-u</code> 口令解锁。</li>
+<li><code>-d</code> 使账号无口令。</li>
+<li><code>-f</code> 强迫用户下次登录时修改口令。</li>
+</ul>
+<p><strong>查看用户组</strong>：<code>group username</code>或<code>id username</code></p>
+]]></content>
+    </entry>
+</feed>

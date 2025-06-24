@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>go依赖注入库 samber/do 笔记 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="go依赖注入库 samber/do 笔记 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="go依赖注入库 samber/do 笔记" />
+  <meta property="og:url" content="https://jinvic.github.io/post/go-di-lib-samber-do-notes/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+                <a href="https://jinvic.github.io/tag/2vaencnsMM/" class="tag">Go</a>
+                
+                <a href="https://jinvic.github.io/tag/KbkCyWeWckl/" class="tag">笔记</a>
+                
+              </span>
+              <h1>go依赖注入库 samber/do 笔记</h1>
+              <span class="meta">
+                Posted on
+                2025-06-24，6 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <h1 id="do">do</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#do">do</a>
+<ul>
+<li><a href="#%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E5%AE%9A%E4%B9%89">依赖注入定义</a></li>
+<li><a href="#%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8">快速使用</a></li>
+<li><a href="#%E5%8C%BF%E5%90%8D%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%91%BD%E5%90%8D%E6%9C%8D%E5%8A%A1">匿名服务与命名服务</a></li>
+<li><a href="#%E6%80%A5%E5%8A%A0%E8%BD%BD%E5%92%8C%E6%87%92%E5%8A%A0%E8%BD%BD">急加载和懒加载</a>
+<ul>
+<li><a href="#%E6%80%A5%E5%8A%A0%E8%BD%BD">急加载</a></li>
+<li><a href="#%E6%87%92%E5%8A%A0%E8%BD%BD">懒加载</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8">服务调用</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96">其他</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p><a href="https://github.com/samber/do">samber/do</a></p>
+<p>文档：<a href="https://do.samber.dev/">⚙️ do: Typesafe dependency injection for Go | do</a><br>
+参考：<a href="https://blog.aflybird.cn/2023/08/read-open-source-go-dependency-injection-library-samber-do">源码分析——Go语言依赖注入库 samber/do - 飞鸟记</a></p>
+<p>do是一个依赖注入库。相比于用过的wire，do更加轻量且无需代码生成。</p>
+<blockquote>
+<p><strong>注意：</strong> v2正在开发中，新版本可能有较大改动。</p>
+</blockquote>
+<h2 id="依赖注入定义">依赖注入定义</h2>
+<blockquote>
+<p>狭义DI定义</p>
+<blockquote>
+<p>对象的使用方式不应该依赖于对象的创建方式。</p>
+</blockquote>
+<p>所以我们要实现的，就是：</p>
+<ul>
+<li>提供一个「第三方」</li>
+<li>对象创建者，把特定类型的对象创建出来并注册到第三方</li>
+<li>对象使用者，从第三方获取对象</li>
+</ul>
+</blockquote>
+<p>我的理解是，使用对象时不需要去关注对象如何创建，不需要自己创建对象，而是直接使用一个现成的对象。<br>
+如何将对象交给使用者，就是所谓的“注入”。<br>
+最简单的理解就是一个map，需要什么对象时查询map从里面拿。</p>
+<h2 id="快速使用">快速使用</h2>
+<pre><code class="language-go">func main() {
+    // create DI container and inject package services
+    injector := do.New()
+
+    do.Provide(injector, NewCar)
+    do.Provide(injector, NewEngine)
+    do.ProvideValue(&amp;Config{
+        Port: 4242,
+    })
+
+    // invoking car will instantiate Car services and its Engine dependency
+    car, err := do.Invoke[*Car](i)
+    if err != nil {
+        log.Fatal(err.Error())
+    }
+
+    car.Start()  // that's all folk 🤗
+
+    // handle ctrl-c and shutdown services
+    i.ShutdownOnSignals(syscall.SIGTERM, os.Interrupt)
+}
+</code></pre>
+<ol>
+<li>使用<code>do.New()</code>创建一个依赖注入容器（即一个<code>map[string]any</code>）</li>
+<li>使用<code>do.Provide()</code>注册服务（提供对象创建方式）</li>
+<li>使用<code>do.Invoke[Type](injector)</code>调用服务（获取对应类型的对象）</li>
+<li>使用对象</li>
+</ol>
+<h2 id="匿名服务与命名服务">匿名服务与命名服务</h2>
+<p>do框架在进行服务注册时，都有提供<code>Provide</code>和<code>ProvideNamed</code>两种方法。</p>
+<pre><code class="language-go">func Provide[T any](i do.Injector, provider do.Provider[T])
+func ProvideNamed[T any](i do.Injector, name string, provider do.Provider[T])
+</code></pre>
+<p>前者为匿名服务，由框架处理命名。后者为命名服务，用户自己提供命名作为<code>map[string]any</code>的key键。</p>
+<p>顺便一提，匿名服务中框架生成服务名的方式就是直接打印变量类型：</p>
+<pre><code class="language-go">func generateServiceName[T any]() string {
+    var t T
+
+    // struct
+    name := fmt.Sprintf(&quot;%T&quot;, t)
+    if name != &quot;&lt;nil&gt;&quot; {
+        return name
+    }
+
+    // interface
+    return fmt.Sprintf(&quot;%T&quot;, new(T))
+}
+</code></pre>
+<h2 id="急加载和懒加载">急加载和懒加载</h2>
+<p><strong>急加载(Eager Loading)</strong> 是在注册服务时直接传入变量。<br>
+<strong>懒加载（Lazy Loading）</strong> 是传入创建变量的方式，等用到时再创建。</p>
+<pre><code class="language-go">// 急加载
+func ProvideValue[T any](i do.Injector, value T)
+func ProvideNamedValue[T any](i do.Injector, name string, value T)
+// 懒加载
+func Provide[T any](i do.Injector, provider do.Provider[T])
+func ProvideNamed[T any](i do.Injector, name string, provider do.Provider[T])
+</code></pre>
+<p>要更深入理解两者的区别，我们需要了解服务的定义和两种服务注册方式的实现。如下是部分源码（已简化）:</p>
+<pre><code class="language-go">type Service[T any] interface {
+    getName() string
+    getInstance(*Injector) (T, error)
+}
+</code></pre>
+<p>服务本身是一个接口，<code>getName</code>方法获取服务名，<code>getInstance</code>方法获取服务实例。无论是急加载还是懒加载，以及其他的瞬时加载和包加载等，只要实现了这个接口就行。</p>
+<h3 id="急加载">急加载</h3>
+<pre><code class="language-go">type ServiceEager[T any] struct {
+    name     string
+    instance T
+}
+
+func newServiceEager[T any](name string, instance T) Service[T] {
+    return &amp;ServiceEager[T]{
+        name:     name,
+        instance: instance,
+    }
+}
+
+//nolint:unused
+func (s *ServiceEager[T]) getName() string {
+    return s.name
+}
+
+//nolint:unused
+func (s *ServiceEager[T]) getInstance(i *Injector) (T, error) {
+    return s.instance, nil
+}
+</code></pre>
+<p>急加载直接传入创建好的实例，调用时返回就行。</p>
+<h3 id="懒加载">懒加载</h3>
+<pre><code class="language-go">type Provider[T any] func(*Injector) (T, error)
+
+type ServiceLazy[T any] struct {
+    mu       sync.RWMutex
+    name     string
+    instance T
+
+    // lazy loading
+    built    bool
+    provider Provider[T]
+}
+
+func newServiceLazy[T any](name string, provider Provider[T]) Service[T] {
+    return &amp;ServiceLazy[T]{
+        name: name,
+
+        built:    false,
+        provider: provider,
+    }
+}
+
+//nolint:unused
+func (s *ServiceLazy[T]) getName() string {
+    return s.name
+}
+
+//nolint:unused
+func (s *ServiceLazy[T]) getInstance(i *Injector) (T, error) {
+    s.mu.Lock()
+    defer s.mu.Unlock()
+
+    if !s.built {
+        err := s.build(i)
+        if err != nil {
+            return empty[T](), err
+        }
+    }
+
+    return s.instance, nil
+}
+
+//nolint:unused
+func (s *ServiceLazy[T]) build(i *Injector) (err error) {
+    instance, err := s.provider(i)
+    if err != nil {
+        return err
+    }
+
+    s.instance = instance
+    s.built = true
+
+    return nil
+}
+</code></pre>
+<p><code>Provider[T any]</code>类型为创建实例的方式。从懒加载服务中获取实例时先通过<code>built</code>标记判断实例是否已创建。<br>
+如果已创建，直接返回实例。如果未创建，使用传入的<code>provider</code>创建实例。创建过程通过并发变量<code>mu</code>保证并发安全。</p>
+<h2 id="服务调用">服务调用</h2>
+<pre><code class="language-go">do.Invoke[T any](do.Injector) (T, error)
+do.InvokeNamed[T any](do.Injector, string) (T, error)
+do.MustInvoke[T any](do.Injector) T
+do.MustInvokeNamed[T any](do.Injector, string) T
+</code></pre>
+<p>使用<code>do.Invoke</code>调用匿名服务，<code>do.InvokeNamed</code>调用命名服务。<br>
+而<code>Must</code>版本是正常版本的封装，单返回值可以直接用于表达式中，报错时不返回错误而是直接panic。</p>
+<h2 id="其他">其他</h2>
+<p>其他用法和特性因为没用过理解不深，为了避免抄文档就干脆不写了。<br>
+以后用上了再查文档记笔记吧。</p>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#do">do</a>
+<ul>
+<li><a href="#%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E5%AE%9A%E4%B9%89">依赖注入定义</a></li>
+<li><a href="#%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8">快速使用</a></li>
+<li><a href="#%E5%8C%BF%E5%90%8D%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%91%BD%E5%90%8D%E6%9C%8D%E5%8A%A1">匿名服务与命名服务</a></li>
+<li><a href="#%E6%80%A5%E5%8A%A0%E8%BD%BD%E5%92%8C%E6%87%92%E5%8A%A0%E8%BD%BD">急加载和懒加载</a>
+<ul>
+<li><a href="#%E6%80%A5%E5%8A%A0%E8%BD%BD">急加载</a></li>
+<li><a href="#%E6%87%92%E5%8A%A0%E8%BD%BD">懒加载</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8">服务调用</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96">其他</a></li>
+</ul>
+</li>
+</ul>
+</div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://jinvic.github.io/post/a-problem-about-wsl-proxy/">
+              <span class="post-title">
+                关于WSL的代理问题一则&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>

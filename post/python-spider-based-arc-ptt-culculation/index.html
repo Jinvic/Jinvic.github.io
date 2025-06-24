@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>基于python爬虫的arcptt计算器【备份留档】 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="基于python爬虫的arcptt计算器【备份留档】 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="基于python爬虫的arcptt计算器【备份留档】" />
+  <meta property="og:url" content="https://jinvic.github.io/post/python-spider-based-arc-ptt-culculation/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+                <a href="https://jinvic.github.io/tag/R8ylBkvMORu/" class="tag">Python</a>
+                
+                <a href="https://jinvic.github.io/tag/gbX6yaPc5ph/" class="tag">编程</a>
+                
+                <a href="https://jinvic.github.io/tag/GTebp9AhDw4/" class="tag">备份留档</a>
+                
+              </span>
+              <h1>基于python爬虫的arcptt计算器【备份留档】</h1>
+              <span class="meta">
+                Posted on
+                2023-06-05，12 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <hr>
+<h1 id="备份留档">备份留档</h1>
+<p><strong>注意：</strong> 以下内容为早期边学边做的记录，已过时，仅作备份留档用。<br>
+项目最新进度可以查看 <strong><a href="https://github.com/Jinvic/arc_pttcul/tree/main/GUI_PySide6">GUI项目地址</a></strong></p>
+<hr>
+<h1 id="前言">前言</h1>
+<p>arcaea在一次更新后删减了api的返回数据，所以各种查分bot都用不了，查分被做成了付费功能。。，约14RMB一个月。玩家直接倒退回excel时代手算ptt。虽然excel写好函数后也还算方便了，没必要写个计算器套壳。但我想学习了解一下<strong>python爬虫</strong>和<strong>Qtpy</strong>这些，就从这个点入手了。做自己感兴趣的题材学起来也没那么枯燥。<br>
+<strong><a href="https://github.com/Jinvic/arc_pttcul">CLI项目地址（不再维护）</a></strong><br>
+<strong><a href="https://github.com/Jinvic/arc_pttcul/tree/main/GUI_PySide6">GUI项目地址</a></strong></p>
+<hr>
+<h1 id="爬取网页">爬取网页</h1>
+<p>因为没打算深入学习，只想快点搞个成品出来，所以各项原理只是简单过了遍，没有深入学习，像是查字典一样去找自己需要的部分。</p>
+<p>参考书籍为：<strong>Python3网络爬虫开发实战 第二版</strong><br>
+<br><br>
+先是用的<code>urllib.request.urlopen</code>，返回一个response，print时没什么问题，存文件就会报错：<code>UnicodeEncodeError</code>，python的编码问题不是很懂，先略过。<br>
+<br><br>
+往后翻了翻，使用<code>requests.get</code>，这次报错<code>requests.exceptions.SSLError</code>。查一下，加个<code>verify=False</code>来避免ssl认证。再跑，报错<code>requests.exceptions.ProxyError</code>，再查，代理的问题。因为我随时上谷歌和github page，代理是一直挂着的。关了代理，verify=False也删掉，再跑，终于好了：</p>
+<pre><code class="language-Python">import requests
+
+# 获取网页
+url = 'https://wiki.arcaea.cn/%E5%AE%9A%E6%95%B0%E8%AF%A6%E8%A1%A8'  # 定数详表页面
+response = requests.get(url)
+with open('website.html', mode='wb') as html_file:
+    html_file.write(response.text)
+</code></pre>
+<p>emm其实爬虫的部分可以到此为止了，接下来就是数据的提取和处理。不过这样未免过于虎头蛇尾，再往后看看有什么用得上的。</p>
+<hr>
+<h1 id="解析提取数据">解析提取数据</h1>
+<p>书上提供了XPath，Beautiful Soup、pyquery等几种库，看得我眼花缭乱。最后选择了pyquery库，它用的选择器和CSS是一样的。之前做移动终端编程也了解过一点jquery。想到这个我就有满满的槽要吐，这个有空再聊。<br>
+<br><br>
+想从之前保存的网页中读，又报错了：<code>UnicodeDecodeError</code>。还是字符问题，有空再把python的字符整明白。这里url比较简单，不需要加什么参数，就不用request库直接用pyquery访问了：</p>
+<pre><code class="language-Python">from pyquery import PyQuery as pq
+
+target_url = 'https://wiki.arcaea.cn/%E5%AE%9A%E6%95%B0%E8%AF%A6%E8%A1%A8'  # 定数详表页面
+doc = pq(url=target_url)
+chart_constant_table = doc('tbody')  # 定数表
+print(chart_constant_table('th').text())
+for item in chart_constant_table('tr').items():
+    print(item('td').text())
+</code></pre>
+<p>定数表拿到了，接下来的问题就是用什么样的数据结构存这张表。</p>
+<hr>
+<h1 id="定数表存储">定数表存储</h1>
+<p>比较让人恼火的一点是，这些曲目似乎并没有一个统一的编号。arcaea中文维基只是简单粗暴的用曲名作为表示符。这样增删改查感觉都不怎么方便。我也懒得折腾就这样吧。<br>
+<br><br>
+使用csv库来存储定数表，又报错了：<code>UnicodeEncodeError</code>。看看存了一半的csv，原来是Löschen中的ö是德文字符，默认gbk字符集写入没有这个字符。之前的报错应该也都是这个原因。加个<code>encoding='utf-8'</code>，问题解决。</p>
+<pre><code class="language-Python">from pyquery import PyQuery as pq
+import csv
+
+target_url = 'https://wiki.arcaea.cn/%E5%AE%9A%E6%95%B0%E8%AF%A6%E8%A1%A8'  # 定数详表页面
+doc = pq(url=target_url)
+chart_constant_table = doc('tbody')  # 定数表
+# print(list(chart_constant_table('th').text().split(' ')))
+
+with open('chart_constant_table.csv', 'w', encoding='utf-8', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+    for item in chart_constant_table('tr').items():
+        print(item.text().split('\n'))
+        writer.writerow(item.text().split('\n'))
+</code></pre>
+<hr>
+<h1 id="定数表查询">定数表查询</h1>
+<p>正常写个遍历查询。考虑了一下要不要用pandas库，因为csv表很小就三百来行，也不需要什么高级的数据分析处理就算了。<br>
+本来是<code>{head[i]}:{row[i]}</code>这样输出，感觉看起来不是很方便就改成类似表格的格式输出了。求取曲名列最大长度后用<code>ljust</code>对齐。</p>
+<pre><code class="language-Python">import csv
+
+def CCT_search(st):
+    # 读取csv并查询
+    with open('chart_constant_table.csv', 'r', encoding='utf-8') as csvfile:
+        reader = csv.reader(csvfile)
+        head = next(reader)
+        res = []
+        for row in reader:
+            if(row[0].upper().find(st.upper()) != -1):
+                res.append(row)
+
+        # 寻找曲名的最大宽度
+        max_width = max([len(str(row[0])) for row in res])
+        max_widths = [5, max_width, 5, 5, 5, 5]  # 编号和定数列宽度固定
+        # print(max_widths)
+
+        if(len(res) == 0):
+            print('未查找到结果，请重新查找')
+        else:
+
+            # 输出表头
+            head = ['编号']+head
+            formatted_row = ''
+            for i in range(len(head)):
+                if(i &lt; 2):  # 前两列为中文，宽度短一点不然对不齐
+                    formatted_row += str(head[i]).ljust(max_widths[i])
+                else:
+                    formatted_row += str(head[i]).ljust(max_widths[i] + 2)
+            print(formatted_row)
+
+            # 输出定数表
+            idx = 0
+            for row in res:
+                # print(f'', end=' ')
+                row = [idx]+row
+                formatted_row = ''
+                for i in range(len(row)):
+                    # print(f'{head[i]}:{row[i]}', end=' ')
+                    formatted_row += str(row[i]).ljust(max_widths[i] + 2)
+                print(formatted_row)
+                idx += 1
+
+        return res
+</code></pre>
+<p>这只是查曲名用的，大小写不敏感。给查询结果编号输出，用户通过编号选择对应曲目。以查询<code>red</code>为例，输出如下：</p>
+<pre><code class="language-text">编号   曲目                            PST    PRS    FTR    BYD    
+0      Redolent Shape                  4.5    7.5    10.2
+1      Hybris (The one who shattered)  4.5    7.5    9.8
+2      Red and Blue                    4.0    7.5    9.4    10.0
+3      Redraw the Colorless World      4.0    6.5    9.2
+</code></pre>
+<hr>
+<h1 id="玩家成绩存储和更新">玩家成绩存储和更新</h1>
+<p>我打算另建一张用户数据表来存储玩家玩了哪些曲目，以及对应的成绩和潜力值。<br>
+最开始用户数据表是空的。玩家每次玩了新歌，录入成绩时需要从定数表中拿曲名和定数出来，再结合成绩计算潜力值存入用户数据表，表头为<code>曲名 难度 定数 成绩 潜力值</code>。之后推了更高的分，就直接在用户数据表里面更新。添加成绩代码如下：</p>
+<pre><code class="language-Python">import csv
+from CCT_search import CCT_search
+from ptt_culculation import ptt_cul
+
+
+# 从定数表添加新行
+def UDT_add():
+    print('请输入关键词以查找曲目')
+    st = input()
+
+    res = CCT_search(st)
+    if(len(res) == 0):
+        return
+
+    input_check = False
+    while input_check == False:
+        print(&quot;选择添加的曲目，输入编号&quot;)
+        idx = int(input())
+        if(idx &gt;= len(res) or idx &lt; 0):
+            print(&quot;编号不合法&quot;)
+        else:
+            input_check = True
+
+    input_check = False
+    while input_check == False:
+        print(&quot;选择难度[pst|prs|ftr|byd]&quot;)
+        difficults = ['PST', 'PRS', 'FTR', 'BYD']
+        difficult = input()
+        dif_id = -1
+        for i in range(4):
+            if(difficults[i].upper() == difficult.upper()):
+                dif_id = i
+                break
+        if(dif_id == -1):
+            print('难度输入错误')
+        else:
+            input_check = True
+
+    print(&quot;输入成绩&quot;)
+    score = int(input())
+
+    # 曲名 难度 定数 成绩 潜力值
+    new_row = [res[idx][0],
+               difficults[dif_id],
+               res[idx][dif_id+1],
+               score,
+               ptt_cul(float(res[idx][dif_id+1]), score)]
+    print(new_row)
+
+    # 写入用户数据表
+    with open('user_data_table.csv', 'a', encoding='utf-8', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(new_row)
+
+     UDT_sort()
+</code></pre>
+<p>更新成绩代码如下，查找部分和之前<code>CCT_search()</code>差不多，感觉一直打表和查找代码重复度太高了，有空再优化吧。</p>
+<pre><code class="language-Python">def UDT_update():
+    print('请输入关键词以查找曲目')
+    st = input()
+
+    # 在用户数据表搜索
+    with open('user_data_table.csv', 'r', encoding='utf-8') as csvfile:
+        reader = csv.reader(csvfile)
+        rows = [row for row in reader]
+        res = []
+        dic = {}  # 存查找结果到原表行数的映射
+        row_no = 0  # 原表行数
+        idx = 0  # 结果编号
+        for row in rows:
+            if(row[0].upper().find(st.upper()) != -1):
+                res.append([idx]+row)
+                dic[idx] = row_no
+                idx += 1
+            row_no += 1
+        if(len(res) == 0):
+            print('未查找到结果，请重新查找')
+            return
+
+    # 寻找曲名的最大宽度
+    max_width = max([len(str(row[1])) for row in res])
+    max_widths = [5, max_width, 5, 5, 10, 10]
+    head = ['编号', '曲名', '难度', '定数', '成绩', '潜力值']
+    head_widths = [3, max_width, 3, 3, 8, 7]
+
+    # 输出表头
+    formatted_row = ''
+    for i in range(len(head)):
+        formatted_row += str(head[i]).ljust(head_widths[i] + 2)
+    print(formatted_row)
+
+    # 输出用户数据表
+    for row in res:
+        formatted_row = ''
+        for i in range(len(row)):
+            formatted_row += str(row[i]).ljust(max_widths[i] + 2)
+        print(formatted_row)
+
+    input_check = False
+    while input_check == False:
+        print(&quot;选择修改的曲目，输入编号&quot;)
+        idx = int(input())
+        if(idx &gt;= len(res) or idx &lt; 0):
+            print(&quot;编号不合法&quot;)
+        else:
+            input_check = True
+
+    print('输入更新后的成绩')
+    score = int(input())
+    rows[dic[idx]][3] = score
+    rows[dic[idx]][4] = ptt_cul(
+        float(rows[dic[idx]][2]), rows[dic[idx]][3])
+
+    with open('user_data_table.csv', 'w', encoding='utf-8', newline='') as new_csvfile:
+        writer = csv.writer(new_csvfile)
+        writer.writerows(rows)
+
+    UDT_sort()
+</code></pre>
+<p>写个排序函数,每次更改用户数据表后排序。</p>
+<pre><code class="language-Python">def UDT_sort():
+    with open('user_data_table.csv', 'r', encoding='utf-8', newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        rows = [row for row in reader]
+
+    sorted_rows = sorted(rows, key=lambda x: float(x[4]), reverse=True)
+
+    with open('user_data_table.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerows(sorted_rows)
+</code></pre>
+<hr>
+<h1 id="b30和r10计算">b30和r10计算</h1>
+<p>每次计算b30前使用<code>UDT_sort()</code>排序。如果成绩大于30项，只取前30项。<br>
+单曲ptt和r10都有公式算。<br>
+一起的代码如下：</p>
+<pre><code class="language-Python">import csv
+
+
+def ptt_cul(cc, score):
+    if(score &gt; 10000000):
+        return cc+2
+    elif(score &gt;= 9800000):
+        return cc+1+(score-9800000)/200000
+    else:
+        return max(cc+(score-9500000)/300000, 0)
+
+
+def b30_cul():
+
+    with open('user_data_table.csv', 'r', encoding='utf-8', newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        cnt = 0
+        sum = 0
+        for row in reader:
+            sum += float(row[4])
+            cnt += 1
+            if(cnt == 30):
+                break
+        return sum/30
+
+
+def r10_cul(b30, ptt):
+    return (ptt*40-b30*30)/10
+</code></pre>
+<hr>
+<h1 id="命令行界面和打包">命令行界面和打包</h1>
+<p>做个简单的命令行界面看能不能用。</p>
+<pre><code class="language-Python">from spider import CCT_update
+from user_data_edit import UDT_add, UDT_list, UDT_update
+from ptt_culculation import b30_cul, r10_cul
+
+
+def main():
+    print('选择你要进行的操作：')
+    print('1. 更新定数表')
+    print('2. 列出用户成绩')
+    print('3. 添加新成绩')
+    print('4. 更新现有成绩')
+    print('5. 计算b30')
+    print('6. 计算r10')
+
+    input_check = False
+    while input_check == False:
+        idx = int(input())
+        if(idx &gt; 6 or idx &lt;= 0):
+            print(&quot;编号不合法&quot;)
+        else:
+            input_check = True
+
+    if(idx == 1):
+        CCT_update()
+    elif(idx == 2):
+        UDT_list()
+    elif(idx == 3):
+        UDT_add()
+    elif(idx == 4):
+        UDT_update()
+    elif(idx == 5):
+        print(b30_cul())
+    else:
+        print('输入你现在的ptt')
+        ptt = input()
+        print(r10_cul(b30_cul(), float(ptt)))
+
+
+if __name__ == '__main__':
+    while(True):
+        print()
+        main()
+
+</code></pre>
+<p>安装<code>PyInstaller</code>，使用<code>Pyinstaller -F main.py</code>命令进行单文件打包。<br>
+初次使用需要先生成两个表格。启动程序，先使用<code>1. 更新定数表</code>命令生成定数表。再使用<code>3. 添加新成绩</code>命令生成用户数据表。也可以自己导入用户数据，方法见上。</p>
+<hr>
+<h1 id="qtpy图形化界面">Qtpy图形化界面</h1>
+<p><s>诶，还没做呢。CLI能用懒得做GUI了，有生之年系列。</s><br>
+开始做了。懒得贴代码了，去github看吧。这里记一下进度。<br>
+<strong><a href="https://github.com/Jinvic/arc_pttcul/tree/main/GUI_PySide6">项目地址</a></strong><br>
+<br><br>
+23-06-12 0:17<br>
+GUI使用<code>Pyside6</code>开发，先搭一个架子。</p>
+<ul>
+<li>整合了CCT查询和UDT查询。表格显示使用<code>TableView</code>空间，不再手动格式化。</li>
+<li>给UDT加了个表头，使CCT和UDT的搜索通用。</li>
+</ul>
+<br>
+23-06-13 3:16 
+<ul>
+<li>把各个文件整合为单文件。</li>
+<li>添加了爬取定数表失败的异常处理。</li>
+<li>使用<code>QInputDialog</code>进行参数输入。控件自带的输入限制省去了手写异常处理的工作量。</li>
+<li><strong>完成了GUI的开发。</strong></li>
+</ul>
+<p>（居然两天就做完了，还以为会拖很久）</p>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#%E5%A4%87%E4%BB%BD%E7%95%99%E6%A1%A3">备份留档</a></li>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E7%88%AC%E5%8F%96%E7%BD%91%E9%A1%B5">爬取网页</a></li>
+<li><a href="#%E8%A7%A3%E6%9E%90%E6%8F%90%E5%8F%96%E6%95%B0%E6%8D%AE">解析提取数据</a></li>
+<li><a href="#%E5%AE%9A%E6%95%B0%E8%A1%A8%E5%AD%98%E5%82%A8">定数表存储</a></li>
+<li><a href="#%E5%AE%9A%E6%95%B0%E8%A1%A8%E6%9F%A5%E8%AF%A2">定数表查询</a></li>
+<li><a href="#%E7%8E%A9%E5%AE%B6%E6%88%90%E7%BB%A9%E5%AD%98%E5%82%A8%E5%92%8C%E6%9B%B4%E6%96%B0">玩家成绩存储和更新</a></li>
+<li><a href="#b30%E5%92%8Cr10%E8%AE%A1%E7%AE%97">b30和r10计算</a></li>
+<li><a href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%95%8C%E9%9D%A2%E5%92%8C%E6%89%93%E5%8C%85">命令行界面和打包</a></li>
+<li><a href="#qtpy%E5%9B%BE%E5%BD%A2%E5%8C%96%E7%95%8C%E9%9D%A2">Qtpy图形化界面</a></li>
+</ul>
+</div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://jinvic.github.io/post/BMP_image_format_and_read_[C++_Python]/">
+              <span class="post-title">
+                BMP图片格式和读取【C++/Python】&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>

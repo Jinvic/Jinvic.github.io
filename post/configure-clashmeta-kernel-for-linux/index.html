@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>Linux配置ClashMeta内核 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="Linux配置ClashMeta内核 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="Linux配置ClashMeta内核" />
+  <meta property="og:url" content="https://jinvic.github.io/post/configure-clashmeta-kernel-for-linux/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+                <a href="https://jinvic.github.io/tag/47cAf1nsEU/" class="tag">Linux</a>
+                
+              </span>
+              <h1>Linux配置ClashMeta内核</h1>
+              <span class="meta">
+                Posted on
+                2024-12-20，4 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <h1 id="linux配置clashmeta内核">Linux配置ClashMeta内核</h1>
+<blockquote>
+<p>配置项没弄好，换 <s>数据删除</s> <!-- [ShellCrash](https://github.com/juewuy/ShellCrash/tree/dev) --> 解决了，感觉前面的工作都白干了。但写都写了还是发篇博客。</p>
+</blockquote>
+<h2 id="安装homebrew">安装homebrew</h2>
+<p>使用<code>homebrew</code>安装mihomo。注意：<code>homebrew</code>不建议使用root用户直接安装，建议新创建一个用户再添加到sudo用户组。例如创建新用户<code>brew</code>:</p>
+<pre><code class="language-bash">sudo useradd brew
+sudo passwd brew # 设置新用户的密码
+sudo usermod -aG sudo brew
+</code></pre>
+<p>完成后使用新用户账号密码登录，可以使用<code>groups</code>命令检查用户是否属于sudo组。</p>
+<p>使用如下命令安装<code>homebrew</code>：</p>
+<pre><code class="language-bash">/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;
+</code></pre>
+<p>如果出现如下报错：</p>
+<pre><code class="language-txt">Error: Failed to install Homebrew Portable Ruby and cannot find another Ruby 3.3!
+If there's no Homebrew Portable Ruby available for your processor:
+- install Ruby 3.3 with your system package manager (or rbenv/ruby-build)
+- make it first in your PATH
+- try again
+</code></pre>
+<p>提示说找不到适合你的处理器架构的Ruby 3.3版本，需要自已装一个ruby，安装方法不在此赘述。我是在wsl上出现这个问题的，云服务器上没有出现。</p>
+<p>安装Homebrew成功后，需要手动将其添加到PATH路径：</p>
+<pre><code class="language-bash">echo 'export PATH=&quot;/home/linuxbrew/.linuxbrew/bin:$PATH&quot;' &gt;&gt; ~/.bashrc
+source ~/.bashrc
+</code></pre>
+<p>然后使用<code>brew -v</code>验证homebrew是否能够正常使用。</p>
+<h2 id="安装mihomo">安装mihomo</h2>
+<p>使用homebrew可以很方便地安装mihomo：</p>
+<p><code>homebrew install mihomo</code></p>
+<p>安装完成后提示信息如下：</p>
+<pre><code class="language-text">You need to customize /home/linuxbrew/.linuxbrew/etc/mihomo/config.yaml.
+
+To start mihomo now and restart at login:
+  brew services start mihomo
+Or, if you don't want/need a background service you can just run:
+  /home/linuxbrew/.linuxbrew/opt/mihomo/bin/mihomo -d /home/linuxbrew/.linuxbrew/etc/mihomo
+</code></pre>
+<p>提示你配置文件创建在<code>/home/linuxbrew/.linuxbrew/etc/mihomo/config.yaml</code>。有需要可以参考<a href="https://wiki.metacubex.one/config/">文档</a>进行修改。</p>
+<p>如下是一些使用<code>homebrew services</code>操作mihomo的命令：</p>
+<pre><code class="language-bash">brew services start mihomo      # 启动服务
+brew services stop mihomo       # 停止服务
+brew services list              # 查看服务状态
+brew services restart mihomo·   # 重启服务
+</code></pre>
+<p><strong>【可选】：</strong> 个人比较喜欢用<a href="https://just.systems/man/zh/%E8%AF%B4%E6%98%8E.html">just</a>管理命令。<code>.justfile</code>文件如下：</p>
+<pre><code class="language-text">start:
+    brew services start mihomo
+stop:
+    brew services stop mihomo
+list:
+    brew services list
+restart:
+    brew services restart mihomo
+
+alias st:=start
+alias sp:=stop
+alias li:=list
+alias re:=restart
+</code></pre>
+<h2 id="用户界面">用户界面</h2>
+<p>完全靠参数也不方便，我们先来配置ui界面。可选的面板有yacd,metacubexd等。</p>
+<p><s>数据删除</s></p>
+<!-- - [metacubexd](https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip)
+- [Yacd-meta](https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip)
+- [Razord-meta](https://github.com/MetaCubeX/Razord-meta/archive/refs/heads/gh-pages.zip) -->
+<p>下载压缩包并解压。然后往配置文件中添加如下内容：</p>
+<pre><code class="language-yaml">external-controller: 0.0.0.0:9090# RESTful API 监听地址
+secret: your_secret # `Authorization:Bearer ${secret}`  # 设置登录面板的密码
+external-ui: /home/brew/mihomo/metacubexd-gh-pages/     # 换成你压缩包解压出来的文件夹的地址
+</code></pre>
+<p>端口按需求改，地址换成你自己的，保存后重启服务。在防火墙和安全组开放相关端口后，访问<code>http://&lt;你的服务器ip&gt;:9093/ui</code>即可登录面板。</p>
+<h2 id="代理配置">代理配置</h2>
+<p>见 <s>数据删除</s> <!-- [subconverter](https://github.com/tindy2013/subconverter/tree/master) --> 。<br>
+更方便的用法是使用现成的客户端，如 <s>数据删除</s> <!-- clash for windows --> ，<s>数据删除</s> <!-- clash verge rev -->。</p>
+<h2 id="https配置">https配置</h2>
+<p>虽然注释写着要配置tls的证书路径，但实测只要反向代理时配了证书，配置项里写一下https的端口就行。<br>
+如果不进行反向代理直接通过ip和端口号访问才需要在设置里配证书路径。</p>
+<pre><code class="language-yaml"># 直接通过ip访问还需要配置证书
+tls:
+  certificate: string # 证书 PEM 格式，或者 证书的路径
+  private-key: string # 证书对应的私钥 PEM 格式，或者私钥路径
+# 反向代理只需要配置https端口
+external-controller-tls: 0.0.0.0:9443 # RESTful API HTTPS 监听地址，需要配置 tls 部分配置文件
+</code></pre>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#linux%E9%85%8D%E7%BD%AEclashmeta%E5%86%85%E6%A0%B8">Linux配置ClashMeta内核</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85homebrew">安装homebrew</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85mihomo">安装mihomo</a></li>
+<li><a href="#%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2">用户界面</a></li>
+<li><a href="#%E4%BB%A3%E7%90%86%E9%85%8D%E7%BD%AE">代理配置</a></li>
+<li><a href="#https%E9%85%8D%E7%BD%AE">https配置</a></li>
+</ul>
+</li>
+</ul>
+</div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://jinvic.github.io/post/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/">
+              <span class="post-title">
+                Certbot申请泛域名SSL证书并自动续期&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>

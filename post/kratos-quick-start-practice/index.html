@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>Kratos 快速入门实践 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="Kratos 快速入门实践 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="Kratos 快速入门实践" />
+  <meta property="og:url" content="https://jinvic.github.io/post/kratos-quick-start-practice/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+                <a href="https://jinvic.github.io/tag/2vaencnsMM/" class="tag">Go</a>
+                
+              </span>
+              <h1>Kratos 快速入门实践</h1>
+              <span class="meta">
+                Posted on
+                2024-11-11，9 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <h1 id="kratos-快速入门实践">Kratos 快速入门实践</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#kratos-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%AE%9E%E8%B7%B5">Kratos 快速入门实践</a>
+<ul>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84">项目结构</a></li>
+<li><a href="#api%E5%B1%82">api层</a></li>
+<li><a href="#ent%E5%B1%82">ent层</a></li>
+<li><a href="#data%E5%B1%82">data层</a></li>
+<li><a href="#biz%E5%B1%82">biz层</a></li>
+<li><a href="#service%E5%B1%82">service层</a></li>
+<li><a href="#%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5">依赖注入</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="前言">前言</h2>
+<p>kratos<a href="https://go-kratos.dev/docs/getting-started/start">官方文档</a>的快速入门主打一个跑起来就算成功，基本没什么内容。本文将基于官方文档快速入门，结合自己的实践，详细说明如何在kratos框架中开发一个新功能。</p>
+<h2 id="项目结构">项目结构</h2>
+<p>如下是 Kratos 的一个典型的 Go 项目布局，也差不多是我们使用<code>kratos new .</code>创建新项目时的默认布局：</p>
+<pre><code class="language-bash">application
+|____api
+| |____helloworld
+| | |____v1
+| | |____errors
+|____cmd
+| |____helloworld
+|____configs
+|____internal
+| |____conf
+| |____data
+| |____biz
+| |____service
+| |____server
+|____test
+|____pkg
+|____go.mod
+|____go.sum
+|____LICENSE
+|____README.md
+</code></pre>
+<p>简单来说，要开发一个新功能就是<code>api-&gt;[service-biz-data]&lt;-ent</code>的流程。其中<code>api</code>层定义外部接口，<code>service</code>层负责与外部接口对接，<code>biz</code>层负责业务逻辑，<code>data</code>层与底层数据操作对接，<code>ent</code>层实现数据库定义与操作。</p>
+<h2 id="api层">api层</h2>
+<p>首先在<code>api/helloworld/v1</code>中定义protobuf文件，并使用 <code>kratos proto client .\api\helloworld\v1\test.proto</code> 生成go代码。</p>
+<pre><code class="language-proto">// api/helloworld/v1/test.proto
+syntax = &quot;proto3&quot;;
+
+package api.helloworld.v1;
+
+import &quot;google/api/annotations.proto&quot;;
+
+option go_package = &quot;helloworld/api/helloworld/v1;v1&quot;;
+
+// The test service definition.
+service Test {
+  rpc GetTest(GetTestRequest) returns (GetTestReply) {
+    option (google.api.http) = {
+      get: &quot;/test/{id}&quot;
+    };
+  };
+}
+
+message GetTestRequest {
+  string id = 1;
+}
+message GetTestReply {
+  string field1 = 1;
+  string field2 = 2;
+}
+</code></pre>
+<p>然后可以通过<code>kratos proto server .\api\helloworld\v1\test.proto -t internal/service</code>在<code>internal\service</code>下生成对应的service文件，这里实现了<code>pb.TestServer</code>接口。</p>
+<pre><code class="language-go">// internal/service/test.go
+package service
+
+import (
+ &quot;context&quot;
+
+ pb &quot;helloworld/api/helloworld/v1&quot;
+)
+
+type TestService struct {
+ pb.UnimplementedTestServer
+}
+
+func NewTestService() *TestService {
+ return &amp;TestService{}
+}
+
+func (s *TestService) GetTest(ctx context.Context, req *pb.GetTestRequest) (*pb.GetTestReply, error) {
+ return &amp;pb.GetTestReply{}, nil
+}
+</code></pre>
+<p>对外的部分就完成了，这是从外部接口到内部逻辑的步骤。</p>
+<p>接下来，我们从最底层的数据库开始，由内向外实现到service层。</p>
+<h2 id="ent层">ent层</h2>
+<p>首先是ent框架的schema定义，在<code>internal/data/ent/schema</code>下定义ent的schema文件。<br>
+关于ent的语法，在此不再赘述。</p>
+<pre><code class="language-go">// internal/data/ent/schema/test.go
+package schema
+
+import (
+ &quot;entgo.io/ent&quot;
+ &quot;entgo.io/ent/dialect&quot;
+ &quot;entgo.io/ent/schema/field&quot;
+)
+
+// Test holds the schema definition for the Test entity.
+type Test struct {
+ ent.Schema
+}
+
+// Fields of the Test.
+func (Test) Fields() []ent.Field {
+
+ return []ent.Field{
+
+  field.Int32(&quot;id&quot;).SchemaType(map[string]string{
+   dialect.MySQL: &quot;int(10)UNSIGNED&quot;, // Override MySQL.
+  }).NonNegative().Unique(),
+
+  field.String(&quot;field1&quot;).SchemaType(map[string]string{
+   dialect.MySQL: &quot;varchar(50)&quot;, // Override MySQL.
+  }),
+
+  field.String(&quot;field2&quot;).SchemaType(map[string]string{
+   dialect.MySQL: &quot;varchar(50)&quot;, // Override MySQL.
+  }),
+ }
+
+}
+
+// Edges of the Test.
+func (Test) Edges() []ent.Edge {
+ return nil
+}
+</code></pre>
+<p>在完成schema定义后，就可以使用ent工具生成用户操作数据库的相关代码。</p>
+<pre><code class="language-bash">ent generate ./internal/data/ent/schema
+</code></pre>
+<p>在<code>internal/data/data.go</code>中实现客户端并装载到Data结构体中,这样就把数据库操作和内部逻辑连接了起来。</p>
+<pre><code class="language-go">// internal/data/data.go
+package data
+
+import (
+    ...
+    _ &quot;github.com/go-sql-driver/mysql&quot; // mysql driver
+)
+
+// Data .
+type Data struct {
+ // TODO wrapped database client
+ db *ent.Client
+}
+
+// NewData .
+func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
+ cleanup := func() {
+  log.NewHelper(logger).Info(&quot;closing the data resources&quot;)
+ }
+ return &amp;Data{
+  db: NewEntClient(c, logger),
+ }, cleanup, nil
+}
+
+// NewEntClient .
+func NewEntClient(c *conf.Data, logger log.Logger) *ent.Client {
+ client, err := ent.Open(c.Database.Driver, c.Database.Source)
+ if err != nil {
+  log.NewHelper(logger).Fatal(err)
+ }
+ return client
+}
+</code></pre>
+<p>别忘了在<code>configs/config.yaml</code>中修改数据库配置。</p>
+<pre><code class="language-yaml">data:   
+  database:
+    driver: mysql
+    source: root:123456@tcp(127.0.0.1:3306)/test?parseTime=True&amp;loc=Local
+</code></pre>
+<p>完成api层和ent层后，程序内外的连接就完成了，接下来就是实现程序内部的逻辑。</p>
+<h2 id="data层">data层</h2>
+<p>在<code>internal/data/test.go</code>中实现数据库操作，这里让<code>testRepo</code>实现<code>GetTest</code>方法，即实现<code>biz.TestRepo</code>接口。</p>
+<pre><code class="language-go">// internal/data/test.go
+package data
+
+type testRepo struct {
+ data *Data
+ log  *log.Helper
+}
+
+func (r *testRepo) GetTest(ctx context.Context, id int32) (*biz.Test, error) {
+ test, err := r.data.db.Test.Query().Where(test.IDEQ(id)).Only(ctx)
+ if err != nil {
+  return nil, err
+ }
+ return &amp;biz.Test{
+  Id:     test.ID,
+  Field1: test.Field1,
+  Field2: test.Field2,
+ }, nil
+}
+
+</code></pre>
+<h2 id="biz层">biz层</h2>
+<p>在<code>internal/biz/test.go</code>中实现业务逻辑，这里因为逻辑很简单，直接调用data层方法就行。</p>
+<pre><code class="language-go">// internal/biz/test.go
+package biz
+
+type Test struct {
+ Id     int32
+ Field1 string
+ Field2 string
+}
+
+type TestRepo interface {
+ GetTest(context.Context, int32) (*Test, error)
+}
+
+type TestUsecase struct {
+ repo TestRepo
+ log  *log.Helper
+}
+
+// // GetTest search and return the Test.
+func (uc *TestUsecase) GetTest(ctx context.Context, id int32) (*Test, error) {
+ return uc.repo.GetTest(ctx, id)
+}
+</code></pre>
+<h2 id="service层">service层</h2>
+<p>最后，将<code>TestUsecase</code>装载到<code>internal/service/test.go</code>中，这样service层就完成了。</p>
+<pre><code class="language-go">// internal/service/test.go
+package service
+
+type TestService struct {
+ pb.UnimplementedTestServer
+ uc *biz.TestUsecase
+}
+
+func (s *TestService) GetTest(ctx context.Context, req *pb.GetTestRequest) (*pb.GetTestReply, error) {
+ id, err := strconv.Atoi(req.Id)
+ if err != nil {
+  return nil, err
+ }
+ test, err := s.uc.GetTest(ctx, int32(id))
+ if err != nil {
+  return nil, err
+ }
+ return &amp;pb.GetTestReply{
+  Field1: test.Field1,
+  Field2: test.Field2,
+ }, nil
+}
+</code></pre>
+<h2 id="依赖注入">依赖注入</h2>
+<p>最后，我们实现每一层的构造函数，并使用<code>wire</code>进行依赖注入。</p>
+<pre><code class="language-go">// internal/servece/test.go
+package service
+
+func NewTestService(
+ uc *biz.TestUsecase,
+) *TestService {
+ return &amp;TestService{
+  uc: uc,
+ }
+}
+// internal/servece/service.go
+package service
+
+import &quot;github.com/google/wire&quot;
+
+// ProviderSet is service providers.
+var ProviderSet = wire.NewSet(NewGreeterService, NewTestService)
+
+// internal/biz/test.go
+package biz
+
+// NewTestUsecase new a Test usecase.
+func NewTestUsecase(repo TestRepo, logger log.Logger) *TestUsecase {
+ return &amp;TestUsecase{repo: repo, log: log.NewHelper(logger)}
+}
+
+// internal/biz/biz.go
+package biz
+
+import &quot;github.com/google/wire&quot;
+
+// ProviderSet is biz providers.
+var ProviderSet = wire.NewSet(NewGreeterUsecase, NewTestUsecase)
+
+// internal/data/test.go
+package data
+
+// NewTestRepo .
+func NewTestRepo(data *Data, logger log.Logger) biz.TestRepo {
+ return &amp;testRepo{
+  data: data,
+  log:  log.NewHelper(logger),
+ }
+}
+
+// internal/data/data.go
+package data
+
+import (
+    ...
+    &quot;github.com/google/wire&quot;
+)
+
+// ProviderSet is data providers.
+var ProviderSet = wire.NewSet(NewData, NewGreeterRepo, NewTestRepo)
+
+// internal/server/http.go
+package server
+
+// NewHTTPServer new an HTTP server.
+func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, test *service.TestService, logger log.Logger) *http.Server {
+ var opts = []http.ServerOption{
+  http.Middleware(
+   recovery.Recovery(),
+  ),
+ }
+ if c.Http.Network != &quot;&quot; {
+  opts = append(opts, http.Network(c.Http.Network))
+ }
+ if c.Http.Addr != &quot;&quot; {
+  opts = append(opts, http.Address(c.Http.Addr))
+ }
+ if c.Http.Timeout != nil {
+  opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
+ }
+ srv := http.NewServer(opts...)
+ v1.RegisterGreeterHTTPServer(srv, greeter)
+ v1.RegisterTestHTTPServer(srv, test)
+ return srv
+}
+
+// internal/server/grpc.go
+package server
+
+// NewGRPCServer new a gRPC server.
+func NewGRPCServer(c *conf.Server, greeter *service.GreeterService, test *service.TestService, logger log.Logger) *grpc.Server {
+ var opts = []grpc.ServerOption{
+  grpc.Middleware(
+   recovery.Recovery(),
+  ),
+ }
+ if c.Grpc.Network != &quot;&quot; {
+  opts = append(opts, grpc.Network(c.Grpc.Network))
+ }
+ if c.Grpc.Addr != &quot;&quot; {
+  opts = append(opts, grpc.Address(c.Grpc.Addr))
+ }
+ if c.Grpc.Timeout != nil {
+  opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
+ }
+ srv := grpc.NewServer(opts...)
+ v1.RegisterGreeterServer(srv, greeter)
+ v1.RegisterTestServer(srv, test)
+ return srv
+}
+</code></pre>
+<p>使用<code>go generate ./...</code>命令更新依赖注入代码后就可以启动服务了。</p>
+<h2 id="总结">总结</h2>
+<p>通过以上步骤，我们完成了从proto文件到最终可运行的服务的整个过程，包括proto文件生成、ent层、data层、biz层、service层以及依赖注入。至于其他内容如<code>cmd</code>和<code>internal/conf</code>文件夹下的内容，在创建项目时已经生成好了不需要过多改动在此便不再赘述，有需要可以自行修改。</p>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#kratos-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%AE%9E%E8%B7%B5">Kratos 快速入门实践</a>
+<ul>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84">项目结构</a></li>
+<li><a href="#api%E5%B1%82">api层</a></li>
+<li><a href="#ent%E5%B1%82">ent层</a></li>
+<li><a href="#data%E5%B1%82">data层</a></li>
+<li><a href="#biz%E5%B1%82">biz层</a></li>
+<li><a href="#service%E5%B1%82">service层</a></li>
+<li><a href="#%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5">依赖注入</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://jinvic.github.io/post/ent-notes/">
+              <span class="post-title">
+                ent笔记&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>

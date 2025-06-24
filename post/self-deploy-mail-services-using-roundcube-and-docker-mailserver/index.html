@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>使用roundcube+docker-mailserver自部署邮件服务 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="使用roundcube+docker-mailserver自部署邮件服务 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="使用roundcube+docker-mailserver自部署邮件服务" />
+  <meta property="og:url" content="https://jinvic.github.io/post/self-deploy-mail-services-using-roundcube-and-docker-mailserver/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+              </span>
+              <h1>使用roundcube+docker-mailserver自部署邮件服务</h1>
+              <span class="meta">
+                Posted on
+                2025-02-07，6 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <h1 id="使用roundcubedocker-mailserver自部署邮件服务">使用roundcube+docker-mailserver自部署邮件服务</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E4%BD%BF%E7%94%A8roundcubedocker-mailserver%E8%87%AA%E9%83%A8%E7%BD%B2%E9%82%AE%E4%BB%B6%E6%9C%8D%E5%8A%A1">使用roundcube+docker-mailserver自部署邮件服务</a>
+<ul>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+<li><a href="#%E9%82%AE%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8-docker-mailserver">邮件服务器 Docker Mailserver</a>
+<ul>
+<li><a href="#%E8%AF%81%E4%B9%A6%E7%94%B3%E8%AF%B7">证书申请</a></li>
+<li><a href="#dns%E9%85%8D%E7%BD%AE">DNS配置</a></li>
+<li><a href="#%E5%BC%80%E6%94%BE%E7%AB%AF%E5%8F%A3">开放端口</a></li>
+<li><a href="#%E9%83%A8%E7%BD%B2dms">部署DMS</a></li>
+<li><a href="#%E5%AE%B9%E5%99%A8%E5%86%85%E9%85%8D%E7%BD%AE">容器内配置</a></li>
+</ul>
+</li>
+<li><a href="#%E9%82%AE%E4%BB%B6%E5%AE%A2%E6%88%B7%E7%AB%AF-roundcube">邮件客户端 Roundcube</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p>在做一个开源项目的邮件通知功能，本来用smtp发个邮件就行，不知怎么的就捣鼓着就开始自建邮件服务器了。不过用自己的域名实现邮件服务很酷不是吗？</p>
+<h2 id="参考">参考</h2>
+<p><strong>教程</strong>：</p>
+<ul>
+<li><a href="https://www.anye.xyz/archives/itwz2wfX">1Panel 自建邮局 - Docker Mailserver</a></li>
+<li><a href="https://docker-mailserver.github.io/docker-mailserver/latest/usage/">Usage - Docker Mailserver</a></li>
+</ul>
+<p><strong>工具</strong>：</p>
+<ul>
+<li><a href="https://ll00.cn/Mail/index.html">smtp发信测试</a></li>
+<li><a href="https://mxtoolbox.com/SuperTool.aspx">MX ToolBox</a></li>
+</ul>
+<h2 id="邮件服务器-docker-mailserver">邮件服务器 Docker Mailserver</h2>
+<p>本来是打算在应用商店直接部署的，但不知道为什么总报错安装失败，就自己用docker-composer部署了。</p>
+<h3 id="证书申请">证书申请</h3>
+<p>首先要实现SSL/TLS安全连接你必须有个证书，申请证书的过程略，1Panel本身的证书功能就很方便了。申请好的证书别忘了<strong>推送到本地目录</strong>，记下这个路径之后要用到。</p>
+<h3 id="dns配置">DNS配置</h3>
+<p>要让别人能找到你的邮件服务器地址需要配置DNS，配置项很多我也不是很懂，详情可以参考开头的文章。这里以我的域名<code>jinvic.top</code>为例：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">域名</th>
+<th>记录类型</th>
+<th>记录值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">jinvic.top</td>
+<td>MX</td>
+<td>10 mail.jinvic.top</td>
+<td>改成你自己的域名</td>
+</tr>
+<tr>
+<td style="text-align:right">email.jinvic.top</td>
+<td>A</td>
+<td>&lt;你的服务器公网ip&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:right">jinvic.top</td>
+<td>TXT</td>
+<td>&quot;v=spf1 mx -all&quot;</td>
+<td>SPF 记录</td>
+</tr>
+<tr>
+<td style="text-align:right">_dmarc.jinvic.top</td>
+<td>TXT</td>
+<td>&quot;v=DMARC1; p=reject; adkim=s; aspf=s&quot;</td>
+<td>DMARC 记录</td>
+</tr>
+<tr>
+<td style="text-align:right">mail._domainkey.jinvic.top</td>
+<td>TXT</td>
+<td>&lt;稍后生成&gt;</td>
+<td>DKIM 记录</td>
+</tr>
+</tbody>
+</table>
+<h3 id="开放端口">开放端口</h3>
+<p>DMS用到的端口有<code>25,143,465,587,993</code>这些，全部在防火墙开放一下。如果用到是服务商提供的云服务器，记得配置下安全组规则。</p>
+<h3 id="部署dms">部署DMS</h3>
+<p>在准备好的工作目录下，通过如下命令获取docker-compose和.env文件：</p>
+<pre><code class="language-bash">DMS_GITHUB_URL=&quot;https://raw.githubusercontent.com/docker-mailserver/docker-mailserver/master&quot;
+wget &quot;${DMS_GITHUB_URL}/compose.yaml&quot;
+wget &quot;${DMS_GITHUB_URL}/mailserver.env&quot;
+</code></pre>
+<p>compose.yaml中如下内容需要自主配置：</p>
+<ul>
+<li><code>hostname</code>：改成你自己的域名，即DNS中A记录配置的域名，如<code>email.jinvic.top</code>，注意不能是<code>jinvic.top</code>。</li>
+<li><code>volumes</code>: 将你的证书路径挂载进去，配环境变量用</li>
+</ul>
+<p>如下是我的compose.yaml示例：</p>
+<pre><code class="language-yaml">services:
+  mailserver:
+    image: ghcr.io/docker-mailserver/docker-mailserver:latest
+    container_name: mailserver
+    # Provide the FQDN of your mail server here (Your DNS MX record should point to this value)
+    hostname: mail.jinvic.top
+    env_file: mailserver.env
+    # More information about the mail-server ports:
+    # https://docker-mailserver.github.io/docker-mailserver/latest/config/security/understanding-the-ports/
+    ports:
+      - &quot;25:25&quot;    # SMTP  (explicit TLS =&gt; STARTTLS, Authentication is DISABLED =&gt; use port 465/587 instead)
+      - &quot;143:143&quot;  # IMAP4 (explicit TLS =&gt; STARTTLS)
+      - &quot;465:465&quot;  # ESMTP (implicit TLS)
+      - &quot;587:587&quot;  # ESMTP (explicit TLS =&gt; STARTTLS)
+      - &quot;993:993&quot;  # IMAP4 (implicit TLS)
+    volumes:
+      - ./docker-data/dms/mail-data/:/var/mail/
+      - ./docker-data/dms/mail-state/:/var/mail-state/
+      - ./docker-data/dms/mail-logs/:/var/log/mail/
+      - ./docker-data/dms/config/:/tmp/docker-mailserver/
+      - /cert/jinvic.top:/cert/jinvic.top:ro
+    restart: always
+    stop_grace_period: 1m
+    # Uncomment if using `ENABLE_FAIL2BAN=1`:
+    # cap_add:
+    #   - NET_ADMIN
+    healthcheck:
+      test: &quot;ss --listening --tcp | grep -P 'LISTEN.+:smtp' || exit 1&quot;
+      timeout: 3s
+      retries: 0
+</code></pre>
+<p>mailserver.env中如下内容需要自主配置：</p>
+<ul>
+<li><code>SSL_TYPE</code>：设置为<code>manual</code></li>
+<li><code>SSL_CERT_PATH</code> 和 <code>SSL_KEY_PATH</code>：映射的证书路径</li>
+<li><code>POSTMASTER_ADDRESS</code>：非必选，邮件服务器的管理员邮箱地址</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-env">SSL_TYPE=manual
+SSL_CERT_PATH=/cert/jinvic.top/fullchain.pem
+SSL_KEY_PATH=/cert/jinvic.top/privkey.pem
+POSTMASTER_ADDRESS=jinvic@jinvic.top
+</code></pre>
+<p>配置完成后，使用<code>docker-compose up -d</code>启动服务。</p>
+<h3 id="容器内配置">容器内配置</h3>
+<p>通过<code>docker exec -ti &lt;CONTAINER NAME&gt; /bin/sh</code>启动容器内终端。</p>
+<ul>
+<li><strong>创建用户</strong>： <code>setup email add jinvic@jinvic.top</code><br>
+之后会让你输入密码。之后就可以用这套账密登录roundcube了。</li>
+<li><strong>生成DKIM</strong>：<code>setup config dkim</code><br>
+将括号内文本写入DNS（见 <a href="#dns%E9%85%8D%E7%BD%AE">DNS配置</a>）。</li>
+</ul>
+<h2 id="邮件客户端-roundcube">邮件客户端 Roundcube</h2>
+<p>我是直接在1Panel的应用市场装的Roundcube，不过默认配置有点问题我改了下端口，如下：</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IMAP 服务器</td>
+<td>mail.jinvic.top</td>
+</tr>
+<tr>
+<td>IMAP 端口</td>
+<td>993</td>
+</tr>
+<tr>
+<td>SMTP 服务器</td>
+<td>mail.jinvic.top</td>
+</tr>
+<tr>
+<td>SMTP 端口</td>
+<td>465</td>
+</tr>
+</tbody>
+</table>
+<p>IMAP登录时还需要手动指定SSL/TLS加密方式，我不清楚环境变量怎么改就直接改的配置文件<code>./data/config/config.docker.inc.php</code>，缺点是每次重启都会重置。</p>
+<pre><code class="language-txt">$config['imap_host'] = 'ssl://mail.jinvic.top:993';
+$config['smtp_host'] = 'ssl://mail.jinvic.top:465';
+$config['username_domain'] = 'jinvic.top';
+</code></pre>
+<p><code>username_domain</code>是可选项，配置后如<code>jinvic@jinvic.top</code>登录时就可以直接用jinvic作为用户名了，比较方便。</p>
+<p>至于SSL/TLS配置，我没有在roundcube里配，而是在反向代理至roundcube服务时加了https配置，实测没有问题。</p>
+<p>完成如上配置后就可以登录roundcube客户端访问docker-mailserver服务器，进行收发邮件操作了。</p>
+<p><strong>250624更新</strong></p>
+<p>在1panel商店安装的roundcube只能使用1panel商店安装的mysql。就个人使用来说单独装个mysql还是太笨重了。为了切换到sqlite还是换成了自部署。参考<a href="https://github.com/roundcube/roundcubemail-docker/blob/master/examples/docker-compose-simple.yaml">官方示例</a>改改就行。这里给出一个配置示例：</p>
+<pre><code class="language-yml">services:
+  roundcube:
+    image: roundcube/roundcubemail:latest
+    container_name: roundcube
+    environment:
+      ROUNDCUBEMAIL_DEFAULT_HOST: &quot;ssl://mail.jinvic.top&quot;
+      ROUNDCUBEMAIL_DEFAULT_PORT: &quot;993&quot;
+      ROUNDCUBEMAIL_SMTP_SERVER: &quot;ssl://mail.jinvic.top&quot;
+      ROUNDCUBEMAIL_SMTP_PORT: &quot;465&quot;
+      ROUNDCUBEMAIL_USERNAME_DOMAIN: &quot;jinvic.top&quot;
+      # ROUNDCUBEMAIL_REQUEST_PATH:
+      # ROUNDCUBEMAIL_PLUGINS:
+      # ROUNDCUBEMAIL_INSTALL_PLUGINS:
+      # ROUNDCUBEMAIL_SKIN:
+      # ROUNDCUBEMAIL_UPLOAD_MAX_FILESIZE:
+      # ROUNDCUBEMAIL_SPELLCHECK_URI:
+      # ROUNDCUBEMAIL_ASPELL_DICTS:
+
+      ROUNDCUBE_DB_TYPE: &quot;sqlite&quot;
+      ROUNDCUBE_DB_NAME: &quot;/var/roundcube/db/roundcube.sqlite&quot;
+    volumes:
+      - ./www:/var/www/html
+      - ./data/config:/var/roundcube/config
+      - ./data/db:/var/roundcube/db
+    ports:
+      - &quot;12078:80&quot;
+    restart: always
+</code></pre>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#%E4%BD%BF%E7%94%A8roundcubedocker-mailserver%E8%87%AA%E9%83%A8%E7%BD%B2%E9%82%AE%E4%BB%B6%E6%9C%8D%E5%8A%A1">使用roundcube+docker-mailserver自部署邮件服务</a>
+<ul>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+<li><a href="#%E9%82%AE%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8-docker-mailserver">邮件服务器 Docker Mailserver</a>
+<ul>
+<li><a href="#%E8%AF%81%E4%B9%A6%E7%94%B3%E8%AF%B7">证书申请</a></li>
+<li><a href="#dns%E9%85%8D%E7%BD%AE">DNS配置</a></li>
+<li><a href="#%E5%BC%80%E6%94%BE%E7%AB%AF%E5%8F%A3">开放端口</a></li>
+<li><a href="#%E9%83%A8%E7%BD%B2dms">部署DMS</a></li>
+<li><a href="#%E5%AE%B9%E5%99%A8%E5%86%85%E9%85%8D%E7%BD%AE">容器内配置</a></li>
+</ul>
+</li>
+<li><a href="#%E9%82%AE%E4%BB%B6%E5%AE%A2%E6%88%B7%E7%AB%AF-roundcube">邮件客户端 Roundcube</a></li>
+</ul>
+</li>
+</ul>
+</div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://jinvic.github.io/post/[sql_in_10min_a_day]-reading-notes/">
+              <span class="post-title">
+                《SQL必知必会》阅读笔记&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>

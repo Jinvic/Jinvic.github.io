@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>Certbot申请泛域名SSL证书并自动续期 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="Certbot申请泛域名SSL证书并自动续期 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="Certbot申请泛域名SSL证书并自动续期" />
+  <meta property="og:url" content="https://jinvic.github.io/post/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+                <a href="https://jinvic.github.io/tag/gH3FCoCS3C/" class="tag">Web</a>
+                
+                <a href="https://jinvic.github.io/tag/2caP3ZTldp/" class="tag">服务器</a>
+                
+                <a href="https://jinvic.github.io/tag/47cAf1nsEU/" class="tag">Linux</a>
+                
+              </span>
+              <h1>Certbot申请泛域名SSL证书并自动续期</h1>
+              <span class="meta">
+                Posted on
+                2024-12-11，3 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <h1 id="certbot申请泛域名ssl证书与自动续期">Certbot申请泛域名SSL证书与自动续期</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#certbot%E7%94%B3%E8%AF%B7%E6%B3%9B%E5%9F%9F%E5%90%8Dssl%E8%AF%81%E4%B9%A6%E4%B8%8E%E8%87%AA%E5%8A%A8%E7%BB%AD%E6%9C%9F">Certbot申请泛域名SSL证书与自动续期</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85-certbot">安装 Certbot</a></li>
+<li><a href="#%E5%9F%9F%E5%90%8D%E9%AA%8C%E8%AF%81%E8%AF%81%E4%B9%A6%E7%94%9F%E6%88%90">域名验证&amp;证书生成</a></li>
+<li><a href="#nginx%E9%85%8D%E7%BD%AE%E8%AF%81%E4%B9%A6">nginx配置证书</a></li>
+<li><a href="#%E8%87%AA%E5%8A%A8%E7%BB%AD%E6%9C%9F">自动续期</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p>参考：<a href="https://www.cnblogs.com/michaelshen/p/18538178">使用 Let’s Encrypt 免费申请泛域名 SSL 证书，并实现自动续期</a></p>
+<p>本来不打算写这篇的，原教程已经很详细了。不过他使用的腾讯云，在自动续期这块有个cli工具可以用。而我用的华为云只能调api，所以还是得自己摸索下顺便记录。</p>
+<h2 id="安装-certbot">安装 Certbot</h2>
+<p>虽然很想用包管理器，但官网都只用snap和pip安装，为了保险还是用到snap。</p>
+<pre><code class="language-bash">sudo snap install --classic certbot #安装Certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot #创建一个符号链接，确保可以执行certbot命令（相当于快捷方式）
+</code></pre>
+<h2 id="域名验证证书生成">域名验证&amp;证书生成</h2>
+<p>Certbot需要验证你申请证书的域名是否确实属于你。具体流程就是给你个随机字符串让你解析到固定域名它再来验证。</p>
+<pre><code class="language-bash">sudo certbot certonly --manual --preferred-challenges dns -d *.example.com -d example.com
+</code></pre>
+<p>记得替换你的邮箱和域名。然后他会请求你的邮箱用于紧急更新和安全提醒。</p>
+<figure data-type="image" tabindex="1"><img src="https://jinvic.github.io/post-images/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/1.png" alt="pic1" loading="lazy"></figure>
+<p>然后是两次确认。第一次是服务条款选是，第二次是问能不能给你邮箱发广告邮件，可以选否。</p>
+<figure data-type="image" tabindex="2"><img src="https://jinvic.github.io/post-images/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/2.png" alt="pic2" loading="lazy"></figure>
+<p>接着就是给你一串字符串去解析到对应域名。例如我就是将那一串解析到<code>_acme-challenge.jinvic.top</code>。具体解析方法看你的DNS服务商，重点是<strong>记录类型</strong>要选<code>TXT</code>。</p>
+<figure data-type="image" tabindex="3"><img src="https://jinvic.github.io/post-images/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/3.png" alt="pic3" loading="lazy"></figure>
+<p>添加解析完成后稍等一会再继续。你也可以在<a href="https://toolbox.googleapps.com/apps/dig/#TXT/">这里</a>验证解析是否成功。</p>
+<p>验证成功后就会自动生成证书，并告诉你证书所在目录和过期时间。</p>
+<figure data-type="image" tabindex="4"><img src="https://jinvic.github.io/post-images/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/4.png" alt="pic4" loading="lazy"></figure>
+<h2 id="nginx配置证书">nginx配置证书</h2>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name example.com www.example.com;
+ 
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+ 
+server {
+    listen 443 ssl;
+    server_name example.com www.example.com;
+ 
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+ 
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+    }
+}
+</code></pre>
+<h2 id="自动续期">自动续期</h2>
+<p>内容有点多，新开了个项目：<a href="https://github.com/Jinvic/certbot-huaweicloud">Jinvic/certbot-huaweicloud</a>。用这个项目生成供certbot钩子运行的程序。</p>
+<pre><code class="language-bash">certbot renew --manual --preferred-challenges=dns \
+--manual-auth-hook /path/to/project/bin/certbot -use auth \
+--manual-cleanup-hook /path/to/project/bin/certbot -use cleanup \
+--deploy-hook &quot;sudo nginx -s reload&quot;
+</code></pre>
+<ul>
+<li><code>/path/to/project/bin/certbot</code> 为你编译生成的程序路径。</li>
+<li><code>sudo nginx -s reload</code> 用于重新加载配置nginx配置。</li>
+</ul>
+<p>编辑生成的程序需要读取配置文件。cd到项目目录或者将配置文件<code>.env</code>放到程序同一目录再执行上述命令。</p>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#certbot%E7%94%B3%E8%AF%B7%E6%B3%9B%E5%9F%9F%E5%90%8Dssl%E8%AF%81%E4%B9%A6%E4%B8%8E%E8%87%AA%E5%8A%A8%E7%BB%AD%E6%9C%9F">Certbot申请泛域名SSL证书与自动续期</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85-certbot">安装 Certbot</a></li>
+<li><a href="#%E5%9F%9F%E5%90%8D%E9%AA%8C%E8%AF%81%E8%AF%81%E4%B9%A6%E7%94%9F%E6%88%90">域名验证&amp;证书生成</a></li>
+<li><a href="#nginx%E9%85%8D%E7%BD%AE%E8%AF%81%E4%B9%A6">nginx配置证书</a></li>
+<li><a href="#%E8%87%AA%E5%8A%A8%E7%BB%AD%E6%9C%9F">自动续期</a></li>
+</ul>
+</li>
+</ul>
+</div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://jinvic.github.io/post/build-webdav-service-on-linux/">
+              <span class="post-title">
+                Linux搭建Webdav服务&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>

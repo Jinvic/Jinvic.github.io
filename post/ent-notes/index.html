@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>ent笔记 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="ent笔记 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="ent笔记" />
+  <meta property="og:url" content="https://jinvic.github.io/post/ent-notes/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+                <a href="https://jinvic.github.io/tag/2vaencnsMM/" class="tag">Go</a>
+                
+                <a href="https://jinvic.github.io/tag/KbkCyWeWckl/" class="tag">笔记</a>
+                
+              </span>
+              <h1>ent笔记</h1>
+              <span class="meta">
+                Posted on
+                2024-11-07，6 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <h1 id="ent笔记">ent笔记</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#ent%E7%AC%94%E8%AE%B0">ent笔记</a>
+<ul>
+<li><a href="#%E6%A6%82%E8%BF%B0">概述</a></li>
+<li><a href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8">快速入门</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85ent">安装ent</a></li>
+<li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96ent%E7%9B%AE%E5%BD%95">初始化ent目录</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E5%AE%9E%E4%BD%93">创建实体</a>
+<ul>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E5%AD%97%E6%AE%B5">添加字段</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E8%BE%B9relation">添加边（Relation）</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E9%80%86%E8%BE%B9backref">添加逆边（BackRef）</a></li>
+</ul>
+</li>
+<li><a href="#%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81">生成代码</a></li>
+<li><a href="#%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93">连接数据库</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E8%BF%81%E7%A7%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A8%A1%E5%BC%8F">创建&amp;迁移数据库模式</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%B6%E4%BB%96%E5%B7%A5%E5%85%B7">其他工具</a>
+<ul>
+<li><a href="#sql%E8%BD%ACentgo">SQL转entgo</a></li>
+<li><a href="#entimport">entimport</a></li>
+<li><a href="#protoc-gen-ent">protoc-gen-ent</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="概述">概述</h2>
+<blockquote>
+<p>ent 是一个 Go 的实体框架 (ORM)。 ent 可以使用 Go 代码轻松地定义任何数据模型或图结构；schema配置由 entc (ent codegen) 验证，这种配置生成了一个地道的静态类型的 API ，使开发人员能够富有生产性和幸福感。 它支持 MySQL, MariaDB, PostgreSQL, SQLite 和 Gremlin图数据库。</p>
+</blockquote>
+<p>简单来说，ent是Facebook团队开源的一个Go语言ORM框架，类似于Java的Hibernate，Python的SQLAlchemy，Go的GORM等。相比于gorm，ent的特点是专注于使用dsl写schema，关联和约束都写在 Go 代码，而不是结构标签，并用cli工具自动生成和验证代码，以及同样支持从schema构造迁移数据库结构，用户只需要管理好schema就行。缺点是学习成本和上手难度较高，需要理解学习它的schema概念和dls语法，以及面对复杂需求框架生成的代码可能不够灵活有时需要自定义方法。</p>
+<p><s>ent<a href="https://entgo.io/zh/docs/getting-started">官方文档</a>里的中文和没有差不多。这里贴一个民间翻译的<a href="https://ent.ryansu.tech/#/zh-cn/getting-started">中文文档</a>。</s></p>
+<blockquote>
+<p>241107: 才注意到ent主页挂着支持以色列的横幅，在开源项目中宣扬政治主张实在有点恶心了。<br>
+241114: 中文支持很差，甚至文档进度都不同步，建议看英文文档。为了封装硬生生搞了个语法子集出来，很多功能都无法实现。文档既少又烂，查资料全靠issue。两个字：<strong>快跑</strong></p>
+</blockquote>
+<h2 id="快速入门">快速入门</h2>
+<p>ent使用需要go环境，可以安装go后设置go项目:</p>
+<pre><code class="language-bash">go mod &lt;projectname&gt;
+</code></pre>
+<h3 id="安装ent">安装ent</h3>
+<pre><code class="language-bash">go get entgo.io/ent/cmd/ent
+</code></pre>
+<p>使用<code>ent -h</code>查看是否安装成功。如果提示找不到可以使用如下命令代替ent命令：</p>
+<pre><code class="language-bash">go run entgo.io/ent/cmd/ent
+</code></pre>
+<p>或者使用go install添加到%GOPATH/bin目录：</p>
+<pre><code class="language-bash">go install entgo.io/ent/cmd/ent
+</code></pre>
+<h3 id="初始化ent目录">初始化ent目录</h3>
+<pre><code class="language-bash">ent new
+</code></pre>
+<p>目录如下：</p>
+<pre><code class="language-bash">.
+└── ent
+    ├── generate.go
+    └── schema
+</code></pre>
+<h3 id="创建实体">创建实体</h3>
+<pre><code class="language-bash">ent new &lt;entityname&gt;
+</code></pre>
+<p>可以使用如上命令同时创建多个实体。它们将被创建在schema目录下。假设我们创建了一个User实体（<strong>首字母必须大写</strong>）<code>ent new User</code>：</p>
+<pre><code class="language-bash">.
+└── ent
+    ├── generate.go
+    └── schema
+        └── user.go
+</code></pre>
+<p>代码如下：</p>
+<pre><code class="language-go">
+package schema
+
+import &quot;entgo.io/ent&quot;
+
+// User holds the schema definition for the User entity.
+type User struct {
+    ent.Schema
+}
+
+// Fields of the User.
+func (User) Fields() []ent.Field {
+    return nil
+}
+
+// Edges of the User.
+func (User) Edges() []ent.Edge {
+    return nil
+}
+</code></pre>
+<p>其中Fields和Edges方法分别定义了实体的字段和关联关系。</p>
+<h4 id="添加字段">添加字段</h4>
+<p>直接修改各实体<code>Fields</code>方法的返回值即可。例如，我们给User实体添加age和name字段：</p>
+<pre><code class="language-go">// Fields of the User.
+func (User) Fields() []ent.Field {
+ return []ent.Field{
+  field.Int(&quot;age&quot;).
+   Positive(),
+  field.String(&quot;name&quot;).
+   Default(&quot;unknown&quot;),
+ }
+}
+</code></pre>
+<p>关于字段，详情见<a href="#fields">Fields</a>。</p>
+<h4 id="添加边relation">添加边（Relation）</h4>
+<p>直接修改各实体<code>Edges</code>方法的返回值即可。例如，我们给User实体添加一个一对多关系到Car：</p>
+<pre><code class="language-go">// Edges of the User.
+func (User) Edges() []ent.Edge {
+ return []ent.Edge{
+  edge.To(&quot;cars&quot;, Car.Type),
+ }
+}
+</code></pre>
+<p>这时如果我们查看数据库模式，会发现Car实体对应的cars表多了一列<code>user_cars</code>，作为外键约束指向User实体的id。</p>
+<h4 id="添加逆边backref">添加逆边（BackRef）</h4>
+<pre><code class="language-go">// Edges of the Car.
+func (Car) Edges() []ent.Edge {
+ return []ent.Edge{
+  // 创建一个名为 &quot;owner&quot; 的 `User` 反向边
+  // 并关联到 &quot;cars&quot; 边 (在 用户 结构中)
+  // 并显式的使用 `Ref` 方法。
+  edge.From(&quot;owner&quot;, User.Type).
+   Ref(&quot;cars&quot;).
+   // 设置边为唯一确保每辆车都只有一个拥有者
+   Unique(),
+ }
+}
+</code></pre>
+<p>如上代码创建了<code>cars</code>边的逆边<code>owner</code>。这时如果我们查看数据库模式，会发现并没有新增约束，因为这只是对原边的反向引用。</p>
+<p>我们可以通过<code>Unique</code>方法来设置边的唯一性，从而设置一对一，一对多或多对多关系。<br>
+如果是多对多关系将建立一个新的映射表来反映关联关系。</p>
+<p>关于边，详见<a href="#edges">Edges</a>。</p>
+<h3 id="生成代码">生成代码</h3>
+<pre><code class="language-bash">ent generate ./ent/schema
+</code></pre>
+<p>或者：</p>
+<pre><code class="language-bash">go generate ./ent
+</code></pre>
+<p>生成代码后目录如下：</p>
+<pre><code class="language-bash">.
+└── ent
+    ├── client.go
+    ├── ent.go
+    ├── enttest
+    │   └── enttest.go
+    ├── generate.go
+    ├── hook
+    │   └── hook.go
+    ├── migrate
+    │   ├── migrate.go
+    │   └── schema.go
+    ├── mutation.go
+    ├── predicate
+    │   └── predicate.go
+    ├── runtime
+    │   └── runtime.go
+    ├── runtime.go
+    ├── schema
+    │   └── user.go
+    ├── tx.go
+    ├── user            # user
+    │   ├── user.go
+    │   └── where.go        
+    ├── user.go         # user
+    ├── user_create.go  # user
+    ├── user_delete.go  # user
+    ├── user_query.go   # user
+    └── user_update.go  # user
+</code></pre>
+<p>其中，user文件夹及user开头的文件属于User实体，其他的文件则是通用的。</p>
+<p>在编写好schema和生成代码后，就可以使用ent的client进行数据库操作了。</p>
+<h3 id="连接数据库">连接数据库</h3>
+<p>ent支持多种数据库，包括MySQL、PostgreSQL、SQLite等。可以使用<code>ent.Open()</code>建立一个数据库链接并返回客户端：</p>
+<pre><code class="language-go">
+// func ent.Open(driverName string, dataSourceName string, options ...ent.Option) (*ent.Client, error)
+
+client, err := ent.Open(&quot;mysql&quot;, &quot;username:password@tcp(127.0.0.1:3306)/entdemo&quot;)
+defer client.Close()
+</code></pre>
+<h3 id="创建迁移数据库模式">创建&amp;迁移数据库模式</h3>
+<p>可以使用<code>ent.Client.Schema.Create()</code>方法创建数据库模式：</p>
+<pre><code class="language-go">// func (s *Schema) Create(ctx context.Context, opts ...schema.MigrateOption) error
+
+err := client.Schema.Create(context.Background())
+</code></pre>
+<h2 id="其他工具">其他工具</h2>
+<h3 id="sql转entgo">SQL转entgo</h3>
+<p><a href="https://old.printlove.cn/tools/sql2ent">SQL转entgo</a></p>
+<p>这个在线工具可以将sql直接转换成entgo的schema。</p>
+<h3 id="entimport">entimport</h3>
+<p><a href="https://entgo.io/zh/blog/2021/10/11/generating-ent-schemas-from-existing-sql-databases/">blog</a><br>
+<a href="https://github.com/ariga/entimport">github</a></p>
+<p>这个工具可以将数据库中现有的表结构转换成entgo的schema。</p>
+<h3 id="protoc-gen-ent">protoc-gen-ent</h3>
+<p><a href="https://entgo.io/blog/2021/05/04/announcing-schema-imports/">blog</a><br>
+<a href="https://github.com/ent/contrib/tree/master/entproto/cmd/protoc-gen-ent">github</a></p>
+<p>这个工具可以将protobuf文件转换成entgo的schema。</p>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#ent%E7%AC%94%E8%AE%B0">ent笔记</a>
+<ul>
+<li><a href="#%E6%A6%82%E8%BF%B0">概述</a></li>
+<li><a href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8">快速入门</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85ent">安装ent</a></li>
+<li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96ent%E7%9B%AE%E5%BD%95">初始化ent目录</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E5%AE%9E%E4%BD%93">创建实体</a>
+<ul>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E5%AD%97%E6%AE%B5">添加字段</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E8%BE%B9relation">添加边（Relation）</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E9%80%86%E8%BE%B9backref">添加逆边（BackRef）</a></li>
+</ul>
+</li>
+<li><a href="#%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81">生成代码</a></li>
+<li><a href="#%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93">连接数据库</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E8%BF%81%E7%A7%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A8%A1%E5%BC%8F">创建&amp;迁移数据库模式</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%B6%E4%BB%96%E5%B7%A5%E5%85%B7">其他工具</a>
+<ul>
+<li><a href="#sql%E8%BD%ACentgo">SQL转entgo</a></li>
+<li><a href="#entimport">entimport</a></li>
+<li><a href="#protoc-gen-ent">protoc-gen-ent</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://jinvic.github.io/post/protobuf-notes/">
+              <span class="post-title">
+                ProtoBuf笔记&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>

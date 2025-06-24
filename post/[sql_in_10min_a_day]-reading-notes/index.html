@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>《SQL必知必会》阅读笔记 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="《SQL必知必会》阅读笔记 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="《SQL必知必会》阅读笔记" />
+  <meta property="og:url" content="https://jinvic.github.io/post/[sql_in_10min_a_day]-reading-notes/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+              </span>
+              <h1>《SQL必知必会》阅读笔记</h1>
+              <span class="meta">
+                Posted on
+                2025-01-18，28 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <h1 id="sql必知必会阅读笔记">《SQL必知必会》阅读笔记</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#sql%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0">《SQL必知必会》阅读笔记</a>
+<ul>
+<li><a href="#%E7%AC%AC-1-%E8%AF%BE-%E4%BA%86%E8%A7%A3sql">第 1 课 了解SQL</a>
+<ul>
+<li><a href="#11-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80">1.1 数据库基础</a></li>
+<li><a href="#12-%E4%BB%80%E4%B9%88%E6%98%AFsql">1.2 什么是SQL</a></li>
+<li><a href="#13-%E5%8A%A8%E6%89%8B%E5%AE%9E%E8%B7%B5">1.3 动手实践</a></li>
+<li><a href="#14-%E5%B0%8F%E7%BB%93">1.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-2-%E8%AF%BE-%E6%A3%80%E7%B4%A2%E6%95%B0%E6%8D%AE">第 2 课 检索数据</a>
+<ul>
+<li><a href="#21-select-%E8%AF%AD%E5%8F%A5">2.1 SELECT 语句</a></li>
+<li><a href="#22-%E6%A3%80%E7%B4%A2%E5%8D%95%E4%B8%AA%E5%88%97">2.2 检索单个列</a></li>
+<li><a href="#23-%E6%A3%80%E7%B4%A2%E5%A4%9A%E4%B8%AA%E5%88%97">2.3 检索多个列</a></li>
+<li><a href="#24-%E6%A3%80%E7%B4%A2%E6%89%80%E6%9C%89%E5%88%97">2.4 检索所有列</a></li>
+<li><a href="#25-%E6%A3%80%E7%B4%A2%E4%B8%8D%E5%90%8C%E7%9A%84%E5%80%BC">2.5 检索不同的值</a></li>
+<li><a href="#26-%E9%99%90%E5%88%B6%E7%BB%93%E6%9E%9C">2.6 限制结果</a></li>
+<li><a href="#27-%E4%BD%BF%E7%94%A8%E6%B3%A8%E9%87%8A">2.7 使用注释</a></li>
+<li><a href="#28-%E5%B0%8F%E7%BB%93">2.8 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-3-%E8%AF%BE-%E6%8E%92%E5%BA%8F%E6%A3%80%E7%B4%A2%E6%95%B0%E6%8D%AE">第 3 课 排序检索数据</a>
+<ul>
+<li><a href="#31-%E6%8E%92%E5%BA%8F%E6%95%B0%E6%8D%AE">3.1 排序数据</a></li>
+<li><a href="#32-%E6%8C%89%E5%A4%9A%E4%B8%AA%E5%88%97%E6%8E%92%E5%BA%8F">3.2 按多个列排序</a></li>
+<li><a href="#33-%E6%8C%89%E5%88%97%E4%BD%8D%E7%BD%AE%E6%8E%92%E5%BA%8F">3.3 按列位置排序</a></li>
+<li><a href="#34-%E6%8C%87%E5%AE%9A%E6%8E%92%E5%BA%8F%E6%96%B9%E5%90%91">3.4 指定排序方向</a></li>
+<li><a href="#35-%E5%B0%8F%E7%BB%93">3.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-4-%E8%AF%BE-%E8%BF%87%E6%BB%A4%E6%95%B0%E6%8D%AE">第 4 课 过滤数据</a>
+<ul>
+<li><a href="#41%E4%BD%BF%E7%94%A8where%E5%AD%90%E5%8F%A5">4.1使用WHERE子句</a></li>
+<li><a href="#42-where%E5%AD%90%E5%8F%A5%E6%93%8D%E4%BD%9C%E7%AC%A6">4.2 WHERE子句操作符</a></li>
+<li><a href="#43-%E5%B0%8F%E7%BB%93">4.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-5-%E8%AF%BE-%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E8%BF%87%E6%BB%A4">第 5 课 高级数据过滤</a>
+<ul>
+<li><a href="#51-%E7%BB%84%E5%90%88-where-%E5%AD%90%E5%8F%A5">5.1 组合 WHERE 子句</a></li>
+<li><a href="#52-in-%E6%93%8D%E4%BD%9C%E7%AC%A6">5.2 IN 操作符</a></li>
+<li><a href="#53-not-%E6%93%8D%E4%BD%9C%E7%AC%A6">5.3 NOT 操作符</a></li>
+<li><a href="#54-%E5%B0%8F%E7%BB%93">5.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-6-%E8%AF%BE-%E7%94%A8%E9%80%9A%E9%85%8D%E7%AC%A6%E8%BF%9B%E8%A1%8C%E8%BF%87%E6%BB%A4">第 6 课 用通配符进行过滤</a>
+<ul>
+<li><a href="#61-like%E6%93%8D%E4%BD%9C%E7%AC%A6">6.1 LIKE操作符</a></li>
+<li><a href="#62-%E4%BD%BF%E7%94%A8%E9%80%9A%E9%85%8D%E7%AC%A6%E7%9A%84%E6%8A%80%E5%B7%A7">6.2 使用通配符的技巧</a></li>
+<li><a href="#63-%E5%B0%8F%E7%BB%93">6.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-7-%E8%AF%BE-%E5%88%9B%E5%BB%BA%E8%AE%A1%E7%AE%97%E5%AD%97%E6%AE%B5">第 7 课 创建计算字段</a>
+<ul>
+<li><a href="#71-%E8%AE%A1%E7%AE%97%E5%AD%97%E6%AE%B5">7.1 计算字段</a></li>
+<li><a href="#72-%E6%8B%BC%E6%8E%A5%E5%AD%97%E6%AE%B5">7.2 拼接字段</a></li>
+<li><a href="#73-%E6%89%A7%E8%A1%8C%E7%AE%97%E6%95%B0%E8%BF%90%E7%AE%97">7.3 执行算数运算</a></li>
+<li><a href="#74-%E5%B0%8F%E7%BB%93">7.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-8-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E5%87%BD%E6%95%B0%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE">第 8 课 使用函数处理数据</a>
+<ul>
+<li><a href="#81-%E5%87%BD%E6%95%B0">8.1 函数</a></li>
+<li><a href="#82-%E4%BD%BF%E7%94%A8%E5%87%BD%E6%95%B0">8.2 使用函数</a></li>
+<li><a href="#83-%E5%B0%8F%E7%BB%93">8.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-9-%E8%AF%BE-%E6%B1%87%E6%80%BB%E6%95%B0%E6%8D%AE">第 9 课 汇总数据</a>
+<ul>
+<li><a href="#91-%E8%81%9A%E9%9B%86%E5%87%BD%E6%95%B0">9.1 聚集函数</a></li>
+<li><a href="#92-%E8%81%9A%E9%9B%86%E4%B8%8D%E5%90%8C%E5%80%BC">9.2 聚集不同值</a></li>
+<li><a href="#93-%E7%BB%84%E5%90%88%E8%81%9A%E9%9B%86%E5%8F%82%E6%95%B0">9.3 组合聚集参数</a></li>
+<li><a href="#94-%E5%B0%8F%E7%BB%93">9.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-10-%E8%AF%BE-%E5%88%86%E7%BB%84%E6%95%B0%E6%8D%AE">第 10 课 分组数据</a>
+<ul>
+<li><a href="#101-%E6%95%B0%E6%8D%AE%E5%88%86%E7%BB%84">10.1 数据分组</a></li>
+<li><a href="#102-%E5%88%9B%E5%BB%BA%E5%88%86%E7%BB%84">10.2 创建分组</a></li>
+<li><a href="#103-%E8%BF%87%E6%BB%A4%E5%88%86%E7%BB%84">10.3 过滤分组</a></li>
+<li><a href="#104-%E5%88%86%E7%BB%84%E5%92%8C%E6%8E%92%E5%BA%8F">10.4 分组和排序</a></li>
+<li><a href="#105-select-%E5%AD%90%E5%8F%A5%E9%A1%BA%E5%BA%8F">10.5 SELECT 子句顺序</a></li>
+<li><a href="#106-%E5%B0%8F%E7%BB%93">10.6 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-11-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E5%AD%90%E6%9F%A5%E8%AF%A2">第 11 课 使用子查询</a>
+<ul>
+<li><a href="#111-%E5%AD%90%E6%9F%A5%E8%AF%A2">11.1 子查询</a></li>
+<li><a href="#112-%E5%88%A9%E7%94%A8%E5%AD%90%E6%9F%A5%E8%AF%A2%E8%BF%9B%E8%A1%8C%E8%BF%87%E6%BB%A4">11.2 利用子查询进行过滤</a></li>
+<li><a href="#113-%E4%BD%9C%E4%B8%BA%E8%AE%A1%E7%AE%97%E5%AD%97%E6%AE%B5%E4%BD%BF%E7%94%A8%E5%AD%90%E6%9F%A5%E8%AF%A2">11.3 作为计算字段使用子查询</a></li>
+<li><a href="#114-%E5%B0%8F%E7%BB%93">11.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-12-%E8%AF%BE-%E8%81%94%E7%BB%93%E8%A1%A8">第 12 课 联结表</a>
+<ul>
+<li><a href="#121-%E8%81%94%E7%BB%93">12.1 联结</a></li>
+<li><a href="#122-%E5%88%9B%E5%BB%BA%E8%BF%9E%E7%BB%93">12.2 创建连结</a></li>
+<li><a href="#123-%E5%B0%8F%E7%BB%93">12.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-13-%E8%AF%BE-%E5%88%9B%E5%BB%BA%E9%AB%98%E7%BA%A7%E8%81%94%E7%BB%93">第 13 课 创建高级联结</a>
+<ul>
+<li><a href="#131-%E4%BD%BF%E7%94%A8%E8%A1%A8%E5%88%AB%E5%90%8D">13.1 使用表别名</a></li>
+<li><a href="#132-%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E7%9A%84%E8%81%94%E7%BB%93">13.2 使用不同类型的联结</a></li>
+<li><a href="#133-%E4%BD%BF%E7%94%A8%E5%B8%A6%E8%81%9A%E9%9B%86%E5%87%BD%E6%95%B0%E7%9A%84%E8%81%94%E7%BB%93">13.3 使用带聚集函数的联结</a></li>
+<li><a href="#134-%E4%BD%BF%E7%94%A8%E8%81%94%E7%BB%93%E5%92%8C%E8%81%94%E7%BB%93%E6%9D%A1%E4%BB%B6">13.4 使用联结和联结条件</a></li>
+<li><a href="#135-%E5%B0%8F%E7%BB%93">13.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-14-%E8%AF%BE-%E7%BB%84%E5%90%88%E6%9F%A5%E8%AF%A2">第 14 课 组合查询</a>
+<ul>
+<li><a href="#141-%E7%BB%84%E5%90%88%E6%9F%A5%E8%AF%A2">14.1 组合查询</a></li>
+<li><a href="#142-%E5%88%9B%E5%BB%BA%E7%BB%84%E5%90%88%E6%9F%A5%E8%AF%A2">14.2 创建组合查询</a></li>
+<li><a href="#143-%E5%B0%8F%E7%BB%93">14.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-15-%E8%AF%BE-%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE">第 15 课 插入数据</a>
+<ul>
+<li><a href="#151-%E6%95%B0%E6%8D%AE%E6%8F%92%E5%85%A5">15.1 数据插入</a></li>
+<li><a href="#152-%E4%BB%8E%E4%B8%80%E4%B8%AA%E8%A1%A8%E5%A4%8D%E5%88%B6%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E8%A1%A8">15.2 从一个表复制到另一个表</a></li>
+<li><a href="#153-%E5%B0%8F%E7%BB%93">15.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-16-%E8%AF%BE-%E6%9B%B4%E6%96%B0%E5%92%8C%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE">第 16 课 更新和删除数据</a>
+<ul>
+<li><a href="#161-%E6%9B%B4%E6%96%B0%E6%95%B0%E6%8D%AE">16.1 更新数据</a></li>
+<li><a href="#162-%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE">16.2 删除数据</a></li>
+<li><a href="#163-%E6%9B%B4%E6%96%B0%E5%92%8C%E5%88%A0%E9%99%A4%E7%9A%84%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99">16.3 更新和删除的指导原则</a></li>
+<li><a href="#164-%E5%B0%8F%E7%BB%93">16.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-17-%E8%AF%BE-%E5%88%9B%E5%BB%BA%E5%92%8C%E6%93%8D%E7%BA%B5%E8%A1%A8">第 17 课 创建和操纵表</a>
+<ul>
+<li><a href="#171-%E5%88%9B%E5%BB%BA%E8%A1%A8">17.1 创建表</a></li>
+<li><a href="#172-%E6%9B%B4%E6%96%B0%E8%A1%A8">17.2 更新表</a></li>
+<li><a href="#173-%E5%88%A0%E9%99%A4%E8%A1%A8">17.3 删除表</a></li>
+<li><a href="#174-%E9%87%8D%E5%91%BD%E5%90%8D%E8%A1%A8">17.4 重命名表</a></li>
+<li><a href="#175-%E5%B0%8F%E7%BB%93">17.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-18-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E8%A7%86%E5%9B%BE">第 18 课 使用视图</a>
+<ul>
+<li><a href="#181-%E8%A7%86%E5%9B%BE">18.1 视图</a></li>
+<li><a href="#182-%E5%88%9B%E5%BB%BA%E8%A7%86%E5%9B%BE">18.2 创建视图</a></li>
+<li><a href="#183-%E5%B0%8F%E7%BB%93">18.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-19-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">第 19 课 使用存储过程</a>
+<ul>
+<li><a href="#191-%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">19.1 存储过程</a></li>
+<li><a href="#192-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">19.2 为什么要使用存储过程</a></li>
+<li><a href="#193-%E6%89%A7%E8%A1%8C%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">19.3 执行存储过程</a></li>
+<li><a href="#194-%E5%88%9B%E5%BB%BA%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">19.4 创建存储过程</a></li>
+<li><a href="#195-%E5%B0%8F%E7%BB%93">19.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-20-%E8%AF%BE-%E7%AE%A1%E7%90%86%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86">第 20 课 管理事务处理</a>
+<ul>
+<li><a href="#201-%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86">20.1 事务处理</a></li>
+<li><a href="#202-%E6%8E%A7%E5%88%B6%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86">20.2 控制事务处理</a></li>
+<li><a href="#203-%E5%B0%8F%E7%BB%93">20.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-21-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E6%B8%B8%E6%A0%87">第 21 课 使用游标</a></li>
+<li><a href="#%E7%AC%AC-22-%E8%AF%BE-%E9%AB%98%E7%BA%A7-sql-%E7%89%B9%E6%80%A7">第 22 课 高级 SQL 特性</a>
+<ul>
+<li><a href="#221-%E7%BA%A6%E6%9D%9F">22.1 约束</a></li>
+<li><a href="#222-%E7%B4%A2%E5%BC%95">22.2 索引</a></li>
+<li><a href="#223-%E8%A7%A6%E5%8F%91%E5%99%A8">22.3 触发器</a></li>
+<li><a href="#224-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8">22.4 数据库安全</a></li>
+<li><a href="#225-%E5%B0%8F%E7%BB%93">22.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p>这次看到是<a href="https://book.douban.com/subject/35167240/">第五版</a>，20年7月出版。<br>
+MySQL的示例数据库在<a href="https://forta.com/wp-content/uploads/books/0135182794/TYSQL5_MySQL.zip">这里</a><br>
+最近都是通过orm操作sql，补习一下基础知识好了。简单记一下，别变成抄书就行。</p>
+<h2 id="第-1-课-了解sql">第 1 课 了解SQL</h2>
+<h3 id="11-数据库基础">1.1 数据库基础</h3>
+<p>介绍数据库，表，列，数据类型，行，主键这些基本概念，略。</p>
+<h3 id="12-什么是sql">1.2 什么是SQL</h3>
+<p>SQL：Structured Query Language 结构化查询语言<br>
+用了这么久sql还真不熟悉全称是啥。</p>
+<p>标准SQL由ANSI标准委员会管理，称为 ANSI SQL。其他DBMS 即使有自己的扩展也都支持 ANSI SQL。</p>
+<h3 id="13-动手实践">1.3 动手实践</h3>
+<p>让你装一个sql。</p>
+<h3 id="14-小结">1.4 小结</h3>
+<p>简单介绍sql及基本数据库术语。</p>
+<h2 id="第-2-课-检索数据">第 2 课 检索数据</h2>
+<h3 id="21-select-语句">2.1 SELECT 语句</h3>
+<h3 id="22-检索单个列">2.2 检索单个列</h3>
+<pre><code class="language-sql">SELECT c_name 
+FROM t_name;
+</code></pre>
+<p><strong>提示</strong>：SQL不区分大小写。一种常用方法是关键词发现，列名表名等小写，这样有更好的可读性，但不是必须。</p>
+<h3 id="23-检索多个列">2.3 检索多个列</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2 
+FROM t_name;
+</code></pre>
+<h3 id="24-检索所有列">2.4 检索所有列</h3>
+<pre><code class="language-sql">SELECT * 
+FROM t_name;
+</code></pre>
+<p><strong>注意</strong>：检索不需要的列会降低速度和性能，如非必须最好不适用通配符。</p>
+<h3 id="25-检索不同的值">2.5 检索不同的值</h3>
+<pre><code class="language-sql">SELECT DISTINCT c_name 
+FROM t_name;
+</code></pre>
+<p><strong>注意</strong>：不能部分使用DISTINCT。DISTINCT关键字作用于所有的列。</p>
+<h3 id="26-限制结果">2.6 限制结果</h3>
+<pre><code class="language-sql">SELECT DISTINCT c_name 
+FROM t_name 
+LIMIT 5 
+OFFSET 5;
+</code></pre>
+<h3 id="27-使用注释">2.7 使用注释</h3>
+<ul>
+<li>行内注释：<code>-- text</code> 或 <code># text</code></li>
+<li>多行注释： <code>/* text */</code></li>
+</ul>
+<h3 id="28-小结">2.8 小结</h3>
+<ul>
+<li><code>SELECT</code>子句</li>
+<li><code>LIMIT</code>和<code>OFFSET</code>子句</li>
+<li>注释</li>
+</ul>
+<h2 id="第-3-课-排序检索数据">第 3 课 排序检索数据</h2>
+<h3 id="31-排序数据">3.1 排序数据</h3>
+<p><strong>子句</strong>（clause）: SQL语句由子句构成，有些子句是必需的，有些则是可选的。一个子句通常由一个关键字加上所提供的数据组成。<br>
+以前从来没有注意过子句的概念，直到gorm里被教做人。</p>
+<pre><code class="language-sql">SELECT c_name
+FROM t_name 
+ORDER BY c_name; 
+</code></pre>
+<h3 id="32-按多个列排序">3.2 按多个列排序</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2, _name3
+FROM t_name 
+ORDER BY c_name2, c_name3;
+</code></pre>
+<p>按<code>ORDER BY</code>子句中的列名顺序作为优先级排序。<br>
+<strong>提示</strong>：也可以使用非选择列排序。</p>
+<h3 id="33-按列位置排序">3.3 按列位置排序</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2, _name3
+FROM t_name 
+ORDER BY 2, 3;
+</code></pre>
+<p><strong>提示</strong>：如果有必要，可以混合使用实际列名和相对列位置。</p>
+<h3 id="34-指定排序方向">3.4 指定排序方向</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2, c_name3
+FROM t_name 
+ORDER BY c_name2 DESC, c_name3 ASC;
+</code></pre>
+<p>sql默认使用升序排序，你也可以使用<code>ASC</code>关键字显示指定。要使用降序排序，使用<code>DESC</code>关键字。<br>
+和<code>DISTINCT</code>不同，<code>ASC</code>和<code>DESC</code>只会影响对应列。</p>
+<h3 id="35-小结">3.5 小结</h3>
+<ul>
+<li><strong>子句</strong> 概念</li>
+<li><code>ORDER BY</code>子句</li>
+<li><code>ASC</code>和<code>DESC</code>关键字</li>
+</ul>
+<h2 id="第-4-课-过滤数据">第 4 课 过滤数据</h2>
+<h3 id="41使用where子句">4.1使用WHERE子句</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2
+FROM t_name
+WHERE c_name1 = 100;
+</code></pre>
+<p><strong>注意</strong>在同时使用<code>ORDER BY</code>和<code>WHERE</code>子句时，应该让<code>ORDER BY</code>位于<code>WHERE</code>之后，否则将会产生错误。<br>
+这个我倒没注意过，用gorm时也没报过错，大概不同的DBMS或者ORM对这有优化吧。</p>
+<h3 id="42-where子句操作符">4.2 WHERE子句操作符</h3>
+<p>不同的DBMS对操作符的支持不同，需要查看具体文档。<br>
+除了常规的大小等于，需要注意的操作符还有表区间的<code>BETWEEN...AND...</code>和判空的<code>IS (NOT) NULL</code>。</p>
+<h3 id="43-小结">4.3 小结</h3>
+<ul>
+<li><code>WHERE</code>子句及其操作符</li>
+</ul>
+<h2 id="第-5-课-高级数据过滤">第 5 课 高级数据过滤</h2>
+<h3 id="51-组合-where-子句">5.1 组合 WHERE 子句</h3>
+<p>使用<code>AND</code>和<code>OR</code>逻辑操作符来组合WHERE子句。<br>
+AND的优先级大于OR，不过比起依赖默认顺序，更推荐使用括号消除歧义。</p>
+<pre><code class="language-sql">SELECT c_name1, c_name2, c_name3
+FROM t_name 
+WHERE (c_name1 &gt; 30 OR c_name2 &gt; 40) AND c_name3 &lt; 50;
+</code></pre>
+<h3 id="52-in-操作符">5.2 IN 操作符</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2, c_name3
+FROM t_name 
+WHERE c_name1 IN (3, 4, 5);
+</code></pre>
+<p>使用<code>IN</code>操作符的优点：</p>
+<ul>
+<li>语法更清楚只管</li>
+<li>和其他操作符组合使用时，求值顺序更易管理</li>
+<li>一般比一组OR执行更快</li>
+<li>可以包含其他SELECT语句，从而动态建立WHERE子句</li>
+</ul>
+<h3 id="53-not-操作符">5.3 NOT 操作符</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2, c_name3
+FROM t_name 
+WHERE c_name1 NOT IN (3, 4, 5);
+</code></pre>
+<p>在复杂子句中NOT的易用性和可读性更高。</p>
+<h3 id="54-小结">5.4 小结</h3>
+<ul>
+<li><code>AND</code>和<code>OR</code>操作符</li>
+<li><code>IN</code>操作符</li>
+<li><code>NOT</code>操作符</li>
+</ul>
+<h2 id="第-6-课-用通配符进行过滤">第 6 课 用通配符进行过滤</h2>
+<h3 id="61-like操作符">6.1 LIKE操作符</h3>
+<p>先记一些专有名词和概念：<br>
+<strong>通配符（wildcard）</strong>：用来匹配值的一部分的特殊字符。<br>
+<strong>搜索模式（search pattern）</strong>：由字面值、通配符或两者组合构成的搜索条件。<br>
+<strong>谓词（predicate）</strong>：没讲清楚定义 ，但并不难理解。</p>
+<p>以下是sql中的通配符。</p>
+<ul>
+<li><code>%</code>: 任何字符出现任意次数<br>
+直接'%'不会匹配NULL</li>
+<li><code>_</code>:，任何字符匹配一个字符</li>
+<li><code>[]</code>: 指定字符集指定位置匹配一个字符<br>
+部分DBMS不支持（如MySql）</li>
+</ul>
+<p>最常见的关键词搜索示例如下：</p>
+<pre><code class="language-sql">SELECT c_name1, c_name2
+FROM t_name 
+WHERE c_name1 LIKE '%keyword%';
+</code></pre>
+<h3 id="62-使用通配符的技巧">6.2 使用通配符的技巧</h3>
+<ul>
+<li>不要过度使用通配符</li>
+<li>不要用在搜索模式开始处（速度慢）</li>
+<li>注意通配符位置</li>
+</ul>
+<h3 id="63-小结">6.3 小结</h3>
+<ul>
+<li><code>LIKE</code>谓词</li>
+<li>通配符</li>
+</ul>
+<h2 id="第-7-课-创建计算字段">第 7 课 创建计算字段</h2>
+<h3 id="71-计算字段">7.1 计算字段</h3>
+<p>有时需要从数据库中检索出转换、计算或格式化过的数据，而不是检索出数据再在客户端应用程序重新格式化。<br>
+虽然很多操作都可以在客户端应用程序完成，但一般在数据库服务器上完成这些操作要快得多。</p>
+<h3 id="72-拼接字段">7.2 拼接字段</h3>
+<p>可以使用<code>+</code>或<code>||</code>拼接两个列。但MySql和MariaDB中则是特殊函数<code>CONCAT()</code>。<br>
+可以使用<code>LTRIM()</code>，<code>RTRIM()</code>或<code>TRIM()</code>函数去除左右空格。<br>
+可以使用<code>AS</code>关键字创建别名。这是可选的，但最佳实践推荐使用AS。</p>
+<pre><code class="language-sql">SELECT CONCAT(RTRIM(c_name1), c_name2) AS alias 
+FROM t_name;
+</code></pre>
+<h3 id="73-执行算数运算">7.3 执行算数运算</h3>
+<p>也可以使用加减乘除等操作符对数字类型的字段进行计算。</p>
+<h3 id="74-小结">7.4 小结</h3>
+<ul>
+<li><code>CONCAT()</code>函数</li>
+<li><code>LTRIM()</code>，<code>RTRIM()</code>，<code>TRIM</code>函数</li>
+<li><code>AS</code>关键字</li>
+<li>算术运算</li>
+</ul>
+<h2 id="第-8-课-使用函数处理数据">第 8 课 使用函数处理数据</h2>
+<h3 id="81-函数">8.1 函数</h3>
+<p><strong>注意</strong>：不同的函数在不同DBMS中的支持不同。即使是相同的功能，在不同DBMS中的函数名也很可能不同。所以SQL函数是不可移植的。</p>
+<h3 id="82-使用函数">8.2 使用函数</h3>
+<p>大多是SQL实现支持以下类型的函数：</p>
+<ul>
+<li>处理文本字符串的文本函数。</li>
+<li>对数值数据进行算术操作的数值函数。</li>
+<li>数量日期和时间值并提取特定成分的日期和时间函数。</li>
+<li>生成美观易读的输出的格式化函数。</li>
+<li>返回DBMS相关特殊信息的系统函数。</li>
+</ul>
+<p>由于不同DBMS对函数的支持不同，在这里不展开。有需要查表。</p>
+<h3 id="83-小结">8.3 小结</h3>
+<ul>
+<li>数据处理函数</li>
+</ul>
+<h2 id="第-9-课-汇总数据">第 9 课 汇总数据</h2>
+<h3 id="91-聚集函数">9.1 聚集函数</h3>
+<p>与数据处理函数不同，聚集函数在各种主要SQL实现中支持基本一致。<br>
+<strong>聚集函数</strong>：对某些行运行的函数，计算并返回一个值。</p>
+<ul>
+<li><code>AVG()</code> 返回某列的平均值</li>
+<li><code>COUNT()</code> 返回某列的行数
+<ul>
+<li><code>COUNT(*)</code>对行的数目进行计数，不管表列中包含的是空值(NULL)还是非空值。</li>
+<li><code>COUNT(column)</code>对特定列中具有值的行进行计数，忽略NULL值。</li>
+</ul>
+</li>
+<li><code>MAX()</code> 返回某列的最大值</li>
+<li><code>MIN()</code> 返回某列的最小值</li>
+<li><code>SUM()</code> 返回某列值之和</li>
+</ul>
+<h3 id="92-聚集不同值">9.2 聚集不同值</h3>
+<ul>
+<li>对所有行执行计算，指定<code>ALL</code>参数或不指定（默认ALL）</li>
+<li>只包含不同的值，指定<code>DISTINCT</code>参数</li>
+</ul>
+<p>有的DBMS还支持其他参数。</p>
+<pre><code class="language-sql">SELECT AVG(DISTINCT c_name) AS avg_res
+FROM t_name;
+</code></pre>
+<h3 id="93-组合聚集参数">9.3 组合聚集参数</h3>
+<p>在select中可以同时使用多个聚集参数。</p>
+<h3 id="94-小结">9.4 小结</h3>
+<ul>
+<li>五种聚集函数</li>
+<li><code>ALL</code>和<code>DISTINCT</code>参数</li>
+</ul>
+<h2 id="第-10-课-分组数据">第 10 课 分组数据</h2>
+<h3 id="101-数据分组">10.1 数据分组</h3>
+<p>举例需要对数据分组的需求。</p>
+<h3 id="102-创建分组">10.2 创建分组</h3>
+<p>使用<code>GROUP BY</code>子句创建分组。一些规定：</p>
+<ul>
+<li>GROUP BY子句可以包含任意数目的列，因而可以对分组进行嵌套。</li>
+<li>GROUP BY子句中嵌套了分组，数据将在最后指定的分组上汇总。</li>
+<li>GROUP BY子句中每一列必须是检索列或有效表达式（但不能是聚集函数）。如果SELECT中使用表达式，GROUP BY中也要使用相同的表达式，不能使用别名。</li>
+<li>大多数SQL实现不允许GROUP BY列带有长度可变的数据类型（如TEXT）。</li>
+<li>除聚集语句外，SELECT中每一列都必须在GROUP BY中给出。</li>
+<li>如果分组列中包含具有NULL值的行，则NULL将作为一个分组返回。如果列中有多行NULL值，它们将分为一组。</li>
+<li>GROUP BY子句必须出现在WHERE子句之后，ORDER BY子句之前。</li>
+</ul>
+<h3 id="103-过滤分组">10.3 过滤分组</h3>
+<p>使用<code>HAVING</code>子句过滤分组。<br>
+HAVING支持所有WHERE操作符，唯一的差别是WHERE过滤行，而HAVING过滤分组。<br>
+另一种理解方法是，WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。</p>
+<pre><code class="language-sql">SELECT c_name, COUNT(*) AS num
+FROM t_name
+GROUP BY c_name
+HAVING COUNT(*) &gt;= 2;
+</code></pre>
+<h3 id="104-分组和排序">10.4 分组和排序</h3>
+<p>在特定DBMS中，GROUP BY分组时确实会按照子句的列排序。但还是推荐使用ORDER BY手动排序实现精细化操作和提高可读性。</p>
+<h3 id="105-select-子句顺序">10.5 SELECT 子句顺序</h3>
+<p>列出目前为止学过的子句顺序</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">子句</th>
+<th style="text-align:left">说明</th>
+<th style="text-align:left">是否必须使用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">SELECT</td>
+<td style="text-align:left">要返回的列或表达式</td>
+<td style="text-align:left">是</td>
+</tr>
+<tr>
+<td style="text-align:left">FROM</td>
+<td style="text-align:left">从中检索数据的表</td>
+<td style="text-align:left">仅在从表选择数据时使用</td>
+</tr>
+<tr>
+<td style="text-align:left">WHERE</td>
+<td style="text-align:left">行级过滤</td>
+<td style="text-align:left">否</td>
+</tr>
+<tr>
+<td style="text-align:left">GROUP BY</td>
+<td style="text-align:left">分组说明</td>
+<td style="text-align:left">仅在按组计算聚集时使用</td>
+</tr>
+<tr>
+<td style="text-align:left">HAVING</td>
+<td style="text-align:left">组级过滤</td>
+<td style="text-align:left">否</td>
+</tr>
+<tr>
+<td style="text-align:left">ORDER BY</td>
+<td style="text-align:left">输出排序顺序</td>
+<td style="text-align:left">否</td>
+</tr>
+</tbody>
+</table>
+<h3 id="106-小结">10.6 小结</h3>
+<ul>
+<li><code>GROUP BY</code>子句</li>
+<li><code>HAVING</code>子句</li>
+</ul>
+<h2 id="第-11-课-使用子查询">第 11 课 使用子查询</h2>
+<h3 id="111-子查询">11.1 子查询</h3>
+<p><strong>子查询(subquery)</strong>：嵌套在其他查询中的查询。</p>
+<h3 id="112-利用子查询进行过滤">11.2 利用子查询进行过滤</h3>
+<p>举例，没有新内容。</p>
+<h3 id="113-作为计算字段使用子查询">11.3 作为计算字段使用子查询</h3>
+<p>示例给出的写法感觉用JOIN更方便和易读，仅作了解。</p>
+<h3 id="114-小结">11.4 小结</h3>
+<ul>
+<li>子查询</li>
+</ul>
+<h2 id="第-12-课-联结表">第 12 课 联结表</h2>
+<h3 id="121-联结">12.1 联结</h3>
+<p>简单介绍关系表概念和好处。</p>
+<p><strong>可伸缩性（scale）</strong>：能够适应不断增加的工作量而不失败。设计良好的数据库或应用程序<br>
+称为可伸缩性好（scale well）。</p>
+<h3 id="122-创建连结">12.2 创建连结</h3>
+<pre><code class="language-sql">-- 等值连结
+SELECT c1, c2, c3
+FROM t1, t2
+WHERE t1.c0 = t2.c0
+
+-- 内连结
+SELECT c1, c2, c3
+FROM t1
+INNER JOIN t2 ON t1.c0 = t2.c0
+</code></pre>
+<p>上述两种方法的结果是一致的。</p>
+<h3 id="123-小结">12.3 小结</h3>
+<ul>
+<li>连结概念</li>
+<li>内连结（等值连结）</li>
+</ul>
+<h2 id="第-13-课-创建高级联结">第 13 课 创建高级联结</h2>
+<h3 id="131-使用表别名">13.1 使用表别名</h3>
+<ul>
+<li>缩短 SQL 语句；</li>
+<li>允许在一条 SELECT 语句中多次使用相同的表</li>
+</ul>
+<pre><code class="language-sql">SELECT cust_name, cust_contact
+FROM Customers AS C, Orders AS O, OrderItems AS OI
+WHERE C.cust_id = O.cust_id
+AND OI.order_num = O.order_num
+AND prod_id = 'RGAN01';
+</code></pre>
+<h3 id="132-使用不同类型的联结">13.2 使用不同类型的联结</h3>
+<ul>
+<li>
+<p>自联结（self-join）</p>
+<pre><code class="language-sql">  SELECT c1.cust_id, c1.cust_name, c1.cust_contact
+  FROM Customers AS c1, Customers AS c2
+  WHERE c1.cust_name = c2.cust_name
+  AND c2.cust_contact = 'Jim Jones';
+</code></pre>
+</li>
+<li>
+<p>自然联结（natural join）</p>
+<p>感觉没讲清楚。</p>
+</li>
+<li>
+<p>外联结（outer join）</p>
+<pre><code class="language-sql">SELECT Customers.cust_id, Orders.order_num
+FROM Customers
+LEFT OUTER JOIN Orders ON Customers.cust_id = Orders.cust_id;
+</code></pre>
+<p>外联结还包括没有关联行的行。在使用 OUTER JOIN 语法时，必须使用 RIGHT 或 LEFT 关键字指定包括其所有行的表。</p>
+</li>
+</ul>
+<h3 id="133-使用带聚集函数的联结">13.3 使用带聚集函数的联结</h3>
+<pre><code class="language-sql">SELECT Customers.cust_id,
+COUNT(Orders.order_num) AS num_ord
+FROM Customers
+LEFT OUTER JOIN Orders ON Customers.cust_id = Orders.cust_id
+GROUP BY Customers.cust_id;
+</code></pre>
+<h3 id="134-使用联结和联结条件">13.4 使用联结和联结条件</h3>
+<p>讲了一堆没啥用的东西。</p>
+<h3 id="135-小结">13.5 小结</h3>
+<ul>
+<li>别名</li>
+<li>自联结</li>
+<li>自然连结</li>
+<li>外联结</li>
+</ul>
+<h2 id="第-14-课-组合查询">第 14 课 组合查询</h2>
+<p>这章的UNION感觉没什么用，我好像都没用过，orm也用不上。</p>
+<h3 id="141-组合查询">14.1 组合查询</h3>
+<p>使用情况：</p>
+<ul>
+<li>在一个查询中从不同的表返回结构数据</li>
+<li>对一个表执行多个查询，按一个查询返回数据</li>
+</ul>
+<h3 id="142-创建组合查询">14.2 创建组合查询</h3>
+<p>使用UNION连接多条SELECT语句进行组合查询。</p>
+<p>这里给的示例似乎有误，给了两个一样的sql语句。</p>
+<p>UNION规则：</p>
+<ul>
+<li>UNION 必须由两条或两条以上的 SELECT 语句组成，语句之间用关键字UNION 分隔</li>
+<li>NION 中的每个查询必须包含相同的列、表达式或聚集函数，但次序可以不同</li>
+<li>列数据类型必须兼容：类型不必完全相同，但必须是 DBMS 可以隐含转换的类型</li>
+</ul>
+<p>UNION 从查询结果集中自动去除了重复的行。如果想返回所有的匹配行，可使用 UNION ALL 而不是 UNION。<br>
+如果确实需要每个条件的匹配行全部出现（包括重复行），就必须使用 UNION ALL，而不是 WHERE。</p>
+<p>在用 UNION 组合查询时，只能使用一条 ORDER BY 子句，它必须位于最后一条 SELECT 语句之后，排序所有结果。</p>
+<h3 id="143-小结">14.3 小结</h3>
+<p>利用 UNION，可以把多条查询的结果作为一条组合查询返回，不管结果中有无重复。<br>
+使用 UNION可极大地简化复杂的 WHERE 子句，简化从多个表中检索数据的工作。</p>
+<h2 id="第-15-课-插入数据">第 15 课 插入数据</h2>
+<h3 id="151-数据插入">15.1 数据插入</h3>
+<pre><code class="language-sql">INSERT INTO tablename
+VALUES(v1,v2,v3);
+
+INSERT INTO tablename(c1,c2,c3)
+VALUES(v1,v2,v3);
+
+INSERT INTO tablename(c1,c2,c3)
+SELECT ...
+</code></pre>
+<p>若不指定列名，必须给按顺序每一个列提供值，如果没有值使用NULL。<br>
+省略的列必须允许为空或定义了默认值。<br>
+也可以使用INSERT SELECT直接插入查询结果。此时结果只看顺序无关列名。</p>
+<h3 id="152-从一个表复制到另一个表">15.2 从一个表复制到另一个表</h3>
+<pre><code class="language-sql">CREATE TABLE table1 AS 
+SELECT * FROM table2
+</code></pre>
+<h3 id="153-小结">15.3 小结</h3>
+<ul>
+<li>使用INSERT INTO插入数据</li>
+<li>使用INSERT SELECT插入表</li>
+<li>使用CREATE SELECT复制表</li>
+</ul>
+<h2 id="第-16-课-更新和删除数据">第 16 课 更新和删除数据</h2>
+<h3 id="161-更新数据">16.1 更新数据</h3>
+<pre><code class="language-sql">UPDATE table1
+SET key1 = value1, key2 = value2
+WHERE ...
+</code></pre>
+<h3 id="162-删除数据">16.2 删除数据</h3>
+<pre><code class="language-sql">DELETE FROM table1
+WHERE ...
+</code></pre>
+<h3 id="163-更新和删除的指导原则">16.3 更新和删除的指导原则</h3>
+<ul>
+<li>除非确实打算更新和删除每一行，否则绝对不要使用不带 WHERE 子句的 UPDATE 或 DELETE 语句。</li>
+<li>保证每个表都有主键，尽可能像 WHERE 子句那样使用它。</li>
+<li>在 UPDATE 或 DELETE 语句使用 WHERE 子句前，应该先用 SELECT 进行测试，保证它过滤的是正确的记录，以防编写的 WHERE 子句不正确。</li>
+<li>使用强制实施引用完整性的数据库，这样 DBMS 将不允许删除其数据与其他表相关联的行。</li>
+<li>有的 DBMS 允许数据库管理员施加约束，防止执行不带 WHERE 子句的 UPDATE 或 DELETE 语句。如果所采用的 DBMS 支持这个特性，应该使用它。</li>
+</ul>
+<h3 id="164-小结">16.4 小结</h3>
+<ul>
+<li>UPDATE语句</li>
+<li>DELETE语句</li>
+</ul>
+<h2 id="第-17-课-创建和操纵表">第 17 课 创建和操纵表</h2>
+<h3 id="171-创建表">17.1 创建表</h3>
+<pre><code class="language-sql">CREATE TABLE table1
+(
+    column1 TYPE NULL/NOT NULL,
+    column2 TYPE NULL/NOT NULL,
+    ...
+)
+</code></pre>
+<h3 id="172-更新表">17.2 更新表</h3>
+<p>不同DMBS对更新表的限制不一，需要具体查询对应文档。</p>
+<pre><code class="language-sql">ALTER TABLE table1
+ADD column1 TYPE;
+
+ALTER TABLE table1
+DROP COLUMN column2;
+</code></pre>
+<h3 id="173-删除表">17.3 删除表</h3>
+<pre><code class="language-sql">DROP TABLE table1
+</code></pre>
+<h3 id="174-重命名表">17.4 重命名表</h3>
+<p>不同DBMS对重命名表实现不同，需要具体查询对应文档。</p>
+<h3 id="175-小结">17.5 小结</h3>
+<ul>
+<li>创建表</li>
+<li>更新表</li>
+<li>删除表</li>
+</ul>
+<h2 id="第-18-课-使用视图">第 18 课 使用视图</h2>
+<p>到这里终于来点有用的了。</p>
+<h3 id="181-视图">18.1 视图</h3>
+<ul>
+<li>重用 SQL 语句。</li>
+<li>简化复杂的 SQL 操作。在编写查询后，可以方便地重用它而不必知道其基本查询细节。</li>
+<li>使用表的一部分而不是整个表。</li>
+<li>保护数据。可以授予用户访问表的特定部分的权限，而不是整个表的访问权限。</li>
+<li>更改数据格式和表示。视图可返回与底层表的表示和格式不同的数据。</li>
+</ul>
+<p>尽管视图是个很重要的特性，但在orm中似乎基本没有用到，类似的功能在应用层通过保存构建查询语句的过程作为变量实现。</p>
+<h3 id="182-创建视图">18.2 创建视图</h3>
+<pre><code class="language-sql">CREATE VIEW view1 AS
+SELECT ...
+</code></pre>
+<h3 id="183-小结">18.3 小结</h3>
+<p>视图为虚拟的表。它们包含的不是数据而是根据需要检索数据的查询。视图提供了一种封装 SELECT 语句的层次，可用来简化数据处理，重新格式化或保护基础数据。</p>
+<h2 id="第-19-课-使用存储过程">第 19 课 使用存储过程</h2>
+<p>过程的功能在orm中也被应用层取代，数据库操作基本只剩下crud。虽然sql本身也算一门比较完备的变成语言能实现各种功能，但将这些实现放到应用层而不是sql里能更好地与业务逻辑相结合。</p>
+<h3 id="191-存储过程">19.1 存储过程</h3>
+<p>简单来说，<strong>存储过程</strong>就是为以后使用而保存的一条或多条 SQL 语句。可将其视为批文件，虽然它们的作用不仅限于批处理。</p>
+<h3 id="192-为什么要使用存储过程">19.2 为什么要使用存储过程</h3>
+<ul>
+<li>通过把处理封装在一个易用的单元中，可以简化复杂的操作。</li>
+<li>由于不要求反复建立一系列处理步骤，因而保证了数据的一致性。如果所有开发人员和应用程序都使用同一存储过程，则所使用的代码都是相同的。</li>
+<li>上一点的延伸就是防止错误。需要执行的步骤越多，出错的可能性就越大。防止错误保证了数据的一致性。</li>
+<li>简化对变动的管理。如果表名、列名或业务逻辑（或别的内容）有变化，那么只需要更改存储过程的代码。使用它的人员甚至不需要知道这些变化。</li>
+<li>上一点的延伸就是安全性。通过存储过程限制对基础数据的访问，减少了数据讹误（无意识的或别的原因所导致的数据讹误）的机会。</li>
+<li>因为存储过程通常以编译过的形式存储，所以 DBMS 处理命令所需的工作量少，提高了性能。</li>
+<li>存在一些只能用在单个请求中的 SQL 元素和特性，存储过程可以使用它们来编写功能更强更灵活的代码。</li>
+</ul>
+<p>省流：简单、安全、高性能。</p>
+<ul>
+<li>不同 DBMS 中的存储过程语法有所不同。事实上，编写真正的可移植存储过程几乎是不可能的。不过，存储过程的自我调用（名字以及数据如何传递）可以相对保持可移植。因此，如果需要移植到别的 DBMS，至少客户端应用代码不需要变动。</li>
+<li>一般来说，编写存储过程比编写基本 SQL 语句复杂，需要更高的技能，更丰富的经验。因此，许多数据库管理员把限制存储过程的创建作为安全措施（主要受上一条缺陷的影响）。</li>
+</ul>
+<h3 id="193-执行存储过程">19.3 执行存储过程</h3>
+<pre><code class="language-sql">EXCUTE proc1(
+    value1,
+    value2,
+    ...
+)
+</code></pre>
+<h3 id="194-创建存储过程">19.4 创建存储过程</h3>
+<p>语法略，各DBMS实现不一，有需要查文档。</p>
+<h3 id="195-小结">19.5 小结</h3>
+<ul>
+<li>执行/创建/使用存储过程</li>
+<li>各种 DBMS 对存储过程的实现不一</li>
+</ul>
+<h2 id="第-20-课-管理事务处理">第 20 课 管理事务处理</h2>
+<p>除了crud，orm中最常用的就是事务了。比起手动begin和commit，我更喜欢直接transaction开各事务块，内部基本不用考虑事务本身。</p>
+<h3 id="201-事务处理">20.1 事务处理</h3>
+<p>使用<strong>事务处理</strong>（transaction processing），通过确保成批的 SQL 操作要么完全执行，要么完全不执行，来维护数据库的完整性。</p>
+<ul>
+<li><strong>事务</strong>（transaction）指一组 SQL 语句；</li>
+<li><strong>回退</strong>（rollback）指撤销指定 SQL 语句的过程；</li>
+<li><strong>提交</strong>（commit）指将未存储的 SQL 语句结果写入数据库表；</li>
+<li><strong>保留点</strong>（savepoint）指事务处理中设置的临时占位符（placeholder），可以对它发布回退（与回退整个事务处理不同）。</li>
+</ul>
+<p>事务处理用来管理 INSERT、UPDATE 和 DELETE 语句。不能回退 SELECT语句（回退 SELECT 语句也没有必要），也不能回退 CREATE 或 DROP 操作。事务处理中可以使用这些语句，但进行回退时，这些操作也不撤销。</p>
+<h3 id="202-控制事务处理">20.2 控制事务处理</h3>
+<p>老生常谈，不同 DBMS 用来实现事务处理的语法不同，需要参考具体文档。</p>
+<p>ROLLBACK 命令用来回退（撤销）SQL 语句。</p>
+<p>一般的 SQL 语句提交（写或保存）操作是自动进行的，这就是所谓的隐式提交（implicit commit）。而在在事务处理块中，提交不会隐式进行，需要手动提交使用 COMMIT 命令进行提交。</p>
+<p>使用 SAVEPOINT 命令可以创建保留点（占位符），之后就可以通过 ROLLBACK 回退到特定保存点而非回退整个事务，从而实现精细化操作。</p>
+<h3 id="203-小结">20.3 小结</h3>
+<ul>
+<li>创建事务</li>
+<li>COMMIT</li>
+<li>ROLLBACK</li>
+<li>SAVEPOINT</li>
+</ul>
+<h2 id="第-21-课-使用游标">第 21 课 使用游标</h2>
+<p>略，不同DBMS语法混在一起讲的比较杂，大致就是查询的结果集。这些在orm里直接遍历就行，也不是必须在sql里实现的操作。</p>
+<h2 id="第-22-课-高级-sql-特性">第 22 课 高级 SQL 特性</h2>
+<h3 id="221-约束">22.1 约束</h3>
+<p>很多约束都可以通过代码而非约束实现，而且修改起来也方便。约束一般在建表时就得定义好，后续修改也麻烦。如果是使用纯数据库那约束确实有用，但如果是orm之类操作数据库其实没必要耗费心力。</p>
+<p><strong>主键</strong>：</p>
+<ul>
+<li>任意两行的主键值都不相同。</li>
+<li>每行都具有一个主键值（即列中不允许 NULL 值）。</li>
+<li>包含主键值的列从不修改或更新。</li>
+<li>主键值不能重用。如果从表中删除某一行，其主键值不分配给新行。</li>
+</ul>
+<p><strong>外键</strong>：</p>
+<p>外键用于表示引用。虽然很常用但我其实很少在定义外键时声明其为外键约束。毕竟有时这个外键约束影响到数据库操作很烦，级联删除也可以通过代码实现替代约束。</p>
+<p><strong>唯一约束</strong></p>
+<p>唯一约束用来保证一列（或一组列）中的数据是唯一的。它们类似于主键，但存在以下重要区别。</p>
+<ul>
+<li>表可包含多个唯一约束，但每个表只允许一个主键。</li>
+<li>唯一约束列可包含 NULL 值。</li>
+<li>唯一约束列可修改或更新。</li>
+<li>唯一约束列的值可重复使用。</li>
+<li>与主键不一样，唯一约束不能用来定义外键。</li>
+</ul>
+<p><strong>检查约束</strong></p>
+<p>检查约束用来保证一列（或一组列）中的数据满足一组指定的条件。检查约束的常见用途有以下几点。</p>
+<ul>
+<li>检查最小或最大值。例如，防止 0 个物品的订单（即使 0 是合法的数）。</li>
+<li>指定范围。例如，保证发货日期大于等于今天的日期，但不超过今天起一年后的日期。</li>
+<li>只允许特定的值。例如，在性别字段中只允许 M 或 F。</li>
+</ul>
+<p>同理，检查约束也可通过代码而非约束实现。</p>
+<h3 id="222-索引">22.2 索引</h3>
+<p>所以倒是主要在建表时实现，代码的话差不多也是通过orm建表时创建索引。</p>
+<ul>
+<li>索引改善检索操作的性能，但降低了数据插入、修改和删除的性能。在执行这些操作时，DBMS 必须动态地更新索引。</li>
+<li>索引数据可能要占用大量的存储空间。</li>
+<li>并非所有数据都适合做索引。取值不多的数据（如州）不如具有更多可能值的数据（如姓或名），能通过索引得到那么多的好处。</li>
+<li>索引用于数据过滤和数据排序。如果你经常以某种特定的顺序排序数据，则该数据可能适合做索引。</li>
+<li>可以在索引中定义多个列（例如，州加上城市）。这样的索引仅在以州加城市的顺序排序时有用。如果想按城市排序，则这种索引没有用处。</li>
+</ul>
+<h3 id="223-触发器">22.3 触发器</h3>
+<p>触发器也可在orm中通过钩子或者手动实现。</p>
+<p>触发器是特殊的存储过程，它在特定的数据库活动发生时自动执行。触发器可以与特定表上的 INSERT、UPDATE 和 DELETE 操作（或组合）相关联。</p>
+<ul>
+<li>保证数据一致。例如，在 INSERT 或 UPDATE 操作中将所有州名转换为大写。</li>
+<li>基于某个表的变动在其他表上执行活动。例如，每当更新或删除一行时将审计跟踪记录写入某个日志表。</li>
+<li>进行额外的验证并根据需要回退数据。例如，保证某个顾客的可用资金不超限定，如果已经超出，则阻塞插入。</li>
+<li>计算计算列的值或更新时间戳。</li>
+</ul>
+<p>一般来说，约束的处理比触发器快，因此在可能的时候，应该尽量使用约束。</p>
+<h3 id="224-数据库安全">22.4 数据库安全</h3>
+<p>需要保护的操作：</p>
+<ul>
+<li>对数据库管理功能（创建表、更改或删除已存在的表等）的访问；</li>
+<li>对特定数据库或表的访问；</li>
+<li>访问的类型（只读、对特定列的访问等）；</li>
+<li>仅通过视图或存储过程对表进行访问；</li>
+<li>创建多层次的安全措施，从而允许多种基于登录的访问和控制；</li>
+<li>限制管理用户账号的能力</li>
+</ul>
+<h3 id="225-小结">22.5 小结</h3>
+<ul>
+<li>约束</li>
+<li>索引</li>
+<li>触发器</li>
+<li>数据库安全</li>
+</ul>
+<h2 id="总结">总结</h2>
+<p>200多页很快就读完了。虽然章节很多，但每一章内容都很少10分钟就能搞定，看完整本书也要不了几个小时。<br>
+因为很多内容不同DBMS的实现不同，所以这本书也没办法深入去讲只能提一嘴一笔带过。<br>
+除了crud和事务以外的操作，在orm中基本都不会用到。类似的逻辑可以大多可以通过代码而非sql实现，对非专业db工程师的程序员来说更友好。至于一些需要DB本身特性才能更快更好处理的需求，也可以通过rawsql实现。<br>
+确实是很适合初学者入门的书，各种基础知识点简明易懂，可以快速掌握sql基本用法。但对我就作用有限了，只有最后几章有点用。还是得找进阶一点的书来看。</p>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#sql%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0">《SQL必知必会》阅读笔记</a>
+<ul>
+<li><a href="#%E7%AC%AC-1-%E8%AF%BE-%E4%BA%86%E8%A7%A3sql">第 1 课 了解SQL</a>
+<ul>
+<li><a href="#11-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80">1.1 数据库基础</a></li>
+<li><a href="#12-%E4%BB%80%E4%B9%88%E6%98%AFsql">1.2 什么是SQL</a></li>
+<li><a href="#13-%E5%8A%A8%E6%89%8B%E5%AE%9E%E8%B7%B5">1.3 动手实践</a></li>
+<li><a href="#14-%E5%B0%8F%E7%BB%93">1.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-2-%E8%AF%BE-%E6%A3%80%E7%B4%A2%E6%95%B0%E6%8D%AE">第 2 课 检索数据</a>
+<ul>
+<li><a href="#21-select-%E8%AF%AD%E5%8F%A5">2.1 SELECT 语句</a></li>
+<li><a href="#22-%E6%A3%80%E7%B4%A2%E5%8D%95%E4%B8%AA%E5%88%97">2.2 检索单个列</a></li>
+<li><a href="#23-%E6%A3%80%E7%B4%A2%E5%A4%9A%E4%B8%AA%E5%88%97">2.3 检索多个列</a></li>
+<li><a href="#24-%E6%A3%80%E7%B4%A2%E6%89%80%E6%9C%89%E5%88%97">2.4 检索所有列</a></li>
+<li><a href="#25-%E6%A3%80%E7%B4%A2%E4%B8%8D%E5%90%8C%E7%9A%84%E5%80%BC">2.5 检索不同的值</a></li>
+<li><a href="#26-%E9%99%90%E5%88%B6%E7%BB%93%E6%9E%9C">2.6 限制结果</a></li>
+<li><a href="#27-%E4%BD%BF%E7%94%A8%E6%B3%A8%E9%87%8A">2.7 使用注释</a></li>
+<li><a href="#28-%E5%B0%8F%E7%BB%93">2.8 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-3-%E8%AF%BE-%E6%8E%92%E5%BA%8F%E6%A3%80%E7%B4%A2%E6%95%B0%E6%8D%AE">第 3 课 排序检索数据</a>
+<ul>
+<li><a href="#31-%E6%8E%92%E5%BA%8F%E6%95%B0%E6%8D%AE">3.1 排序数据</a></li>
+<li><a href="#32-%E6%8C%89%E5%A4%9A%E4%B8%AA%E5%88%97%E6%8E%92%E5%BA%8F">3.2 按多个列排序</a></li>
+<li><a href="#33-%E6%8C%89%E5%88%97%E4%BD%8D%E7%BD%AE%E6%8E%92%E5%BA%8F">3.3 按列位置排序</a></li>
+<li><a href="#34-%E6%8C%87%E5%AE%9A%E6%8E%92%E5%BA%8F%E6%96%B9%E5%90%91">3.4 指定排序方向</a></li>
+<li><a href="#35-%E5%B0%8F%E7%BB%93">3.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-4-%E8%AF%BE-%E8%BF%87%E6%BB%A4%E6%95%B0%E6%8D%AE">第 4 课 过滤数据</a>
+<ul>
+<li><a href="#41%E4%BD%BF%E7%94%A8where%E5%AD%90%E5%8F%A5">4.1使用WHERE子句</a></li>
+<li><a href="#42-where%E5%AD%90%E5%8F%A5%E6%93%8D%E4%BD%9C%E7%AC%A6">4.2 WHERE子句操作符</a></li>
+<li><a href="#43-%E5%B0%8F%E7%BB%93">4.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-5-%E8%AF%BE-%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E8%BF%87%E6%BB%A4">第 5 课 高级数据过滤</a>
+<ul>
+<li><a href="#51-%E7%BB%84%E5%90%88-where-%E5%AD%90%E5%8F%A5">5.1 组合 WHERE 子句</a></li>
+<li><a href="#52-in-%E6%93%8D%E4%BD%9C%E7%AC%A6">5.2 IN 操作符</a></li>
+<li><a href="#53-not-%E6%93%8D%E4%BD%9C%E7%AC%A6">5.3 NOT 操作符</a></li>
+<li><a href="#54-%E5%B0%8F%E7%BB%93">5.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-6-%E8%AF%BE-%E7%94%A8%E9%80%9A%E9%85%8D%E7%AC%A6%E8%BF%9B%E8%A1%8C%E8%BF%87%E6%BB%A4">第 6 课 用通配符进行过滤</a>
+<ul>
+<li><a href="#61-like%E6%93%8D%E4%BD%9C%E7%AC%A6">6.1 LIKE操作符</a></li>
+<li><a href="#62-%E4%BD%BF%E7%94%A8%E9%80%9A%E9%85%8D%E7%AC%A6%E7%9A%84%E6%8A%80%E5%B7%A7">6.2 使用通配符的技巧</a></li>
+<li><a href="#63-%E5%B0%8F%E7%BB%93">6.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-7-%E8%AF%BE-%E5%88%9B%E5%BB%BA%E8%AE%A1%E7%AE%97%E5%AD%97%E6%AE%B5">第 7 课 创建计算字段</a>
+<ul>
+<li><a href="#71-%E8%AE%A1%E7%AE%97%E5%AD%97%E6%AE%B5">7.1 计算字段</a></li>
+<li><a href="#72-%E6%8B%BC%E6%8E%A5%E5%AD%97%E6%AE%B5">7.2 拼接字段</a></li>
+<li><a href="#73-%E6%89%A7%E8%A1%8C%E7%AE%97%E6%95%B0%E8%BF%90%E7%AE%97">7.3 执行算数运算</a></li>
+<li><a href="#74-%E5%B0%8F%E7%BB%93">7.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-8-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E5%87%BD%E6%95%B0%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE">第 8 课 使用函数处理数据</a>
+<ul>
+<li><a href="#81-%E5%87%BD%E6%95%B0">8.1 函数</a></li>
+<li><a href="#82-%E4%BD%BF%E7%94%A8%E5%87%BD%E6%95%B0">8.2 使用函数</a></li>
+<li><a href="#83-%E5%B0%8F%E7%BB%93">8.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-9-%E8%AF%BE-%E6%B1%87%E6%80%BB%E6%95%B0%E6%8D%AE">第 9 课 汇总数据</a>
+<ul>
+<li><a href="#91-%E8%81%9A%E9%9B%86%E5%87%BD%E6%95%B0">9.1 聚集函数</a></li>
+<li><a href="#92-%E8%81%9A%E9%9B%86%E4%B8%8D%E5%90%8C%E5%80%BC">9.2 聚集不同值</a></li>
+<li><a href="#93-%E7%BB%84%E5%90%88%E8%81%9A%E9%9B%86%E5%8F%82%E6%95%B0">9.3 组合聚集参数</a></li>
+<li><a href="#94-%E5%B0%8F%E7%BB%93">9.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-10-%E8%AF%BE-%E5%88%86%E7%BB%84%E6%95%B0%E6%8D%AE">第 10 课 分组数据</a>
+<ul>
+<li><a href="#101-%E6%95%B0%E6%8D%AE%E5%88%86%E7%BB%84">10.1 数据分组</a></li>
+<li><a href="#102-%E5%88%9B%E5%BB%BA%E5%88%86%E7%BB%84">10.2 创建分组</a></li>
+<li><a href="#103-%E8%BF%87%E6%BB%A4%E5%88%86%E7%BB%84">10.3 过滤分组</a></li>
+<li><a href="#104-%E5%88%86%E7%BB%84%E5%92%8C%E6%8E%92%E5%BA%8F">10.4 分组和排序</a></li>
+<li><a href="#105-select-%E5%AD%90%E5%8F%A5%E9%A1%BA%E5%BA%8F">10.5 SELECT 子句顺序</a></li>
+<li><a href="#106-%E5%B0%8F%E7%BB%93">10.6 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-11-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E5%AD%90%E6%9F%A5%E8%AF%A2">第 11 课 使用子查询</a>
+<ul>
+<li><a href="#111-%E5%AD%90%E6%9F%A5%E8%AF%A2">11.1 子查询</a></li>
+<li><a href="#112-%E5%88%A9%E7%94%A8%E5%AD%90%E6%9F%A5%E8%AF%A2%E8%BF%9B%E8%A1%8C%E8%BF%87%E6%BB%A4">11.2 利用子查询进行过滤</a></li>
+<li><a href="#113-%E4%BD%9C%E4%B8%BA%E8%AE%A1%E7%AE%97%E5%AD%97%E6%AE%B5%E4%BD%BF%E7%94%A8%E5%AD%90%E6%9F%A5%E8%AF%A2">11.3 作为计算字段使用子查询</a></li>
+<li><a href="#114-%E5%B0%8F%E7%BB%93">11.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-12-%E8%AF%BE-%E8%81%94%E7%BB%93%E8%A1%A8">第 12 课 联结表</a>
+<ul>
+<li><a href="#121-%E8%81%94%E7%BB%93">12.1 联结</a></li>
+<li><a href="#122-%E5%88%9B%E5%BB%BA%E8%BF%9E%E7%BB%93">12.2 创建连结</a></li>
+<li><a href="#123-%E5%B0%8F%E7%BB%93">12.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-13-%E8%AF%BE-%E5%88%9B%E5%BB%BA%E9%AB%98%E7%BA%A7%E8%81%94%E7%BB%93">第 13 课 创建高级联结</a>
+<ul>
+<li><a href="#131-%E4%BD%BF%E7%94%A8%E8%A1%A8%E5%88%AB%E5%90%8D">13.1 使用表别名</a></li>
+<li><a href="#132-%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E7%9A%84%E8%81%94%E7%BB%93">13.2 使用不同类型的联结</a></li>
+<li><a href="#133-%E4%BD%BF%E7%94%A8%E5%B8%A6%E8%81%9A%E9%9B%86%E5%87%BD%E6%95%B0%E7%9A%84%E8%81%94%E7%BB%93">13.3 使用带聚集函数的联结</a></li>
+<li><a href="#134-%E4%BD%BF%E7%94%A8%E8%81%94%E7%BB%93%E5%92%8C%E8%81%94%E7%BB%93%E6%9D%A1%E4%BB%B6">13.4 使用联结和联结条件</a></li>
+<li><a href="#135-%E5%B0%8F%E7%BB%93">13.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-14-%E8%AF%BE-%E7%BB%84%E5%90%88%E6%9F%A5%E8%AF%A2">第 14 课 组合查询</a>
+<ul>
+<li><a href="#141-%E7%BB%84%E5%90%88%E6%9F%A5%E8%AF%A2">14.1 组合查询</a></li>
+<li><a href="#142-%E5%88%9B%E5%BB%BA%E7%BB%84%E5%90%88%E6%9F%A5%E8%AF%A2">14.2 创建组合查询</a></li>
+<li><a href="#143-%E5%B0%8F%E7%BB%93">14.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-15-%E8%AF%BE-%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE">第 15 课 插入数据</a>
+<ul>
+<li><a href="#151-%E6%95%B0%E6%8D%AE%E6%8F%92%E5%85%A5">15.1 数据插入</a></li>
+<li><a href="#152-%E4%BB%8E%E4%B8%80%E4%B8%AA%E8%A1%A8%E5%A4%8D%E5%88%B6%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E8%A1%A8">15.2 从一个表复制到另一个表</a></li>
+<li><a href="#153-%E5%B0%8F%E7%BB%93">15.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-16-%E8%AF%BE-%E6%9B%B4%E6%96%B0%E5%92%8C%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE">第 16 课 更新和删除数据</a>
+<ul>
+<li><a href="#161-%E6%9B%B4%E6%96%B0%E6%95%B0%E6%8D%AE">16.1 更新数据</a></li>
+<li><a href="#162-%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE">16.2 删除数据</a></li>
+<li><a href="#163-%E6%9B%B4%E6%96%B0%E5%92%8C%E5%88%A0%E9%99%A4%E7%9A%84%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99">16.3 更新和删除的指导原则</a></li>
+<li><a href="#164-%E5%B0%8F%E7%BB%93">16.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-17-%E8%AF%BE-%E5%88%9B%E5%BB%BA%E5%92%8C%E6%93%8D%E7%BA%B5%E8%A1%A8">第 17 课 创建和操纵表</a>
+<ul>
+<li><a href="#171-%E5%88%9B%E5%BB%BA%E8%A1%A8">17.1 创建表</a></li>
+<li><a href="#172-%E6%9B%B4%E6%96%B0%E8%A1%A8">17.2 更新表</a></li>
+<li><a href="#173-%E5%88%A0%E9%99%A4%E8%A1%A8">17.3 删除表</a></li>
+<li><a href="#174-%E9%87%8D%E5%91%BD%E5%90%8D%E8%A1%A8">17.4 重命名表</a></li>
+<li><a href="#175-%E5%B0%8F%E7%BB%93">17.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-18-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E8%A7%86%E5%9B%BE">第 18 课 使用视图</a>
+<ul>
+<li><a href="#181-%E8%A7%86%E5%9B%BE">18.1 视图</a></li>
+<li><a href="#182-%E5%88%9B%E5%BB%BA%E8%A7%86%E5%9B%BE">18.2 创建视图</a></li>
+<li><a href="#183-%E5%B0%8F%E7%BB%93">18.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-19-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">第 19 课 使用存储过程</a>
+<ul>
+<li><a href="#191-%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">19.1 存储过程</a></li>
+<li><a href="#192-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">19.2 为什么要使用存储过程</a></li>
+<li><a href="#193-%E6%89%A7%E8%A1%8C%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">19.3 执行存储过程</a></li>
+<li><a href="#194-%E5%88%9B%E5%BB%BA%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">19.4 创建存储过程</a></li>
+<li><a href="#195-%E5%B0%8F%E7%BB%93">19.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-20-%E8%AF%BE-%E7%AE%A1%E7%90%86%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86">第 20 课 管理事务处理</a>
+<ul>
+<li><a href="#201-%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86">20.1 事务处理</a></li>
+<li><a href="#202-%E6%8E%A7%E5%88%B6%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86">20.2 控制事务处理</a></li>
+<li><a href="#203-%E5%B0%8F%E7%BB%93">20.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-21-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E6%B8%B8%E6%A0%87">第 21 课 使用游标</a></li>
+<li><a href="#%E7%AC%AC-22-%E8%AF%BE-%E9%AB%98%E7%BA%A7-sql-%E7%89%B9%E6%80%A7">第 22 课 高级 SQL 特性</a>
+<ul>
+<li><a href="#221-%E7%BA%A6%E6%9D%9F">22.1 约束</a></li>
+<li><a href="#222-%E7%B4%A2%E5%BC%95">22.2 索引</a></li>
+<li><a href="#223-%E8%A7%A6%E5%8F%91%E5%99%A8">22.3 触发器</a></li>
+<li><a href="#224-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8">22.4 数据库安全</a></li>
+<li><a href="#225-%E5%B0%8F%E7%BB%93">22.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://jinvic.github.io/post/2024-year-end-summary/">
+              <span class="post-title">
+                2024年终总结&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>

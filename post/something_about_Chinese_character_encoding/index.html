@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>关于中文字符编码的二三事 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="关于中文字符编码的二三事 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="关于中文字符编码的二三事" />
+  <meta property="og:url" content="https://jinvic.github.io/post/something_about_Chinese_character_encoding/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+                <a href="https://jinvic.github.io/tag/3HvIH-3v5sY/" class="tag">杂项</a>
+                
+                <a href="https://jinvic.github.io/tag/gbX6yaPc5ph/" class="tag">编程</a>
+                
+              </span>
+              <h1>关于中文字符编码的二三事</h1>
+              <span class="meta">
+                Posted on
+                2023-05-10，4 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <p>从学习编程以来，基本都一直避免着用到中文。因为中文容易乱码嘛，英文用起来没那么多事。但一直没有深究其中的原因。前段时间做信息安全的实验，各种加密解密。然而助教提了一个要求：<strong>要能够处理中文</strong>。得，不能再当鸵鸟了，只得好好叨唠叨唠处理中文的问题。其实这玩意，会者不难难者不会。要深究一番也还是有点深度，这里就简单介绍下。</p>
+<hr>
+<h1 id="什么是编码">什么是编码？</h1>
+<p>简单来说，编码对字符来说就像是身份证一样，计算机通过一个编号来唯一确定一种字符。你在敲代码，或者阅读文本时，所看到的字符，其实计算机是不认的。计算机中存储的是其对应的编码，要用的时候先查询这个编码对应的字符，再将字符呈现给你看。</p>
+<hr>
+<h1 id="为什么英文不用考虑编码问题">为什么英文不用考虑编码问题？</h1>
+<p>首先，为什么我们在使用英文时从来没有考虑过编码问题？其实英文字母是有编码的，就是c里面的‘a’=97这样，其中的97就是它的编号。这套编码我们称之为ASCII码，只有0-127。别的编码方式，基本都是兼容ASCII码的，或者说是在ASCII上进行扩展，添加新的字符以及对应的编码。所以，不管你这台设备，或者说这个文件，这个终端用的是什么编码，使用ASCII码的英文一般都能够正常显示，所以不用考虑编码问题。</p>
+<hr>
+<h1 id="为什么有时中文会乱码">为什么有时中文会乱码？</h1>
+<p>上文提到，编码是计算机将编号和字符唯一对应的方式。也就是说，同样的一个编号，在不同编码方式下可能会是完全不同的两个字符。这就是为什么我们有时会遇到中文乱码了。举个很常见的例子，你在VScode写个个小程序，输出中文，F5，一切正常。</p>
+<pre><code class="language-C++">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+signed main(void)
+{
+	cout &lt;&lt; &quot;中文&quot; &lt;&lt; endl;
+	system(&quot;pause&quot;);
+	return 0;
+}
+</code></pre>
+<p><img src="https://jinvic.github.io/post-images/%E5%85%B3%E4%BA%8E%E4%B8%AD%E6%96%87%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B/1.jpg" alt="" loading="lazy"><br>
+但直接运行编译生成的可执行文件就会乱码：<br>
+<img src="https://jinvic.github.io/post-images/%E5%85%B3%E4%BA%8E%E4%B8%AD%E6%96%87%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B/2.png" alt="" loading="lazy"><br>
+原因就是我们上面讲的，双方使用的编码不一样。我们通过<code>chcp</code>命令来查看两个终端分别用到什么编码：<br>
+<img src="https://jinvic.github.io/post-images/%E5%85%B3%E4%BA%8E%E4%B8%AD%E6%96%87%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B/3.png" alt="" loading="lazy"><br>
+<img src="https://jinvic.github.io/post-images/%E5%85%B3%E4%BA%8E%E4%B8%AD%E6%96%87%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B/4.png" alt="" loading="lazy"><br>
+这里输出的是代码页(Code Page)，这里我们不做展开。只要知道936对应GBK编码，而65001对应UTF-8编码就行。双方使用的编码不一样，结果也就不一样。<br>
+那为什么UTF-8编码的输出才是正确的呢？也许你没有注意到，在使用VScode编辑器时，右下角会有个小小的UTF-8字样：<br>
+<img src="https://jinvic.github.io/post-images/%E5%85%B3%E4%BA%8E%E4%B8%AD%E6%96%87%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B/5.png" alt="" loading="lazy"><br>
+这是说我们正在以UTF-8编码浏览文件，同样也会以这个编码保存文件。点击这个按钮你还可以切换用其他编码打开或保存文件。<br>
+<img src="https://jinvic.github.io/post-images/%E5%85%B3%E4%BA%8E%E4%B8%AD%E6%96%87%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B/6.png" alt="" loading="lazy"><br>
+那么原因找到了，我们使用UTF-8的编码保存了文件。编译器编译生成exe文件，里面的“中文”字符串也是UTF-8编码的。而外部终端使用GBK编码打开，于是乱码。</p>
+<hr>
+<h1 id="如何解决乱码问题">如何解决乱码问题</h1>
+<p>要解决这个问题，就要让文件和终端的编码一致。我们可以选择用GBK编码保存文件，或者设置终端编码为UTF-8来解决问题。<br>
+设置终端编码方式为：<code>SetConsoleOutputCP(65001);</code>（需要windows.h），或者<code>system(&quot;chcp 65001&quot;);</code>（不需要windows.h）。</p>
+<hr>
+<h1 id="关于qt的中文编码">关于Qt的中文编码</h1>
+<p>因为最近Qt用的比较多，就在这里稍微提一下。我是先写好c程序，再用Qt做图形化界面，中途需要在QString和std::string以及char*之间转换。如果转换不当就很容易出问题。<br>
+Qt的QString用的是unicode编码，在使用<code>.toStdString()</code>转化成std::string后就变成了UTF-8编码。Qt转换成char*虽然有多种方式，但我还是推荐先转成std::string再用<code>.c_str()</code>转成char*，这样路径明晰，兼容性也会好些。这时的char*也是UTF-8编码。<br>
+需要转回Qt时，std::string用<code>QString::fromStdString()</code>，char*用<code>QString::fromUtf8()</code>就行。</p>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%96%E7%A0%81">什么是编码？</a></li>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%8B%B1%E6%96%87%E4%B8%8D%E7%94%A8%E8%80%83%E8%99%91%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98">为什么英文不用考虑编码问题？</a></li>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E6%97%B6%E4%B8%AD%E6%96%87%E4%BC%9A%E4%B9%B1%E7%A0%81">为什么有时中文会乱码？</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98">如何解决乱码问题</a></li>
+<li><a href="#%E5%85%B3%E4%BA%8Eqt%E7%9A%84%E4%B8%AD%E6%96%87%E7%BC%96%E7%A0%81">关于Qt的中文编码</a></li>
+</ul>
+</div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://jinvic.github.io/post/hello-gridea/">
+              <span class="post-title">
+                Hello Gridea&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>

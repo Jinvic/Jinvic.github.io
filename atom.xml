@@ -1,0 +1,2031 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://jinvic.github.io</id>
+    <title>Jinvic&apos;s Blog</title>
+    <updated>2025-06-24T06:50:20.063Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://jinvic.github.io"/>
+    <link rel="self" href="https://jinvic.github.io/atom.xml"/>
+    <subtitle>记录学习与生活</subtitle>
+    <logo>https://jinvic.github.io/images/avatar.png</logo>
+    <icon>https://jinvic.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2025, Jinvic&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[go依赖注入库 samber/do 笔记]]></title>
+        <id>https://jinvic.github.io/post/go-di-lib-samber-do-notes/</id>
+        <link href="https://jinvic.github.io/post/go-di-lib-samber-do-notes/">
+        </link>
+        <updated>2025-06-24T03:05:03.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="do">do</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#do">do</a>
+<ul>
+<li><a href="#%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E5%AE%9A%E4%B9%89">依赖注入定义</a></li>
+<li><a href="#%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8">快速使用</a></li>
+<li><a href="#%E5%8C%BF%E5%90%8D%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%91%BD%E5%90%8D%E6%9C%8D%E5%8A%A1">匿名服务与命名服务</a></li>
+<li><a href="#%E6%80%A5%E5%8A%A0%E8%BD%BD%E5%92%8C%E6%87%92%E5%8A%A0%E8%BD%BD">急加载和懒加载</a>
+<ul>
+<li><a href="#%E6%80%A5%E5%8A%A0%E8%BD%BD">急加载</a></li>
+<li><a href="#%E6%87%92%E5%8A%A0%E8%BD%BD">懒加载</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8">服务调用</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96">其他</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p><a href="https://github.com/samber/do">samber/do</a></p>
+<p>文档：<a href="https://do.samber.dev/">⚙️ do: Typesafe dependency injection for Go | do</a><br>
+参考：<a href="https://blog.aflybird.cn/2023/08/read-open-source-go-dependency-injection-library-samber-do">源码分析——Go语言依赖注入库 samber/do - 飞鸟记</a></p>
+<p>do是一个依赖注入库。相比于用过的wire，do更加轻量且无需代码生成。</p>
+<blockquote>
+<p><strong>注意：</strong> v2正在开发中，新版本可能有较大改动。</p>
+</blockquote>
+<h2 id="依赖注入定义">依赖注入定义</h2>
+<blockquote>
+<p>狭义DI定义</p>
+<blockquote>
+<p>对象的使用方式不应该依赖于对象的创建方式。</p>
+</blockquote>
+<p>所以我们要实现的，就是：</p>
+<ul>
+<li>提供一个「第三方」</li>
+<li>对象创建者，把特定类型的对象创建出来并注册到第三方</li>
+<li>对象使用者，从第三方获取对象</li>
+</ul>
+</blockquote>
+<p>我的理解是，使用对象时不需要去关注对象如何创建，不需要自己创建对象，而是直接使用一个现成的对象。<br>
+如何将对象交给使用者，就是所谓的“注入”。<br>
+最简单的理解就是一个map，需要什么对象时查询map从里面拿。</p>
+<h2 id="快速使用">快速使用</h2>
+<pre><code class="language-go">func main() {
+    // create DI container and inject package services
+    injector := do.New()
+
+    do.Provide(injector, NewCar)
+    do.Provide(injector, NewEngine)
+    do.ProvideValue(&amp;Config{
+        Port: 4242,
+    })
+
+    // invoking car will instantiate Car services and its Engine dependency
+    car, err := do.Invoke[*Car](i)
+    if err != nil {
+        log.Fatal(err.Error())
+    }
+
+    car.Start()  // that's all folk 🤗
+
+    // handle ctrl-c and shutdown services
+    i.ShutdownOnSignals(syscall.SIGTERM, os.Interrupt)
+}
+</code></pre>
+<ol>
+<li>使用<code>do.New()</code>创建一个依赖注入容器（即一个<code>map[string]any</code>）</li>
+<li>使用<code>do.Provide()</code>注册服务（提供对象创建方式）</li>
+<li>使用<code>do.Invoke[Type](injector)</code>调用服务（获取对应类型的对象）</li>
+<li>使用对象</li>
+</ol>
+<h2 id="匿名服务与命名服务">匿名服务与命名服务</h2>
+<p>do框架在进行服务注册时，都有提供<code>Provide</code>和<code>ProvideNamed</code>两种方法。</p>
+<pre><code class="language-go">func Provide[T any](i do.Injector, provider do.Provider[T])
+func ProvideNamed[T any](i do.Injector, name string, provider do.Provider[T])
+</code></pre>
+<p>前者为匿名服务，由框架处理命名。后者为命名服务，用户自己提供命名作为<code>map[string]any</code>的key键。</p>
+<p>顺便一提，匿名服务中框架生成服务名的方式就是直接打印变量类型：</p>
+<pre><code class="language-go">func generateServiceName[T any]() string {
+    var t T
+
+    // struct
+    name := fmt.Sprintf(&quot;%T&quot;, t)
+    if name != &quot;&lt;nil&gt;&quot; {
+        return name
+    }
+
+    // interface
+    return fmt.Sprintf(&quot;%T&quot;, new(T))
+}
+</code></pre>
+<h2 id="急加载和懒加载">急加载和懒加载</h2>
+<p><strong>急加载(Eager Loading)</strong> 是在注册服务时直接传入变量。<br>
+<strong>懒加载（Lazy Loading）</strong> 是传入创建变量的方式，等用到时再创建。</p>
+<pre><code class="language-go">// 急加载
+func ProvideValue[T any](i do.Injector, value T)
+func ProvideNamedValue[T any](i do.Injector, name string, value T)
+// 懒加载
+func Provide[T any](i do.Injector, provider do.Provider[T])
+func ProvideNamed[T any](i do.Injector, name string, provider do.Provider[T])
+</code></pre>
+<p>要更深入理解两者的区别，我们需要了解服务的定义和两种服务注册方式的实现。如下是部分源码（已简化）:</p>
+<pre><code class="language-go">type Service[T any] interface {
+    getName() string
+    getInstance(*Injector) (T, error)
+}
+</code></pre>
+<p>服务本身是一个接口，<code>getName</code>方法获取服务名，<code>getInstance</code>方法获取服务实例。无论是急加载还是懒加载，以及其他的瞬时加载和包加载等，只要实现了这个接口就行。</p>
+<h3 id="急加载">急加载</h3>
+<pre><code class="language-go">type ServiceEager[T any] struct {
+    name     string
+    instance T
+}
+
+func newServiceEager[T any](name string, instance T) Service[T] {
+    return &amp;ServiceEager[T]{
+        name:     name,
+        instance: instance,
+    }
+}
+
+//nolint:unused
+func (s *ServiceEager[T]) getName() string {
+    return s.name
+}
+
+//nolint:unused
+func (s *ServiceEager[T]) getInstance(i *Injector) (T, error) {
+    return s.instance, nil
+}
+</code></pre>
+<p>急加载直接传入创建好的实例，调用时返回就行。</p>
+<h3 id="懒加载">懒加载</h3>
+<pre><code class="language-go">type Provider[T any] func(*Injector) (T, error)
+
+type ServiceLazy[T any] struct {
+    mu       sync.RWMutex
+    name     string
+    instance T
+
+    // lazy loading
+    built    bool
+    provider Provider[T]
+}
+
+func newServiceLazy[T any](name string, provider Provider[T]) Service[T] {
+    return &amp;ServiceLazy[T]{
+        name: name,
+
+        built:    false,
+        provider: provider,
+    }
+}
+
+//nolint:unused
+func (s *ServiceLazy[T]) getName() string {
+    return s.name
+}
+
+//nolint:unused
+func (s *ServiceLazy[T]) getInstance(i *Injector) (T, error) {
+    s.mu.Lock()
+    defer s.mu.Unlock()
+
+    if !s.built {
+        err := s.build(i)
+        if err != nil {
+            return empty[T](), err
+        }
+    }
+
+    return s.instance, nil
+}
+
+//nolint:unused
+func (s *ServiceLazy[T]) build(i *Injector) (err error) {
+    instance, err := s.provider(i)
+    if err != nil {
+        return err
+    }
+
+    s.instance = instance
+    s.built = true
+
+    return nil
+}
+</code></pre>
+<p><code>Provider[T any]</code>类型为创建实例的方式。从懒加载服务中获取实例时先通过<code>built</code>标记判断实例是否已创建。<br>
+如果已创建，直接返回实例。如果未创建，使用传入的<code>provider</code>创建实例。创建过程通过并发变量<code>mu</code>保证并发安全。</p>
+<h2 id="服务调用">服务调用</h2>
+<pre><code class="language-go">do.Invoke[T any](do.Injector) (T, error)
+do.InvokeNamed[T any](do.Injector, string) (T, error)
+do.MustInvoke[T any](do.Injector) T
+do.MustInvokeNamed[T any](do.Injector, string) T
+</code></pre>
+<p>使用<code>do.Invoke</code>调用匿名服务，<code>do.InvokeNamed</code>调用命名服务。<br>
+而<code>Must</code>版本是正常版本的封装，单返回值可以直接用于表达式中，报错时不返回错误而是直接panic。</p>
+<h2 id="其他">其他</h2>
+<p>其他用法和特性因为没用过理解不深，为了避免抄文档就干脆不写了。<br>
+以后用上了再查文档记笔记吧。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[关于WSL的代理问题一则]]></title>
+        <id>https://jinvic.github.io/post/a-problem-about-wsl-proxy/</id>
+        <link href="https://jinvic.github.io/post/a-problem-about-wsl-proxy/">
+        </link>
+        <updated>2025-06-19T05:57:29.000Z</updated>
+        <content type="html"><![CDATA[<p>今天在使用wsl的<code>docker build</code>拉取镜像时，报错：</p>
+<pre><code class="language-bash">ERROR: failed to solve: alpine: failed to resolve source metadata for docker.io/library/alpine:latest: failed to do request: Head &quot;https://registry-1.docker.io/v2/library/alpine/manifests/latest&quot;: proxyconnect tcp: dial tcp 127.0.0.1:7890: connect: connection refused
+</code></pre>
+<p>即使关闭了代理，仍然报这个错误。于是各种检查，到底是在哪设置的代理。</p>
+<p>首先检查环境变量：</p>
+<pre><code class="language-bash">echo $http_proxy
+echo $https_proxy
+</code></pre>
+<p>确认没有设置环境变量。</p>
+<p>然后检查配置文件：</p>
+<pre><code class="language-bash">sudo cat /etc/docker/daemon.json
+</code></pre>
+<p>因为使用的是<code>Docker Desktop for Windows</code>，所以并没有这个文件，也没有配置代理。</p>
+<p>检查 WinHTTP 代理设置，也没有设置。</p>
+<pre><code class="language-powershell">PS C:\Users\admin&gt; netsh winhttp show proxy
+
+当前的 WinHTTP 代理服务器设置:
+
+    直接访问(没有代理服务器)。
+</code></pre>
+<p>尝试禁用<code>BuildKit</code>，依然报错：</p>
+<pre><code class="language-bash">export DOCKER_BUILDKIT=0
+docker build .
+
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            BuildKit is currently disabled; enable it by removing the DOCKER_BUILDKIT=0
+            environment-variable.
+
+Sending build context to Docker daemon  4.316MB
+Step 1/29 : FROM node:20.19.1-bookworm AS front
+Get &quot;https://registry-1.docker.io/v2/&quot;: proxyconnect tcp: dial tcp 127.0.0.1:7890: connect: connection refused
+</code></pre>
+<p>检查<code>/etc/resolv.conf</code>，一切正常：</p>
+<pre><code class="language-bash">cat /etc/resolv.conf
+# This file was automatically generated by WSL. To stop automatic generation of this file, add the following entry to /etc/wsl.conf:
+# [network]
+# generateResolvConf = false
+nameserver 10.255.255.254
+</code></pre>
+<p>检查<code>%USERPROFILE%\.wslconfig</code>，终于找到了问题：</p>
+<pre><code class="language-powershell">cat ~/.wslconfig
+[experimental]
+networkingMode=mirrored
+dnsTunneling=true
+firewall=true
+autoProxy=true
+</code></pre>
+<p>这是之前将wsl的网络模式由NAT改为镜像模式，顺手复制粘贴的配置。其中<code>autoProxy=true</code>表示 WSL 会自动继承 Windows 的代理设置。在windows运行的clash会在127.0.0.1:7890 启动本地 HTTP 代理服务。WSL 检测到这个代理后，就会把所有网络请求都转发到这个地址，<strong>即使代理没运行，它也会尝试连接</strong>。这就是为什么在windows关了代理仍在wsl仍会尝试连接7890端口。将其修改未false后问题解决。</p>
+<hr>
+<p>虽然docker默认使用代理的问题解决了，但<code>docker build</code>不可以的问题依然存在。一下是一些可供参考的内容。</p>
+<p><a href="https://forums.docker.com/t/help-on-error-internal-load-metadata-for-docker-io-library-node-18-alpine/144360">Help on “ERROR [internal] load metadata for docker.io/library/node:18-alpine”</a><br>
+<a href="https://stackoverflow.com/questions/73812700/docker-error-internal-load-metadata-for-docker-io">https://stackoverflow.com/questions/73812700/docker-error-internal-load-metadata-for-docker-io</a><br>
+<a href="https://github.com/docker/hub-feedback/issues/2388">can't docker pull images from China</a></p>
+<p>可行的解决方案大概有</p>
+<ul>
+<li><code>docker logout</code> <code>docker login</code>重新登录</li>
+<li><code>docker pull</code>手动拉取镜像</li>
+<li><code>export DOCKER_BUILDKIT=0</code>禁用buildkit</li>
+<li>设置镜像站等</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[记一次MCP辅助开发经历]]></title>
+        <id>https://jinvic.github.io/post/record-an-mcp-assisted-development-experience/</id>
+        <link href="https://jinvic.github.io/post/record-an-mcp-assisted-development-experience/">
+        </link>
+        <updated>2025-04-06T05:48:30.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="记一次mcp使用经历">记一次MCP使用经历</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E8%AE%B0%E4%B8%80%E6%AC%A1mcp%E4%BD%BF%E7%94%A8%E7%BB%8F%E5%8E%86">记一次MCP使用经历</a>
+<ul>
+<li><a href="#mcp%E6%8E%A5%E5%85%A5%E5%92%8C%E9%AA%8C%E8%AF%81">MCP接入和验证</a></li>
+<li><a href="#%E6%8B%86%E5%88%86%E5%A4%9A%E6%96%87%E4%BB%B6">拆分多文件</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E6%97%A5%E5%BF%97%E5%8A%9F%E8%83%BD">添加日志功能</a></li>
+<li><a href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E6%B5%81%E7%A8%8B">自动化测试流程</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<blockquote>
+<p>本次开发的结果和完整对话记录都将整理并备份在<a href="https://github.com/Jinvic/minesweeper">Github</a>上。</p>
+</blockquote>
+<p>最开始只是玩扫雷时，感觉鼠标声音有点响，想改成键盘。另外有时扫雷会出现纯看运气的情况，希望加个直接显示雷的作弊功能。就这两个需求，简单让AI写了下，过程略。</p>
+<p>因为感觉一个庞大的单文件不够美观，就想试着拆分成多文件系统。正好最近经常被MCP刷屏，想试试能不能接入一个MCP让cursor自己完成文件的创建之类步骤，实现完全的自动化。找了下选择了这个<a href="https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem">Filesystem MCP Server</a>。</p>
+<h2 id="mcp接入和验证">MCP接入和验证</h2>
+<p>cursor接入MCP也有两种方式，分别时全局和当前目录。前者在<code>C:/Users/用户名/.cursor/mcp.json</code>下，后者在当前目录创建<code>./.cursor/mcp.json</code>。我使用的后者，写入如下内容：</p>
+<pre><code class="language-json">{
+    &quot;mcpServers&quot;: {
+      &quot;filesystem&quot;: {
+        &quot;command&quot;: &quot;npx&quot;,
+        &quot;args&quot;: [
+          &quot;-y&quot;,
+          &quot;@modelcontextprotocol/server-filesystem&quot;,
+          &quot;./&quot;
+        ]
+      }
+    }
+  }
+</code></pre>
+<p>由于使用的npx命令，所以需要nodejs环境。之后再cursor的设置的MCP页面能看到该MCP且带绿点就行了。要验证该mcp能否正常操作文件系统，可以使用如下提示词验证：</p>
+<pre><code class="language-txt">请在当前工作目录下创建一个名为 'test.txt' 的新文件，并向其中写入以下内容：'这是一个测试文件。'
+</code></pre>
+<h2 id="拆分多文件">拆分多文件</h2>
+<p>最开始我让AI拆分多文件时它虽然拆了但没有创建对应文件，似乎是我表述不清晰。之后明确说明让它创建对应文件就会去使用MCP创建了。</p>
+<pre><code class="language-markdown">
+_**User**_
+
+请阅读main.py的代码，并将其拆分为更工程化的多文件结构。
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+我将把这个扫雷游戏拆分为更工程化的多文件结构。下面是建议的文件结构和代码：
+
+## 文件结构
+
+
+minesweeper/
+│
+├── game/
+│   ├── __init__.py
+│   ├── core.py          # 游戏核心逻辑
+│   └── ui.py            # 用户界面组件
+│
+├── handlers/
+│   ├── __init__.py
+│   └── events.py        # 事件处理器
+│
+└── main.py              # 入口点文件
+
+
+## 代码实现
+
+(略)
+
+</code></pre>
+<pre><code class="language-markdown">
+
+_**User**_
+
+请你按照如上内容完成项目文件的创建和编辑。
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+&lt;details&gt;
+            &lt;summary&gt;Listed current directory • **4** results&lt;/summary&gt;
+        
+| Name |
+|-------|
+| 📄 `main.py` |
+| 📄 `main.py.backup` |
+| 📁 `__pycache__` |
+| 📁 `.cursor` |
+
+&lt;/details&gt;
+
+---
+
+现在我将创建项目目录结构。首先创建主要目录：
+
+---
+
+我需要在当前工作目录中创建项目目录：
+
+---
+
+让我们使用终端命令创建目录：
+
+---
+
+mkdir -p minesweeper/game minesweeper/handlers
+
+PS D:\Workspace\Python\Arbiter&gt; mkdir -p minesweeper/game minesweeper/handlers
+
+mkdir: A positional parameter cannot be found that accepts argument 'minesweeper
+/handlers'.
+
+---
+
+让我尝试使用PowerShell语法：
+
+---
+
+mkdir minesweeper/game, minesweeper/handlers -Force
+
+    Directory: D:\Workspace\Python\Arbiter\minesweeper
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----            2025/4/5    16:30                game
+d----            2025/4/5    16:30                handlers
+PS D:\Workspace\Python\Arbiter&gt;
+
+---
+
+现在让我们创建所需的所有文件：
+
+---
+
+(略)
+
+</code></pre>
+<p>可以看到，现在它会去获取当前文件目录结构并使用命令创建目录。再Linux命令出错时也会主动更换目录。</p>
+<h2 id="添加日志功能">添加日志功能</h2>
+<p>之后添加readme，功能修改和测试等都正常。直到我尝试添加日志功能后，发现它会自动查询生成的日志去DEBUG。</p>
+<p>最开始它只是通过 <code>-Tail </code> 选项查询最新的日志：</p>
+<pre><code class="language-markdown">
+
+游戏现在没有显示错误，这是个好迹象。让我们检查一下日志文件，看看窗口大小调整功能是否正常工作：
+
+---
+
+Get-Content -Path &quot;./logs/minesweeper_2025-04-05.log&quot; -Tail 30
+
+</code></pre>
+<p>在发现信息不足时马上更该更准确的筛选和查询方式：</p>
+<pre><code>让我们看更多的日志记录：
+
+---
+
+Get-Content -Path &quot;./logs/minesweeper_2025-04-05.log&quot; | Select-String -Pattern &quot;游戏板|窗口|设置&quot;
+
+</code></pre>
+<h2 id="自动化测试流程">自动化测试流程</h2>
+<p>在学会查询日志后，后续的开发和测试它甚至会在功能完成后自己创建测试脚本并运行：</p>
+<pre><code class="language-markdown">
+让我们测试日志级别的变更是否真正影响了日志输出。首先，我们创建一个临时的测试脚本：
+
+---
+
+（内容略）
+
+---
+
+现在运行测试脚本：
+
+---
+
+python test_log_settings.py
+
+（日志略）
+
+---
+
+我们可以看到，日志级别设置已经修改，但有两个问题需要解决：
+
+1. 控制台只显示了警告和错误级别的日志，这是因为控制台处理器的级别被硬编码为WARNING
+2. 日志保留天数意外地显示为3天而不是7天，这可能是之前的测试修改了配置
+
+让我们修复第一个问题，并再次运行测试：
+
+---
+
+（过程略）
+
+现在我们可以看到，DEBUG 和 INFO 级别的消息也显示出来了，说明日志级别设置已经正确应用。
+
+</code></pre>
+<p>如上内容都是在一次对话中完成的。很明显，AI主动建立了一个创建测试脚本-&gt;运行-&gt;查看日志输出-&gt;修改测试脚本-&gt;运行...的工作流，反复测试并修改直到问题解决，大大提升了效率和自动化程度。</p>
+<h2 id="总结">总结</h2>
+<p>本来只是一次简单的开发，但加入MCP后的成果令我十分惊讶，尤其是AI借助MCP在没有任何指示的情况主动建立起了一套可行的测试流程。这还只是导入了一个最基础的文件系统操作的MCP。难以想象在更专业的领域，加入MCP后的AI辅助开发会对开发流程带来何种颠覆性的改变。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[使用roundcube+docker-mailserver自部署邮件服务]]></title>
+        <id>https://jinvic.github.io/post/self-deploy-mail-services-using-roundcube-and-docker-mailserver/</id>
+        <link href="https://jinvic.github.io/post/self-deploy-mail-services-using-roundcube-and-docker-mailserver/">
+        </link>
+        <updated>2025-02-07T05:57:54.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="使用roundcubedocker-mailserver自部署邮件服务">使用roundcube+docker-mailserver自部署邮件服务</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E4%BD%BF%E7%94%A8roundcubedocker-mailserver%E8%87%AA%E9%83%A8%E7%BD%B2%E9%82%AE%E4%BB%B6%E6%9C%8D%E5%8A%A1">使用roundcube+docker-mailserver自部署邮件服务</a>
+<ul>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+<li><a href="#%E9%82%AE%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8-docker-mailserver">邮件服务器 Docker Mailserver</a>
+<ul>
+<li><a href="#%E8%AF%81%E4%B9%A6%E7%94%B3%E8%AF%B7">证书申请</a></li>
+<li><a href="#dns%E9%85%8D%E7%BD%AE">DNS配置</a></li>
+<li><a href="#%E5%BC%80%E6%94%BE%E7%AB%AF%E5%8F%A3">开放端口</a></li>
+<li><a href="#%E9%83%A8%E7%BD%B2dms">部署DMS</a></li>
+<li><a href="#%E5%AE%B9%E5%99%A8%E5%86%85%E9%85%8D%E7%BD%AE">容器内配置</a></li>
+</ul>
+</li>
+<li><a href="#%E9%82%AE%E4%BB%B6%E5%AE%A2%E6%88%B7%E7%AB%AF-roundcube">邮件客户端 Roundcube</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p>在做一个开源项目的邮件通知功能，本来用smtp发个邮件就行，不知怎么的就捣鼓着就开始自建邮件服务器了。不过用自己的域名实现邮件服务很酷不是吗？</p>
+<h2 id="参考">参考</h2>
+<p><strong>教程</strong>：</p>
+<ul>
+<li><a href="https://www.anye.xyz/archives/itwz2wfX">1Panel 自建邮局 - Docker Mailserver</a></li>
+<li><a href="https://docker-mailserver.github.io/docker-mailserver/latest/usage/">Usage - Docker Mailserver</a></li>
+</ul>
+<p><strong>工具</strong>：</p>
+<ul>
+<li><a href="https://ll00.cn/Mail/index.html">smtp发信测试</a></li>
+<li><a href="https://mxtoolbox.com/SuperTool.aspx">MX ToolBox</a></li>
+</ul>
+<h2 id="邮件服务器-docker-mailserver">邮件服务器 Docker Mailserver</h2>
+<p>本来是打算在应用商店直接部署的，但不知道为什么总报错安装失败，就自己用docker-composer部署了。</p>
+<h3 id="证书申请">证书申请</h3>
+<p>首先要实现SSL/TLS安全连接你必须有个证书，申请证书的过程略，1Panel本身的证书功能就很方便了。申请好的证书别忘了<strong>推送到本地目录</strong>，记下这个路径之后要用到。</p>
+<h3 id="dns配置">DNS配置</h3>
+<p>要让别人能找到你的邮件服务器地址需要配置DNS，配置项很多我也不是很懂，详情可以参考开头的文章。这里以我的域名<code>jinvic.top</code>为例：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">域名</th>
+<th>记录类型</th>
+<th>记录值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">jinvic.top</td>
+<td>MX</td>
+<td>10 mail.jinvic.top</td>
+<td>改成你自己的域名</td>
+</tr>
+<tr>
+<td style="text-align:right">email.jinvic.top</td>
+<td>A</td>
+<td>&lt;你的服务器公网ip&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:right">jinvic.top</td>
+<td>TXT</td>
+<td>&quot;v=spf1 mx -all&quot;</td>
+<td>SPF 记录</td>
+</tr>
+<tr>
+<td style="text-align:right">_dmarc.jinvic.top</td>
+<td>TXT</td>
+<td>&quot;v=DMARC1; p=reject; adkim=s; aspf=s&quot;</td>
+<td>DMARC 记录</td>
+</tr>
+<tr>
+<td style="text-align:right">mail._domainkey.jinvic.top</td>
+<td>TXT</td>
+<td>&lt;稍后生成&gt;</td>
+<td>DKIM 记录</td>
+</tr>
+</tbody>
+</table>
+<h3 id="开放端口">开放端口</h3>
+<p>DMS用到的端口有<code>25,143,465,587,993</code>这些，全部在防火墙开放一下。如果用到是服务商提供的云服务器，记得配置下安全组规则。</p>
+<h3 id="部署dms">部署DMS</h3>
+<p>在准备好的工作目录下，通过如下命令获取docker-compose和.env文件：</p>
+<pre><code class="language-bash">DMS_GITHUB_URL=&quot;https://raw.githubusercontent.com/docker-mailserver/docker-mailserver/master&quot;
+wget &quot;${DMS_GITHUB_URL}/compose.yaml&quot;
+wget &quot;${DMS_GITHUB_URL}/mailserver.env&quot;
+</code></pre>
+<p>compose.yaml中如下内容需要自主配置：</p>
+<ul>
+<li><code>hostname</code>：改成你自己的域名，即DNS中A记录配置的域名，如<code>email.jinvic.top</code>，注意不能是<code>jinvic.top</code>。</li>
+<li><code>volumes</code>: 将你的证书路径挂载进去，配环境变量用</li>
+</ul>
+<p>如下是我的compose.yaml示例：</p>
+<pre><code class="language-yaml">services:
+  mailserver:
+    image: ghcr.io/docker-mailserver/docker-mailserver:latest
+    container_name: mailserver
+    # Provide the FQDN of your mail server here (Your DNS MX record should point to this value)
+    hostname: mail.jinvic.top
+    env_file: mailserver.env
+    # More information about the mail-server ports:
+    # https://docker-mailserver.github.io/docker-mailserver/latest/config/security/understanding-the-ports/
+    ports:
+      - &quot;25:25&quot;    # SMTP  (explicit TLS =&gt; STARTTLS, Authentication is DISABLED =&gt; use port 465/587 instead)
+      - &quot;143:143&quot;  # IMAP4 (explicit TLS =&gt; STARTTLS)
+      - &quot;465:465&quot;  # ESMTP (implicit TLS)
+      - &quot;587:587&quot;  # ESMTP (explicit TLS =&gt; STARTTLS)
+      - &quot;993:993&quot;  # IMAP4 (implicit TLS)
+    volumes:
+      - ./docker-data/dms/mail-data/:/var/mail/
+      - ./docker-data/dms/mail-state/:/var/mail-state/
+      - ./docker-data/dms/mail-logs/:/var/log/mail/
+      - ./docker-data/dms/config/:/tmp/docker-mailserver/
+      - /cert/jinvic.top:/cert/jinvic.top:ro
+    restart: always
+    stop_grace_period: 1m
+    # Uncomment if using `ENABLE_FAIL2BAN=1`:
+    # cap_add:
+    #   - NET_ADMIN
+    healthcheck:
+      test: &quot;ss --listening --tcp | grep -P 'LISTEN.+:smtp' || exit 1&quot;
+      timeout: 3s
+      retries: 0
+</code></pre>
+<p>mailserver.env中如下内容需要自主配置：</p>
+<ul>
+<li><code>SSL_TYPE</code>：设置为<code>manual</code></li>
+<li><code>SSL_CERT_PATH</code> 和 <code>SSL_KEY_PATH</code>：映射的证书路径</li>
+<li><code>POSTMASTER_ADDRESS</code>：非必选，邮件服务器的管理员邮箱地址</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-env">SSL_TYPE=manual
+SSL_CERT_PATH=/cert/jinvic.top/fullchain.pem
+SSL_KEY_PATH=/cert/jinvic.top/privkey.pem
+POSTMASTER_ADDRESS=jinvic@jinvic.top
+</code></pre>
+<p>配置完成后，使用<code>docker-compose up -d</code>启动服务。</p>
+<h3 id="容器内配置">容器内配置</h3>
+<p>通过<code>docker exec -ti &lt;CONTAINER NAME&gt; /bin/sh</code>启动容器内终端。</p>
+<ul>
+<li><strong>创建用户</strong>： <code>setup email add jinvic@jinvic.top</code><br>
+之后会让你输入密码。之后就可以用这套账密登录roundcube了。</li>
+<li><strong>生成DKIM</strong>：<code>setup config dkim</code><br>
+将括号内文本写入DNS（见 <a href="#dns%E9%85%8D%E7%BD%AE">DNS配置</a>）。</li>
+</ul>
+<h2 id="邮件客户端-roundcube">邮件客户端 Roundcube</h2>
+<p>我是直接在1Panel的应用市场装的Roundcube，不过默认配置有点问题我改了下端口，如下：</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IMAP 服务器</td>
+<td>mail.jinvic.top</td>
+</tr>
+<tr>
+<td>IMAP 端口</td>
+<td>993</td>
+</tr>
+<tr>
+<td>SMTP 服务器</td>
+<td>mail.jinvic.top</td>
+</tr>
+<tr>
+<td>SMTP 端口</td>
+<td>465</td>
+</tr>
+</tbody>
+</table>
+<p>IMAP登录时还需要手动指定SSL/TLS加密方式，我不清楚环境变量怎么改就直接改的配置文件<code>./data/config/config.docker.inc.php</code>，缺点是每次重启都会重置。</p>
+<pre><code class="language-txt">$config['imap_host'] = 'ssl://mail.jinvic.top:993';
+$config['smtp_host'] = 'ssl://mail.jinvic.top:465';
+$config['username_domain'] = 'jinvic.top';
+</code></pre>
+<p><code>username_domain</code>是可选项，配置后如<code>jinvic@jinvic.top</code>登录时就可以直接用jinvic作为用户名了，比较方便。</p>
+<p>至于SSL/TLS配置，我没有在roundcube里配，而是在反向代理至roundcube服务时加了https配置，实测没有问题。</p>
+<p>完成如上配置后就可以登录roundcube客户端访问docker-mailserver服务器，进行收发邮件操作了。</p>
+<p><strong>250624更新</strong></p>
+<p>在1panel商店安装的roundcube只能使用1panel商店安装的mysql。就个人使用来说单独装个mysql还是太笨重了。为了切换到sqlite还是换成了自部署。参考<a href="https://github.com/roundcube/roundcubemail-docker/blob/master/examples/docker-compose-simple.yaml">官方示例</a>改改就行。这里给出一个配置示例：</p>
+<pre><code class="language-yml">services:
+  roundcube:
+    image: roundcube/roundcubemail:latest
+    container_name: roundcube
+    environment:
+      ROUNDCUBEMAIL_DEFAULT_HOST: &quot;ssl://mail.jinvic.top&quot;
+      ROUNDCUBEMAIL_DEFAULT_PORT: &quot;993&quot;
+      ROUNDCUBEMAIL_SMTP_SERVER: &quot;ssl://mail.jinvic.top&quot;
+      ROUNDCUBEMAIL_SMTP_PORT: &quot;465&quot;
+      ROUNDCUBEMAIL_USERNAME_DOMAIN: &quot;jinvic.top&quot;
+      # ROUNDCUBEMAIL_REQUEST_PATH:
+      # ROUNDCUBEMAIL_PLUGINS:
+      # ROUNDCUBEMAIL_INSTALL_PLUGINS:
+      # ROUNDCUBEMAIL_SKIN:
+      # ROUNDCUBEMAIL_UPLOAD_MAX_FILESIZE:
+      # ROUNDCUBEMAIL_SPELLCHECK_URI:
+      # ROUNDCUBEMAIL_ASPELL_DICTS:
+
+      ROUNDCUBE_DB_TYPE: &quot;sqlite&quot;
+      ROUNDCUBE_DB_NAME: &quot;/var/roundcube/db/roundcube.sqlite&quot;
+    volumes:
+      - ./www:/var/www/html
+      - ./data/config:/var/roundcube/config
+      - ./data/db:/var/roundcube/db
+    ports:
+      - &quot;12078:80&quot;
+    restart: always
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《SQL必知必会》阅读笔记]]></title>
+        <id>https://jinvic.github.io/post/[sql_in_10min_a_day]-reading-notes/</id>
+        <link href="https://jinvic.github.io/post/[sql_in_10min_a_day]-reading-notes/">
+        </link>
+        <updated>2025-01-18T06:53:46.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="sql必知必会阅读笔记">《SQL必知必会》阅读笔记</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#sql%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0">《SQL必知必会》阅读笔记</a>
+<ul>
+<li><a href="#%E7%AC%AC-1-%E8%AF%BE-%E4%BA%86%E8%A7%A3sql">第 1 课 了解SQL</a>
+<ul>
+<li><a href="#11-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80">1.1 数据库基础</a></li>
+<li><a href="#12-%E4%BB%80%E4%B9%88%E6%98%AFsql">1.2 什么是SQL</a></li>
+<li><a href="#13-%E5%8A%A8%E6%89%8B%E5%AE%9E%E8%B7%B5">1.3 动手实践</a></li>
+<li><a href="#14-%E5%B0%8F%E7%BB%93">1.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-2-%E8%AF%BE-%E6%A3%80%E7%B4%A2%E6%95%B0%E6%8D%AE">第 2 课 检索数据</a>
+<ul>
+<li><a href="#21-select-%E8%AF%AD%E5%8F%A5">2.1 SELECT 语句</a></li>
+<li><a href="#22-%E6%A3%80%E7%B4%A2%E5%8D%95%E4%B8%AA%E5%88%97">2.2 检索单个列</a></li>
+<li><a href="#23-%E6%A3%80%E7%B4%A2%E5%A4%9A%E4%B8%AA%E5%88%97">2.3 检索多个列</a></li>
+<li><a href="#24-%E6%A3%80%E7%B4%A2%E6%89%80%E6%9C%89%E5%88%97">2.4 检索所有列</a></li>
+<li><a href="#25-%E6%A3%80%E7%B4%A2%E4%B8%8D%E5%90%8C%E7%9A%84%E5%80%BC">2.5 检索不同的值</a></li>
+<li><a href="#26-%E9%99%90%E5%88%B6%E7%BB%93%E6%9E%9C">2.6 限制结果</a></li>
+<li><a href="#27-%E4%BD%BF%E7%94%A8%E6%B3%A8%E9%87%8A">2.7 使用注释</a></li>
+<li><a href="#28-%E5%B0%8F%E7%BB%93">2.8 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-3-%E8%AF%BE-%E6%8E%92%E5%BA%8F%E6%A3%80%E7%B4%A2%E6%95%B0%E6%8D%AE">第 3 课 排序检索数据</a>
+<ul>
+<li><a href="#31-%E6%8E%92%E5%BA%8F%E6%95%B0%E6%8D%AE">3.1 排序数据</a></li>
+<li><a href="#32-%E6%8C%89%E5%A4%9A%E4%B8%AA%E5%88%97%E6%8E%92%E5%BA%8F">3.2 按多个列排序</a></li>
+<li><a href="#33-%E6%8C%89%E5%88%97%E4%BD%8D%E7%BD%AE%E6%8E%92%E5%BA%8F">3.3 按列位置排序</a></li>
+<li><a href="#34-%E6%8C%87%E5%AE%9A%E6%8E%92%E5%BA%8F%E6%96%B9%E5%90%91">3.4 指定排序方向</a></li>
+<li><a href="#35-%E5%B0%8F%E7%BB%93">3.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-4-%E8%AF%BE-%E8%BF%87%E6%BB%A4%E6%95%B0%E6%8D%AE">第 4 课 过滤数据</a>
+<ul>
+<li><a href="#41%E4%BD%BF%E7%94%A8where%E5%AD%90%E5%8F%A5">4.1使用WHERE子句</a></li>
+<li><a href="#42-where%E5%AD%90%E5%8F%A5%E6%93%8D%E4%BD%9C%E7%AC%A6">4.2 WHERE子句操作符</a></li>
+<li><a href="#43-%E5%B0%8F%E7%BB%93">4.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-5-%E8%AF%BE-%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E8%BF%87%E6%BB%A4">第 5 课 高级数据过滤</a>
+<ul>
+<li><a href="#51-%E7%BB%84%E5%90%88-where-%E5%AD%90%E5%8F%A5">5.1 组合 WHERE 子句</a></li>
+<li><a href="#52-in-%E6%93%8D%E4%BD%9C%E7%AC%A6">5.2 IN 操作符</a></li>
+<li><a href="#53-not-%E6%93%8D%E4%BD%9C%E7%AC%A6">5.3 NOT 操作符</a></li>
+<li><a href="#54-%E5%B0%8F%E7%BB%93">5.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-6-%E8%AF%BE-%E7%94%A8%E9%80%9A%E9%85%8D%E7%AC%A6%E8%BF%9B%E8%A1%8C%E8%BF%87%E6%BB%A4">第 6 课 用通配符进行过滤</a>
+<ul>
+<li><a href="#61-like%E6%93%8D%E4%BD%9C%E7%AC%A6">6.1 LIKE操作符</a></li>
+<li><a href="#62-%E4%BD%BF%E7%94%A8%E9%80%9A%E9%85%8D%E7%AC%A6%E7%9A%84%E6%8A%80%E5%B7%A7">6.2 使用通配符的技巧</a></li>
+<li><a href="#63-%E5%B0%8F%E7%BB%93">6.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-7-%E8%AF%BE-%E5%88%9B%E5%BB%BA%E8%AE%A1%E7%AE%97%E5%AD%97%E6%AE%B5">第 7 课 创建计算字段</a>
+<ul>
+<li><a href="#71-%E8%AE%A1%E7%AE%97%E5%AD%97%E6%AE%B5">7.1 计算字段</a></li>
+<li><a href="#72-%E6%8B%BC%E6%8E%A5%E5%AD%97%E6%AE%B5">7.2 拼接字段</a></li>
+<li><a href="#73-%E6%89%A7%E8%A1%8C%E7%AE%97%E6%95%B0%E8%BF%90%E7%AE%97">7.3 执行算数运算</a></li>
+<li><a href="#74-%E5%B0%8F%E7%BB%93">7.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-8-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E5%87%BD%E6%95%B0%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE">第 8 课 使用函数处理数据</a>
+<ul>
+<li><a href="#81-%E5%87%BD%E6%95%B0">8.1 函数</a></li>
+<li><a href="#82-%E4%BD%BF%E7%94%A8%E5%87%BD%E6%95%B0">8.2 使用函数</a></li>
+<li><a href="#83-%E5%B0%8F%E7%BB%93">8.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-9-%E8%AF%BE-%E6%B1%87%E6%80%BB%E6%95%B0%E6%8D%AE">第 9 课 汇总数据</a>
+<ul>
+<li><a href="#91-%E8%81%9A%E9%9B%86%E5%87%BD%E6%95%B0">9.1 聚集函数</a></li>
+<li><a href="#92-%E8%81%9A%E9%9B%86%E4%B8%8D%E5%90%8C%E5%80%BC">9.2 聚集不同值</a></li>
+<li><a href="#93-%E7%BB%84%E5%90%88%E8%81%9A%E9%9B%86%E5%8F%82%E6%95%B0">9.3 组合聚集参数</a></li>
+<li><a href="#94-%E5%B0%8F%E7%BB%93">9.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-10-%E8%AF%BE-%E5%88%86%E7%BB%84%E6%95%B0%E6%8D%AE">第 10 课 分组数据</a>
+<ul>
+<li><a href="#101-%E6%95%B0%E6%8D%AE%E5%88%86%E7%BB%84">10.1 数据分组</a></li>
+<li><a href="#102-%E5%88%9B%E5%BB%BA%E5%88%86%E7%BB%84">10.2 创建分组</a></li>
+<li><a href="#103-%E8%BF%87%E6%BB%A4%E5%88%86%E7%BB%84">10.3 过滤分组</a></li>
+<li><a href="#104-%E5%88%86%E7%BB%84%E5%92%8C%E6%8E%92%E5%BA%8F">10.4 分组和排序</a></li>
+<li><a href="#105-select-%E5%AD%90%E5%8F%A5%E9%A1%BA%E5%BA%8F">10.5 SELECT 子句顺序</a></li>
+<li><a href="#106-%E5%B0%8F%E7%BB%93">10.6 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-11-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E5%AD%90%E6%9F%A5%E8%AF%A2">第 11 课 使用子查询</a>
+<ul>
+<li><a href="#111-%E5%AD%90%E6%9F%A5%E8%AF%A2">11.1 子查询</a></li>
+<li><a href="#112-%E5%88%A9%E7%94%A8%E5%AD%90%E6%9F%A5%E8%AF%A2%E8%BF%9B%E8%A1%8C%E8%BF%87%E6%BB%A4">11.2 利用子查询进行过滤</a></li>
+<li><a href="#113-%E4%BD%9C%E4%B8%BA%E8%AE%A1%E7%AE%97%E5%AD%97%E6%AE%B5%E4%BD%BF%E7%94%A8%E5%AD%90%E6%9F%A5%E8%AF%A2">11.3 作为计算字段使用子查询</a></li>
+<li><a href="#114-%E5%B0%8F%E7%BB%93">11.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-12-%E8%AF%BE-%E8%81%94%E7%BB%93%E8%A1%A8">第 12 课 联结表</a>
+<ul>
+<li><a href="#121-%E8%81%94%E7%BB%93">12.1 联结</a></li>
+<li><a href="#122-%E5%88%9B%E5%BB%BA%E8%BF%9E%E7%BB%93">12.2 创建连结</a></li>
+<li><a href="#123-%E5%B0%8F%E7%BB%93">12.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-13-%E8%AF%BE-%E5%88%9B%E5%BB%BA%E9%AB%98%E7%BA%A7%E8%81%94%E7%BB%93">第 13 课 创建高级联结</a>
+<ul>
+<li><a href="#131-%E4%BD%BF%E7%94%A8%E8%A1%A8%E5%88%AB%E5%90%8D">13.1 使用表别名</a></li>
+<li><a href="#132-%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E7%9A%84%E8%81%94%E7%BB%93">13.2 使用不同类型的联结</a></li>
+<li><a href="#133-%E4%BD%BF%E7%94%A8%E5%B8%A6%E8%81%9A%E9%9B%86%E5%87%BD%E6%95%B0%E7%9A%84%E8%81%94%E7%BB%93">13.3 使用带聚集函数的联结</a></li>
+<li><a href="#134-%E4%BD%BF%E7%94%A8%E8%81%94%E7%BB%93%E5%92%8C%E8%81%94%E7%BB%93%E6%9D%A1%E4%BB%B6">13.4 使用联结和联结条件</a></li>
+<li><a href="#135-%E5%B0%8F%E7%BB%93">13.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-14-%E8%AF%BE-%E7%BB%84%E5%90%88%E6%9F%A5%E8%AF%A2">第 14 课 组合查询</a>
+<ul>
+<li><a href="#141-%E7%BB%84%E5%90%88%E6%9F%A5%E8%AF%A2">14.1 组合查询</a></li>
+<li><a href="#142-%E5%88%9B%E5%BB%BA%E7%BB%84%E5%90%88%E6%9F%A5%E8%AF%A2">14.2 创建组合查询</a></li>
+<li><a href="#143-%E5%B0%8F%E7%BB%93">14.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-15-%E8%AF%BE-%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE">第 15 课 插入数据</a>
+<ul>
+<li><a href="#151-%E6%95%B0%E6%8D%AE%E6%8F%92%E5%85%A5">15.1 数据插入</a></li>
+<li><a href="#152-%E4%BB%8E%E4%B8%80%E4%B8%AA%E8%A1%A8%E5%A4%8D%E5%88%B6%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E8%A1%A8">15.2 从一个表复制到另一个表</a></li>
+<li><a href="#153-%E5%B0%8F%E7%BB%93">15.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-16-%E8%AF%BE-%E6%9B%B4%E6%96%B0%E5%92%8C%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE">第 16 课 更新和删除数据</a>
+<ul>
+<li><a href="#161-%E6%9B%B4%E6%96%B0%E6%95%B0%E6%8D%AE">16.1 更新数据</a></li>
+<li><a href="#162-%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE">16.2 删除数据</a></li>
+<li><a href="#163-%E6%9B%B4%E6%96%B0%E5%92%8C%E5%88%A0%E9%99%A4%E7%9A%84%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99">16.3 更新和删除的指导原则</a></li>
+<li><a href="#164-%E5%B0%8F%E7%BB%93">16.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-17-%E8%AF%BE-%E5%88%9B%E5%BB%BA%E5%92%8C%E6%93%8D%E7%BA%B5%E8%A1%A8">第 17 课 创建和操纵表</a>
+<ul>
+<li><a href="#171-%E5%88%9B%E5%BB%BA%E8%A1%A8">17.1 创建表</a></li>
+<li><a href="#172-%E6%9B%B4%E6%96%B0%E8%A1%A8">17.2 更新表</a></li>
+<li><a href="#173-%E5%88%A0%E9%99%A4%E8%A1%A8">17.3 删除表</a></li>
+<li><a href="#174-%E9%87%8D%E5%91%BD%E5%90%8D%E8%A1%A8">17.4 重命名表</a></li>
+<li><a href="#175-%E5%B0%8F%E7%BB%93">17.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-18-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E8%A7%86%E5%9B%BE">第 18 课 使用视图</a>
+<ul>
+<li><a href="#181-%E8%A7%86%E5%9B%BE">18.1 视图</a></li>
+<li><a href="#182-%E5%88%9B%E5%BB%BA%E8%A7%86%E5%9B%BE">18.2 创建视图</a></li>
+<li><a href="#183-%E5%B0%8F%E7%BB%93">18.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-19-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">第 19 课 使用存储过程</a>
+<ul>
+<li><a href="#191-%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">19.1 存储过程</a></li>
+<li><a href="#192-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">19.2 为什么要使用存储过程</a></li>
+<li><a href="#193-%E6%89%A7%E8%A1%8C%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">19.3 执行存储过程</a></li>
+<li><a href="#194-%E5%88%9B%E5%BB%BA%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B">19.4 创建存储过程</a></li>
+<li><a href="#195-%E5%B0%8F%E7%BB%93">19.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-20-%E8%AF%BE-%E7%AE%A1%E7%90%86%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86">第 20 课 管理事务处理</a>
+<ul>
+<li><a href="#201-%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86">20.1 事务处理</a></li>
+<li><a href="#202-%E6%8E%A7%E5%88%B6%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86">20.2 控制事务处理</a></li>
+<li><a href="#203-%E5%B0%8F%E7%BB%93">20.3 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC-21-%E8%AF%BE-%E4%BD%BF%E7%94%A8%E6%B8%B8%E6%A0%87">第 21 课 使用游标</a></li>
+<li><a href="#%E7%AC%AC-22-%E8%AF%BE-%E9%AB%98%E7%BA%A7-sql-%E7%89%B9%E6%80%A7">第 22 课 高级 SQL 特性</a>
+<ul>
+<li><a href="#221-%E7%BA%A6%E6%9D%9F">22.1 约束</a></li>
+<li><a href="#222-%E7%B4%A2%E5%BC%95">22.2 索引</a></li>
+<li><a href="#223-%E8%A7%A6%E5%8F%91%E5%99%A8">22.3 触发器</a></li>
+<li><a href="#224-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8">22.4 数据库安全</a></li>
+<li><a href="#225-%E5%B0%8F%E7%BB%93">22.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p>这次看到是<a href="https://book.douban.com/subject/35167240/">第五版</a>，20年7月出版。<br>
+MySQL的示例数据库在<a href="https://forta.com/wp-content/uploads/books/0135182794/TYSQL5_MySQL.zip">这里</a><br>
+最近都是通过orm操作sql，补习一下基础知识好了。简单记一下，别变成抄书就行。</p>
+<h2 id="第-1-课-了解sql">第 1 课 了解SQL</h2>
+<h3 id="11-数据库基础">1.1 数据库基础</h3>
+<p>介绍数据库，表，列，数据类型，行，主键这些基本概念，略。</p>
+<h3 id="12-什么是sql">1.2 什么是SQL</h3>
+<p>SQL：Structured Query Language 结构化查询语言<br>
+用了这么久sql还真不熟悉全称是啥。</p>
+<p>标准SQL由ANSI标准委员会管理，称为 ANSI SQL。其他DBMS 即使有自己的扩展也都支持 ANSI SQL。</p>
+<h3 id="13-动手实践">1.3 动手实践</h3>
+<p>让你装一个sql。</p>
+<h3 id="14-小结">1.4 小结</h3>
+<p>简单介绍sql及基本数据库术语。</p>
+<h2 id="第-2-课-检索数据">第 2 课 检索数据</h2>
+<h3 id="21-select-语句">2.1 SELECT 语句</h3>
+<h3 id="22-检索单个列">2.2 检索单个列</h3>
+<pre><code class="language-sql">SELECT c_name 
+FROM t_name;
+</code></pre>
+<p><strong>提示</strong>：SQL不区分大小写。一种常用方法是关键词发现，列名表名等小写，这样有更好的可读性，但不是必须。</p>
+<h3 id="23-检索多个列">2.3 检索多个列</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2 
+FROM t_name;
+</code></pre>
+<h3 id="24-检索所有列">2.4 检索所有列</h3>
+<pre><code class="language-sql">SELECT * 
+FROM t_name;
+</code></pre>
+<p><strong>注意</strong>：检索不需要的列会降低速度和性能，如非必须最好不适用通配符。</p>
+<h3 id="25-检索不同的值">2.5 检索不同的值</h3>
+<pre><code class="language-sql">SELECT DISTINCT c_name 
+FROM t_name;
+</code></pre>
+<p><strong>注意</strong>：不能部分使用DISTINCT。DISTINCT关键字作用于所有的列。</p>
+<h3 id="26-限制结果">2.6 限制结果</h3>
+<pre><code class="language-sql">SELECT DISTINCT c_name 
+FROM t_name 
+LIMIT 5 
+OFFSET 5;
+</code></pre>
+<h3 id="27-使用注释">2.7 使用注释</h3>
+<ul>
+<li>行内注释：<code>-- text</code> 或 <code># text</code></li>
+<li>多行注释： <code>/* text */</code></li>
+</ul>
+<h3 id="28-小结">2.8 小结</h3>
+<ul>
+<li><code>SELECT</code>子句</li>
+<li><code>LIMIT</code>和<code>OFFSET</code>子句</li>
+<li>注释</li>
+</ul>
+<h2 id="第-3-课-排序检索数据">第 3 课 排序检索数据</h2>
+<h3 id="31-排序数据">3.1 排序数据</h3>
+<p><strong>子句</strong>（clause）: SQL语句由子句构成，有些子句是必需的，有些则是可选的。一个子句通常由一个关键字加上所提供的数据组成。<br>
+以前从来没有注意过子句的概念，直到gorm里被教做人。</p>
+<pre><code class="language-sql">SELECT c_name
+FROM t_name 
+ORDER BY c_name; 
+</code></pre>
+<h3 id="32-按多个列排序">3.2 按多个列排序</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2, _name3
+FROM t_name 
+ORDER BY c_name2, c_name3;
+</code></pre>
+<p>按<code>ORDER BY</code>子句中的列名顺序作为优先级排序。<br>
+<strong>提示</strong>：也可以使用非选择列排序。</p>
+<h3 id="33-按列位置排序">3.3 按列位置排序</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2, _name3
+FROM t_name 
+ORDER BY 2, 3;
+</code></pre>
+<p><strong>提示</strong>：如果有必要，可以混合使用实际列名和相对列位置。</p>
+<h3 id="34-指定排序方向">3.4 指定排序方向</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2, c_name3
+FROM t_name 
+ORDER BY c_name2 DESC, c_name3 ASC;
+</code></pre>
+<p>sql默认使用升序排序，你也可以使用<code>ASC</code>关键字显示指定。要使用降序排序，使用<code>DESC</code>关键字。<br>
+和<code>DISTINCT</code>不同，<code>ASC</code>和<code>DESC</code>只会影响对应列。</p>
+<h3 id="35-小结">3.5 小结</h3>
+<ul>
+<li><strong>子句</strong> 概念</li>
+<li><code>ORDER BY</code>子句</li>
+<li><code>ASC</code>和<code>DESC</code>关键字</li>
+</ul>
+<h2 id="第-4-课-过滤数据">第 4 课 过滤数据</h2>
+<h3 id="41使用where子句">4.1使用WHERE子句</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2
+FROM t_name
+WHERE c_name1 = 100;
+</code></pre>
+<p><strong>注意</strong>在同时使用<code>ORDER BY</code>和<code>WHERE</code>子句时，应该让<code>ORDER BY</code>位于<code>WHERE</code>之后，否则将会产生错误。<br>
+这个我倒没注意过，用gorm时也没报过错，大概不同的DBMS或者ORM对这有优化吧。</p>
+<h3 id="42-where子句操作符">4.2 WHERE子句操作符</h3>
+<p>不同的DBMS对操作符的支持不同，需要查看具体文档。<br>
+除了常规的大小等于，需要注意的操作符还有表区间的<code>BETWEEN...AND...</code>和判空的<code>IS (NOT) NULL</code>。</p>
+<h3 id="43-小结">4.3 小结</h3>
+<ul>
+<li><code>WHERE</code>子句及其操作符</li>
+</ul>
+<h2 id="第-5-课-高级数据过滤">第 5 课 高级数据过滤</h2>
+<h3 id="51-组合-where-子句">5.1 组合 WHERE 子句</h3>
+<p>使用<code>AND</code>和<code>OR</code>逻辑操作符来组合WHERE子句。<br>
+AND的优先级大于OR，不过比起依赖默认顺序，更推荐使用括号消除歧义。</p>
+<pre><code class="language-sql">SELECT c_name1, c_name2, c_name3
+FROM t_name 
+WHERE (c_name1 &gt; 30 OR c_name2 &gt; 40) AND c_name3 &lt; 50;
+</code></pre>
+<h3 id="52-in-操作符">5.2 IN 操作符</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2, c_name3
+FROM t_name 
+WHERE c_name1 IN (3, 4, 5);
+</code></pre>
+<p>使用<code>IN</code>操作符的优点：</p>
+<ul>
+<li>语法更清楚只管</li>
+<li>和其他操作符组合使用时，求值顺序更易管理</li>
+<li>一般比一组OR执行更快</li>
+<li>可以包含其他SELECT语句，从而动态建立WHERE子句</li>
+</ul>
+<h3 id="53-not-操作符">5.3 NOT 操作符</h3>
+<pre><code class="language-sql">SELECT c_name1, c_name2, c_name3
+FROM t_name 
+WHERE c_name1 NOT IN (3, 4, 5);
+</code></pre>
+<p>在复杂子句中NOT的易用性和可读性更高。</p>
+<h3 id="54-小结">5.4 小结</h3>
+<ul>
+<li><code>AND</code>和<code>OR</code>操作符</li>
+<li><code>IN</code>操作符</li>
+<li><code>NOT</code>操作符</li>
+</ul>
+<h2 id="第-6-课-用通配符进行过滤">第 6 课 用通配符进行过滤</h2>
+<h3 id="61-like操作符">6.1 LIKE操作符</h3>
+<p>先记一些专有名词和概念：<br>
+<strong>通配符（wildcard）</strong>：用来匹配值的一部分的特殊字符。<br>
+<strong>搜索模式（search pattern）</strong>：由字面值、通配符或两者组合构成的搜索条件。<br>
+<strong>谓词（predicate）</strong>：没讲清楚定义 ，但并不难理解。</p>
+<p>以下是sql中的通配符。</p>
+<ul>
+<li><code>%</code>: 任何字符出现任意次数<br>
+直接'%'不会匹配NULL</li>
+<li><code>_</code>:，任何字符匹配一个字符</li>
+<li><code>[]</code>: 指定字符集指定位置匹配一个字符<br>
+部分DBMS不支持（如MySql）</li>
+</ul>
+<p>最常见的关键词搜索示例如下：</p>
+<pre><code class="language-sql">SELECT c_name1, c_name2
+FROM t_name 
+WHERE c_name1 LIKE '%keyword%';
+</code></pre>
+<h3 id="62-使用通配符的技巧">6.2 使用通配符的技巧</h3>
+<ul>
+<li>不要过度使用通配符</li>
+<li>不要用在搜索模式开始处（速度慢）</li>
+<li>注意通配符位置</li>
+</ul>
+<h3 id="63-小结">6.3 小结</h3>
+<ul>
+<li><code>LIKE</code>谓词</li>
+<li>通配符</li>
+</ul>
+<h2 id="第-7-课-创建计算字段">第 7 课 创建计算字段</h2>
+<h3 id="71-计算字段">7.1 计算字段</h3>
+<p>有时需要从数据库中检索出转换、计算或格式化过的数据，而不是检索出数据再在客户端应用程序重新格式化。<br>
+虽然很多操作都可以在客户端应用程序完成，但一般在数据库服务器上完成这些操作要快得多。</p>
+<h3 id="72-拼接字段">7.2 拼接字段</h3>
+<p>可以使用<code>+</code>或<code>||</code>拼接两个列。但MySql和MariaDB中则是特殊函数<code>CONCAT()</code>。<br>
+可以使用<code>LTRIM()</code>，<code>RTRIM()</code>或<code>TRIM()</code>函数去除左右空格。<br>
+可以使用<code>AS</code>关键字创建别名。这是可选的，但最佳实践推荐使用AS。</p>
+<pre><code class="language-sql">SELECT CONCAT(RTRIM(c_name1), c_name2) AS alias 
+FROM t_name;
+</code></pre>
+<h3 id="73-执行算数运算">7.3 执行算数运算</h3>
+<p>也可以使用加减乘除等操作符对数字类型的字段进行计算。</p>
+<h3 id="74-小结">7.4 小结</h3>
+<ul>
+<li><code>CONCAT()</code>函数</li>
+<li><code>LTRIM()</code>，<code>RTRIM()</code>，<code>TRIM</code>函数</li>
+<li><code>AS</code>关键字</li>
+<li>算术运算</li>
+</ul>
+<h2 id="第-8-课-使用函数处理数据">第 8 课 使用函数处理数据</h2>
+<h3 id="81-函数">8.1 函数</h3>
+<p><strong>注意</strong>：不同的函数在不同DBMS中的支持不同。即使是相同的功能，在不同DBMS中的函数名也很可能不同。所以SQL函数是不可移植的。</p>
+<h3 id="82-使用函数">8.2 使用函数</h3>
+<p>大多是SQL实现支持以下类型的函数：</p>
+<ul>
+<li>处理文本字符串的文本函数。</li>
+<li>对数值数据进行算术操作的数值函数。</li>
+<li>数量日期和时间值并提取特定成分的日期和时间函数。</li>
+<li>生成美观易读的输出的格式化函数。</li>
+<li>返回DBMS相关特殊信息的系统函数。</li>
+</ul>
+<p>由于不同DBMS对函数的支持不同，在这里不展开。有需要查表。</p>
+<h3 id="83-小结">8.3 小结</h3>
+<ul>
+<li>数据处理函数</li>
+</ul>
+<h2 id="第-9-课-汇总数据">第 9 课 汇总数据</h2>
+<h3 id="91-聚集函数">9.1 聚集函数</h3>
+<p>与数据处理函数不同，聚集函数在各种主要SQL实现中支持基本一致。<br>
+<strong>聚集函数</strong>：对某些行运行的函数，计算并返回一个值。</p>
+<ul>
+<li><code>AVG()</code> 返回某列的平均值</li>
+<li><code>COUNT()</code> 返回某列的行数
+<ul>
+<li><code>COUNT(*)</code>对行的数目进行计数，不管表列中包含的是空值(NULL)还是非空值。</li>
+<li><code>COUNT(column)</code>对特定列中具有值的行进行计数，忽略NULL值。</li>
+</ul>
+</li>
+<li><code>MAX()</code> 返回某列的最大值</li>
+<li><code>MIN()</code> 返回某列的最小值</li>
+<li><code>SUM()</code> 返回某列值之和</li>
+</ul>
+<h3 id="92-聚集不同值">9.2 聚集不同值</h3>
+<ul>
+<li>对所有行执行计算，指定<code>ALL</code>参数或不指定（默认ALL）</li>
+<li>只包含不同的值，指定<code>DISTINCT</code>参数</li>
+</ul>
+<p>有的DBMS还支持其他参数。</p>
+<pre><code class="language-sql">SELECT AVG(DISTINCT c_name) AS avg_res
+FROM t_name;
+</code></pre>
+<h3 id="93-组合聚集参数">9.3 组合聚集参数</h3>
+<p>在select中可以同时使用多个聚集参数。</p>
+<h3 id="94-小结">9.4 小结</h3>
+<ul>
+<li>五种聚集函数</li>
+<li><code>ALL</code>和<code>DISTINCT</code>参数</li>
+</ul>
+<h2 id="第-10-课-分组数据">第 10 课 分组数据</h2>
+<h3 id="101-数据分组">10.1 数据分组</h3>
+<p>举例需要对数据分组的需求。</p>
+<h3 id="102-创建分组">10.2 创建分组</h3>
+<p>使用<code>GROUP BY</code>子句创建分组。一些规定：</p>
+<ul>
+<li>GROUP BY子句可以包含任意数目的列，因而可以对分组进行嵌套。</li>
+<li>GROUP BY子句中嵌套了分组，数据将在最后指定的分组上汇总。</li>
+<li>GROUP BY子句中每一列必须是检索列或有效表达式（但不能是聚集函数）。如果SELECT中使用表达式，GROUP BY中也要使用相同的表达式，不能使用别名。</li>
+<li>大多数SQL实现不允许GROUP BY列带有长度可变的数据类型（如TEXT）。</li>
+<li>除聚集语句外，SELECT中每一列都必须在GROUP BY中给出。</li>
+<li>如果分组列中包含具有NULL值的行，则NULL将作为一个分组返回。如果列中有多行NULL值，它们将分为一组。</li>
+<li>GROUP BY子句必须出现在WHERE子句之后，ORDER BY子句之前。</li>
+</ul>
+<h3 id="103-过滤分组">10.3 过滤分组</h3>
+<p>使用<code>HAVING</code>子句过滤分组。<br>
+HAVING支持所有WHERE操作符，唯一的差别是WHERE过滤行，而HAVING过滤分组。<br>
+另一种理解方法是，WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。</p>
+<pre><code class="language-sql">SELECT c_name, COUNT(*) AS num
+FROM t_name
+GROUP BY c_name
+HAVING COUNT(*) &gt;= 2;
+</code></pre>
+<h3 id="104-分组和排序">10.4 分组和排序</h3>
+<p>在特定DBMS中，GROUP BY分组时确实会按照子句的列排序。但还是推荐使用ORDER BY手动排序实现精细化操作和提高可读性。</p>
+<h3 id="105-select-子句顺序">10.5 SELECT 子句顺序</h3>
+<p>列出目前为止学过的子句顺序</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">子句</th>
+<th style="text-align:left">说明</th>
+<th style="text-align:left">是否必须使用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">SELECT</td>
+<td style="text-align:left">要返回的列或表达式</td>
+<td style="text-align:left">是</td>
+</tr>
+<tr>
+<td style="text-align:left">FROM</td>
+<td style="text-align:left">从中检索数据的表</td>
+<td style="text-align:left">仅在从表选择数据时使用</td>
+</tr>
+<tr>
+<td style="text-align:left">WHERE</td>
+<td style="text-align:left">行级过滤</td>
+<td style="text-align:left">否</td>
+</tr>
+<tr>
+<td style="text-align:left">GROUP BY</td>
+<td style="text-align:left">分组说明</td>
+<td style="text-align:left">仅在按组计算聚集时使用</td>
+</tr>
+<tr>
+<td style="text-align:left">HAVING</td>
+<td style="text-align:left">组级过滤</td>
+<td style="text-align:left">否</td>
+</tr>
+<tr>
+<td style="text-align:left">ORDER BY</td>
+<td style="text-align:left">输出排序顺序</td>
+<td style="text-align:left">否</td>
+</tr>
+</tbody>
+</table>
+<h3 id="106-小结">10.6 小结</h3>
+<ul>
+<li><code>GROUP BY</code>子句</li>
+<li><code>HAVING</code>子句</li>
+</ul>
+<h2 id="第-11-课-使用子查询">第 11 课 使用子查询</h2>
+<h3 id="111-子查询">11.1 子查询</h3>
+<p><strong>子查询(subquery)</strong>：嵌套在其他查询中的查询。</p>
+<h3 id="112-利用子查询进行过滤">11.2 利用子查询进行过滤</h3>
+<p>举例，没有新内容。</p>
+<h3 id="113-作为计算字段使用子查询">11.3 作为计算字段使用子查询</h3>
+<p>示例给出的写法感觉用JOIN更方便和易读，仅作了解。</p>
+<h3 id="114-小结">11.4 小结</h3>
+<ul>
+<li>子查询</li>
+</ul>
+<h2 id="第-12-课-联结表">第 12 课 联结表</h2>
+<h3 id="121-联结">12.1 联结</h3>
+<p>简单介绍关系表概念和好处。</p>
+<p><strong>可伸缩性（scale）</strong>：能够适应不断增加的工作量而不失败。设计良好的数据库或应用程序<br>
+称为可伸缩性好（scale well）。</p>
+<h3 id="122-创建连结">12.2 创建连结</h3>
+<pre><code class="language-sql">-- 等值连结
+SELECT c1, c2, c3
+FROM t1, t2
+WHERE t1.c0 = t2.c0
+
+-- 内连结
+SELECT c1, c2, c3
+FROM t1
+INNER JOIN t2 ON t1.c0 = t2.c0
+</code></pre>
+<p>上述两种方法的结果是一致的。</p>
+<h3 id="123-小结">12.3 小结</h3>
+<ul>
+<li>连结概念</li>
+<li>内连结（等值连结）</li>
+</ul>
+<h2 id="第-13-课-创建高级联结">第 13 课 创建高级联结</h2>
+<h3 id="131-使用表别名">13.1 使用表别名</h3>
+<ul>
+<li>缩短 SQL 语句；</li>
+<li>允许在一条 SELECT 语句中多次使用相同的表</li>
+</ul>
+<pre><code class="language-sql">SELECT cust_name, cust_contact
+FROM Customers AS C, Orders AS O, OrderItems AS OI
+WHERE C.cust_id = O.cust_id
+AND OI.order_num = O.order_num
+AND prod_id = 'RGAN01';
+</code></pre>
+<h3 id="132-使用不同类型的联结">13.2 使用不同类型的联结</h3>
+<ul>
+<li>
+<p>自联结（self-join）</p>
+<pre><code class="language-sql">  SELECT c1.cust_id, c1.cust_name, c1.cust_contact
+  FROM Customers AS c1, Customers AS c2
+  WHERE c1.cust_name = c2.cust_name
+  AND c2.cust_contact = 'Jim Jones';
+</code></pre>
+</li>
+<li>
+<p>自然联结（natural join）</p>
+<p>感觉没讲清楚。</p>
+</li>
+<li>
+<p>外联结（outer join）</p>
+<pre><code class="language-sql">SELECT Customers.cust_id, Orders.order_num
+FROM Customers
+LEFT OUTER JOIN Orders ON Customers.cust_id = Orders.cust_id;
+</code></pre>
+<p>外联结还包括没有关联行的行。在使用 OUTER JOIN 语法时，必须使用 RIGHT 或 LEFT 关键字指定包括其所有行的表。</p>
+</li>
+</ul>
+<h3 id="133-使用带聚集函数的联结">13.3 使用带聚集函数的联结</h3>
+<pre><code class="language-sql">SELECT Customers.cust_id,
+COUNT(Orders.order_num) AS num_ord
+FROM Customers
+LEFT OUTER JOIN Orders ON Customers.cust_id = Orders.cust_id
+GROUP BY Customers.cust_id;
+</code></pre>
+<h3 id="134-使用联结和联结条件">13.4 使用联结和联结条件</h3>
+<p>讲了一堆没啥用的东西。</p>
+<h3 id="135-小结">13.5 小结</h3>
+<ul>
+<li>别名</li>
+<li>自联结</li>
+<li>自然连结</li>
+<li>外联结</li>
+</ul>
+<h2 id="第-14-课-组合查询">第 14 课 组合查询</h2>
+<p>这章的UNION感觉没什么用，我好像都没用过，orm也用不上。</p>
+<h3 id="141-组合查询">14.1 组合查询</h3>
+<p>使用情况：</p>
+<ul>
+<li>在一个查询中从不同的表返回结构数据</li>
+<li>对一个表执行多个查询，按一个查询返回数据</li>
+</ul>
+<h3 id="142-创建组合查询">14.2 创建组合查询</h3>
+<p>使用UNION连接多条SELECT语句进行组合查询。</p>
+<p>这里给的示例似乎有误，给了两个一样的sql语句。</p>
+<p>UNION规则：</p>
+<ul>
+<li>UNION 必须由两条或两条以上的 SELECT 语句组成，语句之间用关键字UNION 分隔</li>
+<li>NION 中的每个查询必须包含相同的列、表达式或聚集函数，但次序可以不同</li>
+<li>列数据类型必须兼容：类型不必完全相同，但必须是 DBMS 可以隐含转换的类型</li>
+</ul>
+<p>UNION 从查询结果集中自动去除了重复的行。如果想返回所有的匹配行，可使用 UNION ALL 而不是 UNION。<br>
+如果确实需要每个条件的匹配行全部出现（包括重复行），就必须使用 UNION ALL，而不是 WHERE。</p>
+<p>在用 UNION 组合查询时，只能使用一条 ORDER BY 子句，它必须位于最后一条 SELECT 语句之后，排序所有结果。</p>
+<h3 id="143-小结">14.3 小结</h3>
+<p>利用 UNION，可以把多条查询的结果作为一条组合查询返回，不管结果中有无重复。<br>
+使用 UNION可极大地简化复杂的 WHERE 子句，简化从多个表中检索数据的工作。</p>
+<h2 id="第-15-课-插入数据">第 15 课 插入数据</h2>
+<h3 id="151-数据插入">15.1 数据插入</h3>
+<pre><code class="language-sql">INSERT INTO tablename
+VALUES(v1,v2,v3);
+
+INSERT INTO tablename(c1,c2,c3)
+VALUES(v1,v2,v3);
+
+INSERT INTO tablename(c1,c2,c3)
+SELECT ...
+</code></pre>
+<p>若不指定列名，必须给按顺序每一个列提供值，如果没有值使用NULL。<br>
+省略的列必须允许为空或定义了默认值。<br>
+也可以使用INSERT SELECT直接插入查询结果。此时结果只看顺序无关列名。</p>
+<h3 id="152-从一个表复制到另一个表">15.2 从一个表复制到另一个表</h3>
+<pre><code class="language-sql">CREATE TABLE table1 AS 
+SELECT * FROM table2
+</code></pre>
+<h3 id="153-小结">15.3 小结</h3>
+<ul>
+<li>使用INSERT INTO插入数据</li>
+<li>使用INSERT SELECT插入表</li>
+<li>使用CREATE SELECT复制表</li>
+</ul>
+<h2 id="第-16-课-更新和删除数据">第 16 课 更新和删除数据</h2>
+<h3 id="161-更新数据">16.1 更新数据</h3>
+<pre><code class="language-sql">UPDATE table1
+SET key1 = value1, key2 = value2
+WHERE ...
+</code></pre>
+<h3 id="162-删除数据">16.2 删除数据</h3>
+<pre><code class="language-sql">DELETE FROM table1
+WHERE ...
+</code></pre>
+<h3 id="163-更新和删除的指导原则">16.3 更新和删除的指导原则</h3>
+<ul>
+<li>除非确实打算更新和删除每一行，否则绝对不要使用不带 WHERE 子句的 UPDATE 或 DELETE 语句。</li>
+<li>保证每个表都有主键，尽可能像 WHERE 子句那样使用它。</li>
+<li>在 UPDATE 或 DELETE 语句使用 WHERE 子句前，应该先用 SELECT 进行测试，保证它过滤的是正确的记录，以防编写的 WHERE 子句不正确。</li>
+<li>使用强制实施引用完整性的数据库，这样 DBMS 将不允许删除其数据与其他表相关联的行。</li>
+<li>有的 DBMS 允许数据库管理员施加约束，防止执行不带 WHERE 子句的 UPDATE 或 DELETE 语句。如果所采用的 DBMS 支持这个特性，应该使用它。</li>
+</ul>
+<h3 id="164-小结">16.4 小结</h3>
+<ul>
+<li>UPDATE语句</li>
+<li>DELETE语句</li>
+</ul>
+<h2 id="第-17-课-创建和操纵表">第 17 课 创建和操纵表</h2>
+<h3 id="171-创建表">17.1 创建表</h3>
+<pre><code class="language-sql">CREATE TABLE table1
+(
+    column1 TYPE NULL/NOT NULL,
+    column2 TYPE NULL/NOT NULL,
+    ...
+)
+</code></pre>
+<h3 id="172-更新表">17.2 更新表</h3>
+<p>不同DMBS对更新表的限制不一，需要具体查询对应文档。</p>
+<pre><code class="language-sql">ALTER TABLE table1
+ADD column1 TYPE;
+
+ALTER TABLE table1
+DROP COLUMN column2;
+</code></pre>
+<h3 id="173-删除表">17.3 删除表</h3>
+<pre><code class="language-sql">DROP TABLE table1
+</code></pre>
+<h3 id="174-重命名表">17.4 重命名表</h3>
+<p>不同DBMS对重命名表实现不同，需要具体查询对应文档。</p>
+<h3 id="175-小结">17.5 小结</h3>
+<ul>
+<li>创建表</li>
+<li>更新表</li>
+<li>删除表</li>
+</ul>
+<h2 id="第-18-课-使用视图">第 18 课 使用视图</h2>
+<p>到这里终于来点有用的了。</p>
+<h3 id="181-视图">18.1 视图</h3>
+<ul>
+<li>重用 SQL 语句。</li>
+<li>简化复杂的 SQL 操作。在编写查询后，可以方便地重用它而不必知道其基本查询细节。</li>
+<li>使用表的一部分而不是整个表。</li>
+<li>保护数据。可以授予用户访问表的特定部分的权限，而不是整个表的访问权限。</li>
+<li>更改数据格式和表示。视图可返回与底层表的表示和格式不同的数据。</li>
+</ul>
+<p>尽管视图是个很重要的特性，但在orm中似乎基本没有用到，类似的功能在应用层通过保存构建查询语句的过程作为变量实现。</p>
+<h3 id="182-创建视图">18.2 创建视图</h3>
+<pre><code class="language-sql">CREATE VIEW view1 AS
+SELECT ...
+</code></pre>
+<h3 id="183-小结">18.3 小结</h3>
+<p>视图为虚拟的表。它们包含的不是数据而是根据需要检索数据的查询。视图提供了一种封装 SELECT 语句的层次，可用来简化数据处理，重新格式化或保护基础数据。</p>
+<h2 id="第-19-课-使用存储过程">第 19 课 使用存储过程</h2>
+<p>过程的功能在orm中也被应用层取代，数据库操作基本只剩下crud。虽然sql本身也算一门比较完备的变成语言能实现各种功能，但将这些实现放到应用层而不是sql里能更好地与业务逻辑相结合。</p>
+<h3 id="191-存储过程">19.1 存储过程</h3>
+<p>简单来说，<strong>存储过程</strong>就是为以后使用而保存的一条或多条 SQL 语句。可将其视为批文件，虽然它们的作用不仅限于批处理。</p>
+<h3 id="192-为什么要使用存储过程">19.2 为什么要使用存储过程</h3>
+<ul>
+<li>通过把处理封装在一个易用的单元中，可以简化复杂的操作。</li>
+<li>由于不要求反复建立一系列处理步骤，因而保证了数据的一致性。如果所有开发人员和应用程序都使用同一存储过程，则所使用的代码都是相同的。</li>
+<li>上一点的延伸就是防止错误。需要执行的步骤越多，出错的可能性就越大。防止错误保证了数据的一致性。</li>
+<li>简化对变动的管理。如果表名、列名或业务逻辑（或别的内容）有变化，那么只需要更改存储过程的代码。使用它的人员甚至不需要知道这些变化。</li>
+<li>上一点的延伸就是安全性。通过存储过程限制对基础数据的访问，减少了数据讹误（无意识的或别的原因所导致的数据讹误）的机会。</li>
+<li>因为存储过程通常以编译过的形式存储，所以 DBMS 处理命令所需的工作量少，提高了性能。</li>
+<li>存在一些只能用在单个请求中的 SQL 元素和特性，存储过程可以使用它们来编写功能更强更灵活的代码。</li>
+</ul>
+<p>省流：简单、安全、高性能。</p>
+<ul>
+<li>不同 DBMS 中的存储过程语法有所不同。事实上，编写真正的可移植存储过程几乎是不可能的。不过，存储过程的自我调用（名字以及数据如何传递）可以相对保持可移植。因此，如果需要移植到别的 DBMS，至少客户端应用代码不需要变动。</li>
+<li>一般来说，编写存储过程比编写基本 SQL 语句复杂，需要更高的技能，更丰富的经验。因此，许多数据库管理员把限制存储过程的创建作为安全措施（主要受上一条缺陷的影响）。</li>
+</ul>
+<h3 id="193-执行存储过程">19.3 执行存储过程</h3>
+<pre><code class="language-sql">EXCUTE proc1(
+    value1,
+    value2,
+    ...
+)
+</code></pre>
+<h3 id="194-创建存储过程">19.4 创建存储过程</h3>
+<p>语法略，各DBMS实现不一，有需要查文档。</p>
+<h3 id="195-小结">19.5 小结</h3>
+<ul>
+<li>执行/创建/使用存储过程</li>
+<li>各种 DBMS 对存储过程的实现不一</li>
+</ul>
+<h2 id="第-20-课-管理事务处理">第 20 课 管理事务处理</h2>
+<p>除了crud，orm中最常用的就是事务了。比起手动begin和commit，我更喜欢直接transaction开各事务块，内部基本不用考虑事务本身。</p>
+<h3 id="201-事务处理">20.1 事务处理</h3>
+<p>使用<strong>事务处理</strong>（transaction processing），通过确保成批的 SQL 操作要么完全执行，要么完全不执行，来维护数据库的完整性。</p>
+<ul>
+<li><strong>事务</strong>（transaction）指一组 SQL 语句；</li>
+<li><strong>回退</strong>（rollback）指撤销指定 SQL 语句的过程；</li>
+<li><strong>提交</strong>（commit）指将未存储的 SQL 语句结果写入数据库表；</li>
+<li><strong>保留点</strong>（savepoint）指事务处理中设置的临时占位符（placeholder），可以对它发布回退（与回退整个事务处理不同）。</li>
+</ul>
+<p>事务处理用来管理 INSERT、UPDATE 和 DELETE 语句。不能回退 SELECT语句（回退 SELECT 语句也没有必要），也不能回退 CREATE 或 DROP 操作。事务处理中可以使用这些语句，但进行回退时，这些操作也不撤销。</p>
+<h3 id="202-控制事务处理">20.2 控制事务处理</h3>
+<p>老生常谈，不同 DBMS 用来实现事务处理的语法不同，需要参考具体文档。</p>
+<p>ROLLBACK 命令用来回退（撤销）SQL 语句。</p>
+<p>一般的 SQL 语句提交（写或保存）操作是自动进行的，这就是所谓的隐式提交（implicit commit）。而在在事务处理块中，提交不会隐式进行，需要手动提交使用 COMMIT 命令进行提交。</p>
+<p>使用 SAVEPOINT 命令可以创建保留点（占位符），之后就可以通过 ROLLBACK 回退到特定保存点而非回退整个事务，从而实现精细化操作。</p>
+<h3 id="203-小结">20.3 小结</h3>
+<ul>
+<li>创建事务</li>
+<li>COMMIT</li>
+<li>ROLLBACK</li>
+<li>SAVEPOINT</li>
+</ul>
+<h2 id="第-21-课-使用游标">第 21 课 使用游标</h2>
+<p>略，不同DBMS语法混在一起讲的比较杂，大致就是查询的结果集。这些在orm里直接遍历就行，也不是必须在sql里实现的操作。</p>
+<h2 id="第-22-课-高级-sql-特性">第 22 课 高级 SQL 特性</h2>
+<h3 id="221-约束">22.1 约束</h3>
+<p>很多约束都可以通过代码而非约束实现，而且修改起来也方便。约束一般在建表时就得定义好，后续修改也麻烦。如果是使用纯数据库那约束确实有用，但如果是orm之类操作数据库其实没必要耗费心力。</p>
+<p><strong>主键</strong>：</p>
+<ul>
+<li>任意两行的主键值都不相同。</li>
+<li>每行都具有一个主键值（即列中不允许 NULL 值）。</li>
+<li>包含主键值的列从不修改或更新。</li>
+<li>主键值不能重用。如果从表中删除某一行，其主键值不分配给新行。</li>
+</ul>
+<p><strong>外键</strong>：</p>
+<p>外键用于表示引用。虽然很常用但我其实很少在定义外键时声明其为外键约束。毕竟有时这个外键约束影响到数据库操作很烦，级联删除也可以通过代码实现替代约束。</p>
+<p><strong>唯一约束</strong></p>
+<p>唯一约束用来保证一列（或一组列）中的数据是唯一的。它们类似于主键，但存在以下重要区别。</p>
+<ul>
+<li>表可包含多个唯一约束，但每个表只允许一个主键。</li>
+<li>唯一约束列可包含 NULL 值。</li>
+<li>唯一约束列可修改或更新。</li>
+<li>唯一约束列的值可重复使用。</li>
+<li>与主键不一样，唯一约束不能用来定义外键。</li>
+</ul>
+<p><strong>检查约束</strong></p>
+<p>检查约束用来保证一列（或一组列）中的数据满足一组指定的条件。检查约束的常见用途有以下几点。</p>
+<ul>
+<li>检查最小或最大值。例如，防止 0 个物品的订单（即使 0 是合法的数）。</li>
+<li>指定范围。例如，保证发货日期大于等于今天的日期，但不超过今天起一年后的日期。</li>
+<li>只允许特定的值。例如，在性别字段中只允许 M 或 F。</li>
+</ul>
+<p>同理，检查约束也可通过代码而非约束实现。</p>
+<h3 id="222-索引">22.2 索引</h3>
+<p>所以倒是主要在建表时实现，代码的话差不多也是通过orm建表时创建索引。</p>
+<ul>
+<li>索引改善检索操作的性能，但降低了数据插入、修改和删除的性能。在执行这些操作时，DBMS 必须动态地更新索引。</li>
+<li>索引数据可能要占用大量的存储空间。</li>
+<li>并非所有数据都适合做索引。取值不多的数据（如州）不如具有更多可能值的数据（如姓或名），能通过索引得到那么多的好处。</li>
+<li>索引用于数据过滤和数据排序。如果你经常以某种特定的顺序排序数据，则该数据可能适合做索引。</li>
+<li>可以在索引中定义多个列（例如，州加上城市）。这样的索引仅在以州加城市的顺序排序时有用。如果想按城市排序，则这种索引没有用处。</li>
+</ul>
+<h3 id="223-触发器">22.3 触发器</h3>
+<p>触发器也可在orm中通过钩子或者手动实现。</p>
+<p>触发器是特殊的存储过程，它在特定的数据库活动发生时自动执行。触发器可以与特定表上的 INSERT、UPDATE 和 DELETE 操作（或组合）相关联。</p>
+<ul>
+<li>保证数据一致。例如，在 INSERT 或 UPDATE 操作中将所有州名转换为大写。</li>
+<li>基于某个表的变动在其他表上执行活动。例如，每当更新或删除一行时将审计跟踪记录写入某个日志表。</li>
+<li>进行额外的验证并根据需要回退数据。例如，保证某个顾客的可用资金不超限定，如果已经超出，则阻塞插入。</li>
+<li>计算计算列的值或更新时间戳。</li>
+</ul>
+<p>一般来说，约束的处理比触发器快，因此在可能的时候，应该尽量使用约束。</p>
+<h3 id="224-数据库安全">22.4 数据库安全</h3>
+<p>需要保护的操作：</p>
+<ul>
+<li>对数据库管理功能（创建表、更改或删除已存在的表等）的访问；</li>
+<li>对特定数据库或表的访问；</li>
+<li>访问的类型（只读、对特定列的访问等）；</li>
+<li>仅通过视图或存储过程对表进行访问；</li>
+<li>创建多层次的安全措施，从而允许多种基于登录的访问和控制；</li>
+<li>限制管理用户账号的能力</li>
+</ul>
+<h3 id="225-小结">22.5 小结</h3>
+<ul>
+<li>约束</li>
+<li>索引</li>
+<li>触发器</li>
+<li>数据库安全</li>
+</ul>
+<h2 id="总结">总结</h2>
+<p>200多页很快就读完了。虽然章节很多，但每一章内容都很少10分钟就能搞定，看完整本书也要不了几个小时。<br>
+因为很多内容不同DBMS的实现不同，所以这本书也没办法深入去讲只能提一嘴一笔带过。<br>
+除了crud和事务以外的操作，在orm中基本都不会用到。类似的逻辑可以大多可以通过代码而非sql实现，对非专业db工程师的程序员来说更友好。至于一些需要DB本身特性才能更快更好处理的需求，也可以通过rawsql实现。<br>
+确实是很适合初学者入门的书，各种基础知识点简明易懂，可以快速掌握sql基本用法。但对我就作用有限了，只有最后几章有点用。还是得找进阶一点的书来看。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[2024年终总结]]></title>
+        <id>https://jinvic.github.io/post/2024-year-end-summary/</id>
+        <link href="https://jinvic.github.io/post/2024-year-end-summary/">
+        </link>
+        <updated>2025-01-13T08:00:54.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="2024年终总结">2024年终总结</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93">2024年终总结</a>
+<ul>
+<li><a href="#%E5%86%99%E5%9C%A8%E5%BC%80%E5%A4%B4">写在开头</a></li>
+<li><a href="#%E5%AD%A6%E4%B9%A0">学习</a>
+<ul>
+<li><a href="#%E5%AD%A6%E7%94%9F">学生</a></li>
+<li><a href="#%E7%A4%BE%E7%95%9C">社畜</a></li>
+</ul>
+</li>
+<li><a href="#%E7%94%9F%E6%B4%BB">生活</a></li>
+<li><a href="#%E5%B7%A5%E4%BD%9C">工作</a></li>
+<li><a href="#%E7%88%B1%E5%A5%BD">爱好</a>
+<ul>
+<li><a href="#code">CODE</a></li>
+<li><a href="#acgn">ACGN</a>
+<ul>
+<li><a href="#anime">Anime</a></li>
+<li><a href="#comic">Comic</a></li>
+<li><a href="#game">Game</a></li>
+<li><a href="#novel">Novel</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%BB%93%E8%AF%AD">结语</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="写在开头">写在开头</h2>
+<p>心血来潮想写个总结，是受到<a href="https://github.com/saveweb/review-2024">review-2024</a>这个项目的启发，有一位我订阅了RSS的作者发表了他的总结顺便在文章中宣传了一下。几个月前刷到<a href="https://github.com/saveweb/review-2023">review-2023</a>时我还是个看客，这次倒是感觉真可以尝试写点东西了。不过我这人向来没什么过去可言，转头就忘，开始有意识地记录日常也只是最近三个月的事情，更久远的事情只能凭借模糊的记忆和稀缺的文字记录简单写写了<sup><a href="https://mblog.jinvic.top/memo/131">0</a></sup>。</p>
+<h2 id="学习">学习</h2>
+<h3 id="学生">学生</h3>
+<p>明明才过去几个月，学生时代的事情已经十分模糊甚至带上几分朦胧且美好的“回忆滤镜”了。从毕设的记录来看<sup><a href="https://blog.jinvic.top/post/%5BGraduation-Design%5D-Design-and-Implementation-of-an-Analysis-and-Decision-System-for-Online-Purchasing-of-Goods/">1</a></sup>，前半年差不多都花在这件事上了。而具体学了些什么呢？其实也没多少，主要集中在前期的爬虫相关知识上，后面的LSTM相关，为了赶进度都是拿来就用，没有深入研究了，比较可惜。再往后就是无尽的写文档改文档，没什么意思也没学到什么东西。其余更多学生时代的事情，都是23年末期的事了，24年好像还真没什么好记录的。</p>
+<h3 id="社畜">社畜</h3>
+<p>参加工作伊始，基本是被放养的状态，给几个技术让我自己学。这段时间了解了go，啃完了gin，gorm和goredis的官方文档，主要是gorm，gin和goredis的文档倒没多少，基本靠的是第三方的教程来学。学完这些算是搭建起了基本的后端开发技术栈，即web框架+数据库驱动(ORM)<sup><a href="https://mblog.jinvic.top/memo/68">2</a></sup>。之后的工作内容就跟着项目需求的技术栈走了。</p>
+<p>在一个项目中接触了<a href="https://goframe.org/">goframe</a>，其对庞大完备的工程规模和模块设计叹为观止，给刚出学校没多久的学生党一点小小的软件工程震撼<sup><a href="https://mblog.jinvic.top/memo/42">3</a></sup>。虽然之前实习时也接触过spring，但只不过是速成式完成任务式的浅尝辄止，没有去真正了解<sup><a href="https://blog.jinvic.top/post/Notes-on-Zhongshan-QST-Training-Experience/">4</a></sup>。</p>
+<p>另一个项目用的是<a href="https://go-kratos.dev/">kratos</a>，这是一个微服务框架，不过我并没有深入了解微服务，还是和之前一样负责部分功能写业务代码。虽然没深入微服务，但也接触和学习了不少新东西。首先是<a href="https://protobuf.dev/">Protobuf</a>这个序列化技术，相当于一种通用的数据结构定义，简单学一种新的语法就行。然后是<a href="https://github.com/google/wire">Wire</a>这个依赖注入工具，但我只是简单了解了下依赖注入，没有实践过经验不深，以后有空肯定是要拿出来练习熟悉下的。再是<a href="https://swagger.io/">swagger</a>这个生成API文档的工具，直接通过注释生成API文档比手写方便。这个虽然我之后又自己用过一次，但还是不够熟悉，提升空间很大。最后是重量级的orm框架<a href="https://entgo.io/">ent</a>，提起这个我真的是一肚子的苦水（支持以色列，中文文档差，语法不全，主键写死...），实在是喜欢不起来<sup><a href="https://blog.jinvic.top/post/ent-notes/">5</a> <a href="https://mblog.jinvic.top/memo/60">6</a></sup>。</p>
+<p>kratos这个框架文档不太全，入门时稍微摸索了下<sup><a href="https://blog.jinvic.top/post/kratos-quick-start-practice/">7</a></sup>。其他主要是各种CLI工具的安装使用搞得我有点晕，虽然给了个总的CLI工具<code>kratos</code>，但学习各个组件的过程还是免不了去单独安装调试使用，还好找到了<a href="https://just.systems/man/zh/%E8%AF%B4%E6%98%8E.html">just</a>这个工具能够简化命令的管理和使用。</p>
+<p>除了工作需求的技术栈，还慢慢啃完了《Go程序设计语言》这本书<sup><a href="https://blog.jinvic.top/post/the-go-programming-anguage-reading-notes/">8</a></sup>，主要是在最开始的自由学习的那段时间，看完了前七章和第八章部分作为go语言入门，某种程度上来说基础语法还挺简单的（复杂的都封装成库了），有c++或java基础入门很快。之后工作忙放下了一段时间，再捡起来明显感到力不从心<sup><a href="https://mblog.jinvic.top/memo/78">9</a></sup>，不过还是磕磕绊绊读完了。其实读的并不深只是大致过一下，以后有机会肯定是要重读一遍的。不过我觉得更重要的是建立相关的知识体系和扩宽知识面。用更通俗的说法来讲，就是你最起码知道了这个东西是你不会的，而不是连这个东西的存在都不知道，对知识本身的认识也是一种知识。就好像一个侃侃而谈的人，即便各个方面都很浅显也会让人觉得很厉害，毕竟他懂得多嘛。</p>
+<p>现在主要感觉自己在SQL方面有点力有未逮，只是拿着学校学的那点三瓜两枣在糊弄，稍微遇上复杂点需求的就歇菜了。很多更高级更深入的内容，就如上面所说的，连自己不知道什么都不知道，直到查一下才恍然大悟原来还有这么个东西还能这样。所以现在迫切需要搭一个知识体系的框架出来，填不填充再说😋。</p>
+<p>除了Mysql，另一个常用的数据库是mongoDB，这个就更惨了，连最基本的增删改查都不怎么熟，文档也没怎么看。现在用到它更多只是一些简单的数据查询，有需要现查语法就行，有空再精进一下。更常用的还是mysql，优先级更高。此外。我也不是很喜欢mongoDB这种结构不固定的数据，感觉处理起来很麻烦。存数据一时爽取数据火葬场，当然也可能是我不够了解的原因。</p>
+<h2 id="生活">生活</h2>
+<p>一提到这些，又忍不住去追忆学生时代了，明明才过去几个月而已。虽然我完全没有什么所谓的“美好的青春”，基本都是窝在寝室打游戏，但偶尔也是会被朋友拉出去走走，哪怕只是下个馆子。而现在独居后，一个人占个四人桌，就算店员不说我自己都不好意思，在外面吃饭一般都在快餐店解决的。过去看来不起眼的小事，现在竟某种程度上成了一种奢求了。虽然我对社交的需求很低，工作了几个月也没和同事讲过几句话，但完全没有社交，有时也会感到烦闷。</p>
+<p>至于现在的生活，倒也没什么不满。以前宿舍食堂教学楼三点一线，现在宿舍食堂办公室，感觉也没什么区别，甚至距离还更短了。待遇也还算满意，单人一间宿舍，虽然隔壁有个舍友但隔了扇门平日互不打扰也挺好的。食堂伙食一般，虽然可以加钱吃点好的，但评估了一下性价比后还是每餐只吃最便宜那档，实在不行回寝室煮面。对了，我还买了个电磁锅放在宿舍，最开始是想着除了烧热水还能干点别的，就在电磁锅和热水壶之间选择了前者。但买回来除了烧热水还是烧热水，而且还没热水壶方便。因为买菜储存处理什么的都不方便所以完全没做过别的菜，现在成了煮面特化。买了一套简单的砧板和刀具，偶尔吃点水果，比起削皮更喜欢切丁，虽然有点迪拜刀法。此外还买了很多东西，比如桌子（折叠的），椅子（拼装的），凳子（买桌子送的）等家具，一番布置后倒没什么所谓的“家的感觉”，只是从原来的空空荡荡变得可以住人了而已。</p>
+<p>本来是个能几个月都不挪窝的死宅，但现在每周放假都要出去逛逛。倒不是多么想玩，主要是闷久了透透气，毕竟现在住宿舍吃食堂，一个星期都在这方圆百米内打转。一般上午九点半出门，去机厅堵门打mai。我去的那家机子还挺全，光mai有旧框日框国区三种，此外中二，sdvx，jubeat，wacca，IIDX应有尽有。就是中二机况不太好，sdvx好像是坏的，jubeat，wacca不感兴趣，IIDX偶尔搓两把。其实之前附近还有家音游窝小店以前来过，这次再去看倒闭了。这家店的部分机子应该就是从那来的。刚开始的时候会一直玩到很晚快闭店才回去，毕竟以前不喜欢出门没机会接触街机音游，多少有点乐不思蜀了。现在则是堵门趁着人少打一上午，中午吃个饭回来看一眼，人多就走人少就再玩会。本来开始的时候下午还会去牌店，也是以前没去过就去逛逛，还能锻炼下交流能力。不过后来就没去了，一是只恨财力不足实卡跟不上环境，二是入坑时间不长其实也不是很聊得来。现在下午都是去超市逛一圈看有没有什么想买的要添置的，然后回宿舍打游戏。</p>
+<h2 id="工作">工作</h2>
+<p>工作有什么好总结的吗？好像都在前面聊的差不多了。现在的岗位是后端开发，选这个方向只是不想做前端，当时对各种方向不是很了解，就以为是前端做界面后端做逻辑，不想做界面选的后端，好在干的活和预期有差别但不大。现在的实际工作内容主要是crud，更复杂的业务有更资深的前辈做，我就打打杂做点简单的部分。工资水平在业内算是偏低的，不过生活条件还行开销较低，我个人完全可以接受，没啥经济压力自己够用就行，顶多对未来发展有点迷茫，不过将来的事将来再说。</p>
+<p>话说回来，我当时一个宿舍六个人，现在除了一个保研的就我一个干的本专业的工作，可见现在就业行情真的不好。我的毕业院校是一个普通一本，上比不过985211的高学历，下比不过专科院校的低要求，属于典型的端不起架子又放不下身段了，也就是所谓“孔乙己的长衫”罢。话说回来，我大概也算所谓的“小镇做题家”了，村里的人一听一本就是这孩子不得了，可到了社会上所谓的一本学历什么也不是，这下全对上了（自嘲）。偶尔刷到一些面经贴，作者准备如何如何翔实最后成功拿到大厂offer上岸，看完后都会觉得很焦虑。觉得别人找到工作时都这么厉害，而我什么都不会随时可以被取代，虽然我在的也不是什么大厂。</p>
+<h2 id="爱好">爱好</h2>
+<p>想了想好像除了ACGN就没有别的爱好了，果然是阴暗的死宅。勉强把编程也加进去，虽然已经变成工作了但也还算是爱好，并且工作之外也有不少折腾还是值得记一下的。希望以后能多点别的爱好吧。</p>
+<h3 id="code">CODE</h3>
+<p>最早是八月的时候看到活动，38买了一年2h2g的华为云服务器，想着总会用上的，折腾了一下没整明白就放那了。然后10月还是11月的时候，折腾rustdesk看到可以自建，想起来自己还有台服务器就又捡了回来。顺便提醒下大家想买服务器最好乘着新人折扣第一次就买好点买就点，不然后续升级续费即麻烦还贵<sup><a href="https://mblog.jinvic.top/memo/120">10</a></sup>。</p>
+<p>本来用的是华为云给的镜像里自带的宝塔面板，虽然对这个产品没啥好感，懒得折腾就用着了。但它一个劲地弹窗让你买vip，忍无可忍换了1Panel。虽然也分社区版和专业版，但清爽多了至少不会主动打扰你，而且专业版的功能对我这个轻度用户而言也用不上。</p>
+<p>列一下目前服务器上部署的项目吧：</p>
+<ul>
+<li><a href="https://rustdesk.com/docs/zh-cn/">rustdesk</a><br>
+开源的远程桌面软件，虽然有免费服务器但速度较慢，自建就快很多了，体感延迟和蓝牙耳机差不多，完全可以接受。不过我建了这个后其实没用过几次，毕竟回了寝室谁还想工作啊，有需要报个加班就行还能赚加班费。</li>
+<li><a href="https://gotify.net/">Gotify</a><br>
+一个用户用于发送和接收消息的简单服务器。我主要是配合<a href="https://github.com/pppscn/SmsForwarder">SmsForwarder</a>来转发验证码，这样就不用登录时掏出手机查看验证码了。</li>
+<li><a href="https://github.com/hacdias/webdav/">webdav</a><br>
+经常见到webdav这个存储方案，就了解了一下然后自建了。不过现在没怎么用这个了，都是alist+百度网盘当webdav用。</li>
+<li><a href="https://alist.nn.ci/zh/">AList</a><br>
+一个支持多种存储的文件列表程序。如上，我主要是拿它当网盘用，支持的存储方案还挺多的只不过我用不上。</li>
+<li><a href="https://github.com/kingwrcy/moments">moments</a><br>
+极简朋友圈，可以当微博客用，我主要是看重它的小型和轻量化，毕竟我的需求很简单最低支持个Markdown就行。数据存储一个sqlite搞定不需要额外配数据库，以后如果需要迁移起来也方便。</li>
+<li><a href="https://github.com/dani-garcia/vaultwarden">Bitwarden</a><br>
+说是说bitwarden，其实用的是vaultwarden，是非官方的Bitwarden服务器实现。因为官方版本占用资源太大，而这个版本更适合个人部署使用，兼容Bitwarden客户端，只是换个服务端。<br>
+最开始部署这个是想用2fa来着，毕竟密码管理器我已经用着Google Password Manager了，没有迁移需求。但部署完了才发现2fa是另一个移动应用不归服务器管，就换2fauth了。不过这个bitwarden还是留着没删，毕竟来都来了。以后嫌占位置了再删吧。</li>
+<li><a href="https://github.com/Bubka/2FAuth">2FAuth</a><br>
+和Gotify一样，需要输验证码时懒得掏手机部署的，配合扩展程序使用很方便。</li>
+<li><a href="https://github.com/icret/EasyImages2.0">EasyImages2.0</a><br>
+虽然在博客和微博客的选择上都尽量选择了自带图床的方案，但总是会有奇奇怪怪的地方需要贴图片，所以还是部署了一个图床。只是需求很低平时很少用而已。</li>
+<li><a href="https://squidfunk.github.io/mkdocs-material/">mkdocs-material</a><br>
+mkdocs是一个方便构建文档的静态站点生成器。material则是mkdocs的一个主题。感觉多级页面管理笔记之类比单篇的博客方便，也是作为gitbook的替代<sup><a href="https://mblog.jinvic.top/memo/90">11</a> <a href="https://mblog.jinvic.top/memo/94">12</a> <a href="https://doc.jinvic.top/gopkg/">13</a></sup>。</li>
+<li><a href="https://github.com/Chanzhaoyu/chatgpt-web">chatgpt-web</a><br>
+一个简单的ChatGPT前端页面。其实类似的实现有很多，但这个最简洁干净选的这个。搭这个的起因是deepseek发了v3送了token就想试试。本来是koishi+napcat搭建的QQ群Bot，但一天不到就被腾讯拿下了<sup><a href="https://mblog.jinvic.top/memo/123">14</a></sup>。因为腾讯开发者平台的机器人个人开发者只能频道不能群聊，干脆不做bot了。然后chatluna的猫娘预设感觉挺有意思放弃有点可惜，就找了个GPT前端转生<sup><a href="https://mblog.jinvic.top/memo/128">15</a></sup>。</li>
+<li><a href="https://www.pureftpd.org/project/pure-ftpd/">pure-ftpd</a><br>
+虽然ftp很常用，但最开始还真没打算装这个，少数上传需求直接在1Panel面板里解决了。但之后做Github Action的自动部署时用到<a href="https://github.com/SamKirkland/FTP-Deploy-Action">FTP-Deploy-Action</a>这个插件需要ftp就还是装了。话说回来自动部署写好脚本后真方便，有什么更改改完一推就什么也不用管了<sup><a href="https://mblog.jinvic.top/memo/96">16</a></sup>。</li>
+<li><a href="https://github.com/MetaCubeX/mihomo">mihomo</a><br>
+代理软件。有时git，pnpm，docker这些会抽风用不了，比起镜像站还是代理好用些。对linux生态不太了解折腾了几次配置没整好没装成功，最后用<a href="https://github.com/juewuy/ShellCrash">ShellCrash</a>弄好的<sup><a href="https://mblog.jinvic.top/memo/95">17</a></sup>。</li>
+</ul>
+<h3 id="acgn">ACGN</h3>
+<p>还好有bungumi，不然我自己肯定记不住自己都看了那些作品。总结的话就只挑一部分值得聊的说说吧，详情请移步<a href="https://bgm.tv/user/738734">bgm</a></p>
+<h4 id="anime">Anime</h4>
+<p>把22年整年的番，感兴趣和暂无续作计划的都补了。评价最好的是《异世界舅舅》和《孤独摇滚》，不过这两部本来就是带这高期待去看的，所以好是好但也没有《映像研》那种意料之外的惊艳。这也是延迟补番的弊端了，虽然可以很好地避雷，但也少了遇到佳作时的惊喜。</p>
+<h4 id="comic">Comic</h4>
+<p>相比于AG，CN这块其实是纯凑数的，列出来为了队列整齐而已。相比动漫一季12集的短平快，漫画日轻动辄连载好几年，个人又习惯补完结而不是追连载，所以很多感兴趣的作品都是标记后等完结等忘了，就算是完结作也因为没有补漫画的习惯想着有空补就也忘了。</p>
+<h4 id="game">Game</h4>
+<p>今年的游戏主要是前半年在学校玩的，毕业参加工作后虽然攒钱换了新电脑但却没什么空玩游戏了，比较可惜。</p>
+<p><strong>刺客信条系列</strong>：<br>
+今年补了《叛变》《大革命》《枭雄》三作，算是把旧作全部补完了<sup><a href="https://bgm.tv/blog/342808">18</a></sup>。叛变基本就是黑旗换皮，相同的系统填充两个不同的故事。而到了大革命和枭雄这两部时，已经不需要带着那种对老游戏的宽容了，完全可以以当代玩家的视角来审视。神话三部曲好像变动较大，而且评价也在逐渐下行，不过有空还是会补。而最近《影》的节奏很大，看最后质量过得去的话应该还是会边骂边买。毕竟AC系列作为我的单机游戏入坑还是很有情怀的。育碧死不死的无所谓，只是希望别再糟蹋这个IP了。</p>
+<p><strong>音游</strong>：<br>
+移动端音游都退坑了，无论是arc的爬梯子还是pjsk的活动甚至签到都有种上班打卡的感觉。之前是凭着一股惯性一直玩下来的，但停下来后感觉轻松多了干脆直接退坑眼不见为净，不然总会想着某某奖励没拿到。买了个2k+的exmax+手台，高中时就想要这玩意了现在过了好几年终于入手，但玩的次数不多。bms现在还是菜逼不怎么打的动，osu!mania回坑倒是通过越级稍微推了推分，但还是马上就afk了。一方面是感觉没以前厉害有种落差感，另一方面也是怕高强度打4k给手台干坏。街机方面mai倒是几个月推到了w3，还记得入坑时打个红十就满足了，现在离曾经仰望的w4也不远了。只是现在有些浮躁满脑子都是紫谱开大歌，没什么心情红谱练底力，毕竟紫谱的谱面设计确实更有意思。IIDX因为机厅有也入坑了，刚开始不熟悉指法走了点弯路，好在刚入坑影响不大。虽然现在也还是菜，连最基本的映射都磕磕绊绊，果然7+1还是太难了。</p>
+<p><strong>黑神话悟空</strong>：<br>
+聊24年的游戏肯定绕不过黑神话。最开始我对这部作品的期待并不高，毕竟见过太多卖国产情怀和卖宣传片的作品。在我看来能达到《光明记忆》那种水平就行，做个demo性质的作品招人拉投资。但随着消息不断放出也渐渐打消了疑虑，还是在预购的最后几天入了豪华版。后面的故事大家都很熟悉了，出乎意料的爆火也带来了不少争议。在我看来，这游戏当然远称不上完美，糟糕的寻路，频繁的吞指令，不合理的受击硬直，不少boss招式为了演出效果导致体感很差，以及第六章堪称灾难的完成度。这些问题累积起来让我大概只能给到8分这个档次。但这游戏的出现本身就已经足够有意义了。我仍记得那些从来对游戏不感兴趣的亲戚长辈，在闲聊时居然会提起主动这款游戏，询问我有没有玩过，并让我也带着那些子侄辈去体验一下。这份认同，让我们这些从游戏机禁令以来一直被主流社会舆论排斥在外口诛笔伐的游戏玩家，第一次挺直了腰杆。也正是这份认同，让我最终还是打出了满分。</p>
+<h4 id="novel">Novel</h4>
+<p>我补CN一般都是为了补A的原作，而N在这方面少之又少，今年更是一部感兴趣的都没有，基本属于是被放弃的状态。</p>
+<p>其实比起日轻看的更多的是国内的网文，基本都是起点系的。因为习惯避开大热作品，今年看过的作品中并没有值得单独拿出来讲的，毕竟沙里淘金也不是那么容易，绝大多数都是还行，有点意思，但不够好。比起近年的新作品，我更常看的反而是初高中时随便找的老文，看新文看腻了就回去再刷一遍。也许我看的不是文，只是借此追忆那段躲在被窝里偷偷看小说的时光而已。</p>
+<h2 id="结语">结语</h2>
+<p>懒得写了，就这样吧。已经比预期写的长得多了，这还是删了许多板块的情况下。又不是写作文，还要在结尾来个升华什么的...明明学生时代最讨厌的就是写作文，现在随便东拉西扯就是几千字。言归正题，今年的关键词，应该就是“迷茫”和“随波逐流”了，没有什么明确的目标和规划，把生活搞得一团糟。希望来年能做出改观吧。</p>
+<p>2025.1.17</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[记一次向koishi添加插件时的错误处理和修改]]></title>
+        <id>https://jinvic.github.io/post/Record-error-handling-and-modification-when-once-adding-plugin-to-koishi /</id>
+        <link href="https://jinvic.github.io/post/Record-error-handling-and-modification-when-once-adding-plugin-to-koishi /">
+        </link>
+        <updated>2025-01-08T08:48:06.000Z</updated>
+        <content type="html"><![CDATA[<p>给qq机器人绑osubot，用的<a href="https://github.com/Tsurumaki-Kokoro/koishi-plugin-osu-bot/tree/master">@tr4nce/osu-bot</a>插件，需要<a href="https://github.com/Tsurumaki-Kokoro/HitCircle-API">HitCircle API</a>作后端，就用docker装这个，3个多G的镜像，还好不怎么吃内存，我现在缺的就是内存。</p>
+<p>跑HitCircle API时报错：</p>
+<pre><code class="language-bash">RuntimeError: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+</code></pre>
+<p>因为mysql从8.0.3开始将默认的身份认证插件从mysql_native_password更改为caching_sha2_password，所以这里缺了个包。如果是手动部署直接在<code>requirements.txt</code>里加一行就行，但我用到是docker compose，只好在<code>docker-compose.yml</code>里加一行：</p>
+<pre><code class="language-yml">services:
+  api_backend:
+    command: sh -c &quot;pip install cryptography &amp;&amp; uvicorn main:app --host 0.0.0.0 --port 8900&quot;
+    image: tr4nce/hit-circle-api:latest
+    ...
+</code></pre>
+<p>调试几次后又报错：<code>Error response from daemon: No such container:</code>，把新加的一行删了就好了。而且之后也没再报缺依赖。虽然不知道怎么回事但解决了就行吧。</p>
+<p>关于redis，它本来是在<code>docker-compose.yml</code>又拉了一个redis镜像。我本来想换成宿主机的redis，但不能localhost直连，如果换公网ip因为它的镜像写死了不能用密码，我如果把本地redis改成无密码再暴露到公网风险太大，还是用的镜像。</p>
+<p>即使是再同一个<code>docker-compose.yml</code>里，两个镜像也是各自独立的网络命名空间，不能localhost，得用服务名称作为主机名才行，即<code>redis:6379</code>。</p>
+<p>别看搞这么麻烦，其实手动部署很简单就能解决，改下源码加个密码的配置项就行。这就是docker，部署起来确实方便，但遇到问题要改点啥也很麻烦。</p>
+<p>然后插件本身也有点问题，因为它的命令全写的一级命令不好管理，我之后装其他bot还可能冲突，我就只好看看文档看看源码自己改一下。虽然对前端一窍不通，但和别的插件源码对照一下还是改好了，记一下怎么改：</p>
+<p>首先再koishi安装目录下找到下载的插件，我这是<code>/koishi/data/node_modules/@tr4nce/koishi-plugin-osu-bot/lib</code></p>
+<p>在<code>index.js</code>里把一级指令改成二级指令，使用<code>/</code>或者<code>.</code>分隔，示例如下：</p>
+<pre><code class="language-typescript">// ctx.command('bind &lt;username: text&gt;', '绑定osu账号')
+ctx.command('osu.bind &lt;username: text&gt;', '绑定osu账号')
+</code></pre>
+<p>然后在<code>locate/zh-CN.json</code>改下文档。这里建议copy一份<a href="https://github.com/Tsurumaki-Kokoro/koishi-plugin-osu-bot/blob/master/src/locales/zh-CN.yml">源码</a>的yml改，改起来方便些:</p>
+<pre><code class="language-yml">// 更改前
+commands:
+  bind:
+    description: 绑定你的 osu! 账号到你的 平台 账号
+    ...
+
+// 更改后
+commands:
+  // 添加一级指令
+  osu:
+    description: osu! 相关指令
+    // 其余命令都向右缩进作为二级指令
+    bind:
+      description: 绑定你的 osu! 账号到你的 平台 账号
+</code></pre>
+<p>然后把yml转成json再压缩一下就行。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Linux配置ClashMeta内核]]></title>
+        <id>https://jinvic.github.io/post/configure-clashmeta-kernel-for-linux/</id>
+        <link href="https://jinvic.github.io/post/configure-clashmeta-kernel-for-linux/">
+        </link>
+        <updated>2024-12-20T03:33:14.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="linux配置clashmeta内核">Linux配置ClashMeta内核</h1>
+<blockquote>
+<p>配置项没弄好，换 <s>数据删除</s> <!-- [ShellCrash](https://github.com/juewuy/ShellCrash/tree/dev) --> 解决了，感觉前面的工作都白干了。但写都写了还是发篇博客。</p>
+</blockquote>
+<h2 id="安装homebrew">安装homebrew</h2>
+<p>使用<code>homebrew</code>安装mihomo。注意：<code>homebrew</code>不建议使用root用户直接安装，建议新创建一个用户再添加到sudo用户组。例如创建新用户<code>brew</code>:</p>
+<pre><code class="language-bash">sudo useradd brew
+sudo passwd brew # 设置新用户的密码
+sudo usermod -aG sudo brew
+</code></pre>
+<p>完成后使用新用户账号密码登录，可以使用<code>groups</code>命令检查用户是否属于sudo组。</p>
+<p>使用如下命令安装<code>homebrew</code>：</p>
+<pre><code class="language-bash">/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;
+</code></pre>
+<p>如果出现如下报错：</p>
+<pre><code class="language-txt">Error: Failed to install Homebrew Portable Ruby and cannot find another Ruby 3.3!
+If there's no Homebrew Portable Ruby available for your processor:
+- install Ruby 3.3 with your system package manager (or rbenv/ruby-build)
+- make it first in your PATH
+- try again
+</code></pre>
+<p>提示说找不到适合你的处理器架构的Ruby 3.3版本，需要自已装一个ruby，安装方法不在此赘述。我是在wsl上出现这个问题的，云服务器上没有出现。</p>
+<p>安装Homebrew成功后，需要手动将其添加到PATH路径：</p>
+<pre><code class="language-bash">echo 'export PATH=&quot;/home/linuxbrew/.linuxbrew/bin:$PATH&quot;' &gt;&gt; ~/.bashrc
+source ~/.bashrc
+</code></pre>
+<p>然后使用<code>brew -v</code>验证homebrew是否能够正常使用。</p>
+<h2 id="安装mihomo">安装mihomo</h2>
+<p>使用homebrew可以很方便地安装mihomo：</p>
+<p><code>homebrew install mihomo</code></p>
+<p>安装完成后提示信息如下：</p>
+<pre><code class="language-text">You need to customize /home/linuxbrew/.linuxbrew/etc/mihomo/config.yaml.
+
+To start mihomo now and restart at login:
+  brew services start mihomo
+Or, if you don't want/need a background service you can just run:
+  /home/linuxbrew/.linuxbrew/opt/mihomo/bin/mihomo -d /home/linuxbrew/.linuxbrew/etc/mihomo
+</code></pre>
+<p>提示你配置文件创建在<code>/home/linuxbrew/.linuxbrew/etc/mihomo/config.yaml</code>。有需要可以参考<a href="https://wiki.metacubex.one/config/">文档</a>进行修改。</p>
+<p>如下是一些使用<code>homebrew services</code>操作mihomo的命令：</p>
+<pre><code class="language-bash">brew services start mihomo      # 启动服务
+brew services stop mihomo       # 停止服务
+brew services list              # 查看服务状态
+brew services restart mihomo·   # 重启服务
+</code></pre>
+<p><strong>【可选】：</strong> 个人比较喜欢用<a href="https://just.systems/man/zh/%E8%AF%B4%E6%98%8E.html">just</a>管理命令。<code>.justfile</code>文件如下：</p>
+<pre><code class="language-text">start:
+    brew services start mihomo
+stop:
+    brew services stop mihomo
+list:
+    brew services list
+restart:
+    brew services restart mihomo
+
+alias st:=start
+alias sp:=stop
+alias li:=list
+alias re:=restart
+</code></pre>
+<h2 id="用户界面">用户界面</h2>
+<p>完全靠参数也不方便，我们先来配置ui界面。可选的面板有yacd,metacubexd等。</p>
+<p><s>数据删除</s></p>
+<!-- - [metacubexd](https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip)
+- [Yacd-meta](https://github.com/MetaCubeX/Yacd-meta/archive/refs/heads/gh-pages.zip)
+- [Razord-meta](https://github.com/MetaCubeX/Razord-meta/archive/refs/heads/gh-pages.zip) -->
+<p>下载压缩包并解压。然后往配置文件中添加如下内容：</p>
+<pre><code class="language-yaml">external-controller: 0.0.0.0:9090# RESTful API 监听地址
+secret: your_secret # `Authorization:Bearer ${secret}`  # 设置登录面板的密码
+external-ui: /home/brew/mihomo/metacubexd-gh-pages/     # 换成你压缩包解压出来的文件夹的地址
+</code></pre>
+<p>端口按需求改，地址换成你自己的，保存后重启服务。在防火墙和安全组开放相关端口后，访问<code>http://&lt;你的服务器ip&gt;:9093/ui</code>即可登录面板。</p>
+<h2 id="代理配置">代理配置</h2>
+<p>见 <s>数据删除</s> <!-- [subconverter](https://github.com/tindy2013/subconverter/tree/master) --> 。<br>
+更方便的用法是使用现成的客户端，如 <s>数据删除</s> <!-- clash for windows --> ，<s>数据删除</s> <!-- clash verge rev -->。</p>
+<h2 id="https配置">https配置</h2>
+<p>虽然注释写着要配置tls的证书路径，但实测只要反向代理时配了证书，配置项里写一下https的端口就行。<br>
+如果不进行反向代理直接通过ip和端口号访问才需要在设置里配证书路径。</p>
+<pre><code class="language-yaml"># 直接通过ip访问还需要配置证书
+tls:
+  certificate: string # 证书 PEM 格式，或者 证书的路径
+  private-key: string # 证书对应的私钥 PEM 格式，或者私钥路径
+# 反向代理只需要配置https端口
+external-controller-tls: 0.0.0.0:9443 # RESTful API HTTPS 监听地址，需要配置 tls 部分配置文件
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Certbot申请泛域名SSL证书并自动续期]]></title>
+        <id>https://jinvic.github.io/post/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/</id>
+        <link href="https://jinvic.github.io/post/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/">
+        </link>
+        <updated>2024-12-11T09:15:32.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="certbot申请泛域名ssl证书与自动续期">Certbot申请泛域名SSL证书与自动续期</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#certbot%E7%94%B3%E8%AF%B7%E6%B3%9B%E5%9F%9F%E5%90%8Dssl%E8%AF%81%E4%B9%A6%E4%B8%8E%E8%87%AA%E5%8A%A8%E7%BB%AD%E6%9C%9F">Certbot申请泛域名SSL证书与自动续期</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85-certbot">安装 Certbot</a></li>
+<li><a href="#%E5%9F%9F%E5%90%8D%E9%AA%8C%E8%AF%81%E8%AF%81%E4%B9%A6%E7%94%9F%E6%88%90">域名验证&amp;证书生成</a></li>
+<li><a href="#nginx%E9%85%8D%E7%BD%AE%E8%AF%81%E4%B9%A6">nginx配置证书</a></li>
+<li><a href="#%E8%87%AA%E5%8A%A8%E7%BB%AD%E6%9C%9F">自动续期</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p>参考：<a href="https://www.cnblogs.com/michaelshen/p/18538178">使用 Let’s Encrypt 免费申请泛域名 SSL 证书，并实现自动续期</a></p>
+<p>本来不打算写这篇的，原教程已经很详细了。不过他使用的腾讯云，在自动续期这块有个cli工具可以用。而我用的华为云只能调api，所以还是得自己摸索下顺便记录。</p>
+<h2 id="安装-certbot">安装 Certbot</h2>
+<p>虽然很想用包管理器，但官网都只用snap和pip安装，为了保险还是用到snap。</p>
+<pre><code class="language-bash">sudo snap install --classic certbot #安装Certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot #创建一个符号链接，确保可以执行certbot命令（相当于快捷方式）
+</code></pre>
+<h2 id="域名验证证书生成">域名验证&amp;证书生成</h2>
+<p>Certbot需要验证你申请证书的域名是否确实属于你。具体流程就是给你个随机字符串让你解析到固定域名它再来验证。</p>
+<pre><code class="language-bash">sudo certbot certonly --manual --preferred-challenges dns -d *.example.com -d example.com
+</code></pre>
+<p>记得替换你的邮箱和域名。然后他会请求你的邮箱用于紧急更新和安全提醒。</p>
+<figure data-type="image" tabindex="1"><img src="https://jinvic.github.io/post-images/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/1.png" alt="pic1" loading="lazy"></figure>
+<p>然后是两次确认。第一次是服务条款选是，第二次是问能不能给你邮箱发广告邮件，可以选否。</p>
+<figure data-type="image" tabindex="2"><img src="https://jinvic.github.io/post-images/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/2.png" alt="pic2" loading="lazy"></figure>
+<p>接着就是给你一串字符串去解析到对应域名。例如我就是将那一串解析到<code>_acme-challenge.jinvic.top</code>。具体解析方法看你的DNS服务商，重点是<strong>记录类型</strong>要选<code>TXT</code>。</p>
+<figure data-type="image" tabindex="3"><img src="https://jinvic.github.io/post-images/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/3.png" alt="pic3" loading="lazy"></figure>
+<p>添加解析完成后稍等一会再继续。你也可以在<a href="https://toolbox.googleapps.com/apps/dig/#TXT/">这里</a>验证解析是否成功。</p>
+<p>验证成功后就会自动生成证书，并告诉你证书所在目录和过期时间。</p>
+<figure data-type="image" tabindex="4"><img src="https://jinvic.github.io/post-images/use-certbot-to-apply-for-a-pan-domain-ssl-certificate-and-automatic-renewal/4.png" alt="pic4" loading="lazy"></figure>
+<h2 id="nginx配置证书">nginx配置证书</h2>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name example.com www.example.com;
+ 
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+ 
+server {
+    listen 443 ssl;
+    server_name example.com www.example.com;
+ 
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+ 
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+    }
+}
+</code></pre>
+<h2 id="自动续期">自动续期</h2>
+<p>内容有点多，新开了个项目：<a href="https://github.com/Jinvic/certbot-huaweicloud">Jinvic/certbot-huaweicloud</a>。用这个项目生成供certbot钩子运行的程序。</p>
+<pre><code class="language-bash">certbot renew --manual --preferred-challenges=dns \
+--manual-auth-hook /path/to/project/bin/certbot -use auth \
+--manual-cleanup-hook /path/to/project/bin/certbot -use cleanup \
+--deploy-hook &quot;sudo nginx -s reload&quot;
+</code></pre>
+<ul>
+<li><code>/path/to/project/bin/certbot</code> 为你编译生成的程序路径。</li>
+<li><code>sudo nginx -s reload</code> 用于重新加载配置nginx配置。</li>
+</ul>
+<p>编辑生成的程序需要读取配置文件。cd到项目目录或者将配置文件<code>.env</code>放到程序同一目录再执行上述命令。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Linux搭建Webdav服务]]></title>
+        <id>https://jinvic.github.io/post/build-webdav-service-on-linux/</id>
+        <link href="https://jinvic.github.io/post/build-webdav-service-on-linux/">
+        </link>
+        <updated>2024-12-10T00:59:01.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="linux搭建webdav服务">Linux搭建webDav服务</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#linux%E6%90%AD%E5%BB%BAwebdav%E6%9C%8D%E5%8A%A1">Linux搭建webDav服务</a>
+<ul>
+<li><a href="#webdav">webdav</a>
+<ul>
+<li><a href="#webdav%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE">webdav安装配置</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8%E9%87%8D%E5%90%AF%E6%9C%8D%E5%8A%A1">启动&amp;重启服务</a></li>
+<li><a href="#webdav-justfile">webdav justfile</a></li>
+</ul>
+</li>
+<li><a href="#alist">alist</a>
+<ul>
+<li><a href="#alist-%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E7%99%BB%E5%BD%95">alist 安装配置登录</a></li>
+<li><a href="#%E8%BF%9E%E6%8E%A5%E5%AD%98%E5%82%A8">连接存储</a></li>
+<li><a href="#alist-justfile">alist justfile</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%A2%E6%88%B7%E7%AB%AF">客户端</a>
+<ul>
+<li><a href="#raidrive">raidrive</a></li>
+<li><a href="#davfs2">davfs2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<p>一直都有一个文件存储传输同步共享的需求，但苦于没有太好的解决方案。qq不安全难预览还会改你压缩包后缀名，纯强盗逻辑逼着你用他家的垃圾产品生态。百度网盘则是众所周知的限速。虽然我有会员，但感觉还是更适合长期大容量存储而非短期临时的频繁存取，自带的同步空间也不好用只能同步固定文件夹。WPS倒是可以自选同步文件夹，但本来就不是做文件管理这行的使用体验极差，遇上个几百兆的pdf就歇菜了，连基础的文档服务都做不好感觉纯噱头。现在打算在服务器上自己搭一个服务，不想再受这些鸟气。</p>
+<p>本次搭建webdav使用<a href="https://github.com/hacdias/webdav/">hacdias/webdav</a>，教程参考readme文件和博客<a href="https://sunjx97.github.io/posts/cb46f731/">使用docker搭建webdav应用</a>。</p>
+<h2 id="webdav">webdav</h2>
+<p>首先准备一个专门的文件目录，用于放置配置文件和作为webdav的存储路径。这里我的路径是<code>service/webdav</code>。</p>
+<h3 id="webdav安装配置">webdav安装配置</h3>
+<p><strong>webdav配置</strong>：</p>
+<p>在目录下新建文件<code>config.yml</code>，写入如下内容：</p>
+<pre><code class="language-yml"># 监听任意网卡，多网卡可指定对应ip
+address: 0.0.0.0
+port: 6065
+auth: true
+prefix: /
+modify: true
+rules: []
+
+# 跨域设置 | 不是很懂
+cors:
+  enabled: true
+  credentials: true
+  allowed_headers:
+    - Depth
+  allowed_hosts:
+    - http://localhost:6065
+  allowed_methods:
+    - GET
+  exposed_headers:
+    - Content-Length
+    - Content-Range
+
+# 用户信息，如果 auth 为 true 生效  
+users:
+  - username: admin
+    password: admin
+    # 配置自己的 webdav 访问范围，此例为 /data 内所有文件
+    scope: /data
+    # 配置用户权限 默认为R（只读）
+    permissions: CRUD
+</code></pre>
+<p>其中port是docker容器内的端口，可以自行修改。cors跨域设置这块不是很懂。后面的用户信息记得改改用户名和密码，以及根据需求配置用户权限。</p>
+<p><strong>docker配置</strong>：</p>
+<p>在目录下新建文件<code>docker-compose.yml</code>，写入如下内容：</p>
+<pre><code class="language-yml">services:
+  webdav:
+    image: hacdias/webdav
+    container_name: webdav
+    restart: always
+    ports:
+      - 6065:6065
+    volumes:
+      - ./data:/data
+      - ./config.yml:/config.yml
+</code></pre>
+<p>其中port前部分改成你在服务器上要使用的端口，记得开放防火墙和安全组。后部分则是docker内端口，和配置文件保持一致。</p>
+<p>volumes的路径我使用的相对路径，也可以根据需求自行修改。第一行是webdav的文件存储位置，第二行是你的配置文件位置。</p>
+<h3 id="启动重启服务">启动&amp;重启服务</h3>
+<p>配置项完成后，使用<code>sudo docker-compose up -d</code>启动服务。</p>
+<p>如果你修改了配置文件，如添加用户或修改密码，可以使用<code>sudo docker-compose restart webdav</code>重启服务。</p>
+<h3 id="webdav-justfile">webdav justfile</h3>
+<blockquote>
+<p>just 为您提供一种保存和运行项目特有命令的便捷方式。</p>
+</blockquote>
+<p><a href="https://github.com/casey/just">just地址</a><br>
+<a href="https://just.systems/man/zh/%E8%AF%B4%E6%98%8E.html">just文档</a></p>
+<p>webdav相关命令的justfile如下：</p>
+<pre><code class="language-yml">alias re := restart
+
+run:
+    sudo docker-compose up -d
+
+restart:
+    sudo docker-compose restart webdav
+
+del:
+    sudo rm -r data/
+</code></pre>
+<h2 id="alist">alist</h2>
+<blockquote>
+<p>alist: 一个支持多种存储的文件列表程序，使用 Gin 和 Solidjs。</p>
+</blockquote>
+<p>搭了个webdav本来该到此为止的，但又发现一个alist好像挺有意思，见猎心喜搭来看看。我就说明明webdav很常用但教程相对偏少，原来都用的这个。相当于一个中间层，使用alist连接不支持webdev的文件存储方案（如百度网盘），就可以把alist当webdev连接了。</p>
+<h3 id="alist-安装配置登录">alist 安装配置登录</h3>
+<p>我是使用的docker安装，直接使用官方提供的docker-compose：</p>
+<pre><code class="language-yml">services:
+    alist:
+        image: 'xhofe/alist:latest'
+        container_name: alist
+        volumes:
+            - '/etc/alist:/opt/alist/data'
+        ports:
+            - '5244:5244'
+        environment:
+            - PUID=0
+            - PGID=0
+            - UMASK=022
+        restart: unless-stopped
+</code></pre>
+<p>使用<code>sudo docker-compose up -d</code>启动服务。然后访问<code>&lt;服务器地址&gt;:5244</code>登录控制台。初始账号为<code>admin</code>，密码随机生成，通过<code>sudo docker logs alist</code>查看日志：</p>
+<figure data-type="image" tabindex="1"><img src="https://jinvic.github.io/post-images/build-webdav-service-on-linux/pic1.png" alt="pic1" loading="lazy"></figure>
+<p>登录后记得修改密码。</p>
+<h3 id="连接存储">连接存储</h3>
+<p>连接存储直接看<a href="https://alist.nn.ci/zh/guide/drivers/common.html">官方文档</a>就行。</p>
+<p>有一点需要注意，我连接自建的webdav时直接用<code>&lt;ip&gt;:&lt;port&gt;</code>报错：<code>first path segment in URL cannot contain colon</code>，需要加上<code>http(s)://</code>协议头。</p>
+<h3 id="alist-justfile">alist justfile</h3>
+<p>alist 相关命令的justfile如下：</p>
+<pre><code class="language-yml">alias re := restart
+alias upd := update
+
+run:
+    sudo docker-compose up -d
+
+restart:
+    sudo docker-compose restart alist
+
+update:
+    sudo docker-compose pull | \
+    sudo docker-compose up -d
+
+log:
+    sudo docker logs alist
+</code></pre>
+<h2 id="客户端">客户端</h2>
+<h3 id="raidrive">raidrive</h3>
+<p>可以使用<a href="https://www.raidrive.com/">raidrive</a>将Webdav挂载到电脑盘。配置示例如下，依次填入你的服务器地址，配置中设置的端口号，账号密码：<br>
+<img src="https://jinvic.github.io/post-images/build-webdav-service-on-linux/pic2.png" alt="pic2" loading="lazy"></p>
+<p><strong>注意</strong>：如果你在配置中没有设置tls，不要勾选&quot;地址&quot;旁边的&quot;安全连接&quot;复选框。</p>
+<h3 id="davfs2">davfs2</h3>
+<p>Lunux系统挂载webdav可以使用davfs2，参考<a href="https://blog.lincloud.pro/archives/36.html">这篇文章</a></p>
+]]></content>
+    </entry>
+</feed>

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>Linux搭建Webdav服务 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="Linux搭建Webdav服务 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="Linux搭建Webdav服务" />
+  <meta property="og:url" content="https://jinvic.github.io/post/build-webdav-service-on-linux/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+                <a href="https://jinvic.github.io/tag/2caP3ZTldp/" class="tag">服务器</a>
+                
+                <a href="https://jinvic.github.io/tag/47cAf1nsEU/" class="tag">Linux</a>
+                
+              </span>
+              <h1>Linux搭建Webdav服务</h1>
+              <span class="meta">
+                Posted on
+                2024-12-10，5 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <h1 id="linux搭建webdav服务">Linux搭建webDav服务</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#linux%E6%90%AD%E5%BB%BAwebdav%E6%9C%8D%E5%8A%A1">Linux搭建webDav服务</a>
+<ul>
+<li><a href="#webdav">webdav</a>
+<ul>
+<li><a href="#webdav%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE">webdav安装配置</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8%E9%87%8D%E5%90%AF%E6%9C%8D%E5%8A%A1">启动&amp;重启服务</a></li>
+<li><a href="#webdav-justfile">webdav justfile</a></li>
+</ul>
+</li>
+<li><a href="#alist">alist</a>
+<ul>
+<li><a href="#alist-%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E7%99%BB%E5%BD%95">alist 安装配置登录</a></li>
+<li><a href="#%E8%BF%9E%E6%8E%A5%E5%AD%98%E5%82%A8">连接存储</a></li>
+<li><a href="#alist-justfile">alist justfile</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%A2%E6%88%B7%E7%AB%AF">客户端</a>
+<ul>
+<li><a href="#raidrive">raidrive</a></li>
+<li><a href="#davfs2">davfs2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<p>一直都有一个文件存储传输同步共享的需求，但苦于没有太好的解决方案。qq不安全难预览还会改你压缩包后缀名，纯强盗逻辑逼着你用他家的垃圾产品生态。百度网盘则是众所周知的限速。虽然我有会员，但感觉还是更适合长期大容量存储而非短期临时的频繁存取，自带的同步空间也不好用只能同步固定文件夹。WPS倒是可以自选同步文件夹，但本来就不是做文件管理这行的使用体验极差，遇上个几百兆的pdf就歇菜了，连基础的文档服务都做不好感觉纯噱头。现在打算在服务器上自己搭一个服务，不想再受这些鸟气。</p>
+<p>本次搭建webdav使用<a href="https://github.com/hacdias/webdav/">hacdias/webdav</a>，教程参考readme文件和博客<a href="https://sunjx97.github.io/posts/cb46f731/">使用docker搭建webdav应用</a>。</p>
+<h2 id="webdav">webdav</h2>
+<p>首先准备一个专门的文件目录，用于放置配置文件和作为webdav的存储路径。这里我的路径是<code>service/webdav</code>。</p>
+<h3 id="webdav安装配置">webdav安装配置</h3>
+<p><strong>webdav配置</strong>：</p>
+<p>在目录下新建文件<code>config.yml</code>，写入如下内容：</p>
+<pre><code class="language-yml"># 监听任意网卡，多网卡可指定对应ip
+address: 0.0.0.0
+port: 6065
+auth: true
+prefix: /
+modify: true
+rules: []
+
+# 跨域设置 | 不是很懂
+cors:
+  enabled: true
+  credentials: true
+  allowed_headers:
+    - Depth
+  allowed_hosts:
+    - http://localhost:6065
+  allowed_methods:
+    - GET
+  exposed_headers:
+    - Content-Length
+    - Content-Range
+
+# 用户信息，如果 auth 为 true 生效  
+users:
+  - username: admin
+    password: admin
+    # 配置自己的 webdav 访问范围，此例为 /data 内所有文件
+    scope: /data
+    # 配置用户权限 默认为R（只读）
+    permissions: CRUD
+</code></pre>
+<p>其中port是docker容器内的端口，可以自行修改。cors跨域设置这块不是很懂。后面的用户信息记得改改用户名和密码，以及根据需求配置用户权限。</p>
+<p><strong>docker配置</strong>：</p>
+<p>在目录下新建文件<code>docker-compose.yml</code>，写入如下内容：</p>
+<pre><code class="language-yml">services:
+  webdav:
+    image: hacdias/webdav
+    container_name: webdav
+    restart: always
+    ports:
+      - 6065:6065
+    volumes:
+      - ./data:/data
+      - ./config.yml:/config.yml
+</code></pre>
+<p>其中port前部分改成你在服务器上要使用的端口，记得开放防火墙和安全组。后部分则是docker内端口，和配置文件保持一致。</p>
+<p>volumes的路径我使用的相对路径，也可以根据需求自行修改。第一行是webdav的文件存储位置，第二行是你的配置文件位置。</p>
+<h3 id="启动重启服务">启动&amp;重启服务</h3>
+<p>配置项完成后，使用<code>sudo docker-compose up -d</code>启动服务。</p>
+<p>如果你修改了配置文件，如添加用户或修改密码，可以使用<code>sudo docker-compose restart webdav</code>重启服务。</p>
+<h3 id="webdav-justfile">webdav justfile</h3>
+<blockquote>
+<p>just 为您提供一种保存和运行项目特有命令的便捷方式。</p>
+</blockquote>
+<p><a href="https://github.com/casey/just">just地址</a><br>
+<a href="https://just.systems/man/zh/%E8%AF%B4%E6%98%8E.html">just文档</a></p>
+<p>webdav相关命令的justfile如下：</p>
+<pre><code class="language-yml">alias re := restart
+
+run:
+    sudo docker-compose up -d
+
+restart:
+    sudo docker-compose restart webdav
+
+del:
+    sudo rm -r data/
+</code></pre>
+<h2 id="alist">alist</h2>
+<blockquote>
+<p>alist: 一个支持多种存储的文件列表程序，使用 Gin 和 Solidjs。</p>
+</blockquote>
+<p>搭了个webdav本来该到此为止的，但又发现一个alist好像挺有意思，见猎心喜搭来看看。我就说明明webdav很常用但教程相对偏少，原来都用的这个。相当于一个中间层，使用alist连接不支持webdev的文件存储方案（如百度网盘），就可以把alist当webdev连接了。</p>
+<h3 id="alist-安装配置登录">alist 安装配置登录</h3>
+<p>我是使用的docker安装，直接使用官方提供的docker-compose：</p>
+<pre><code class="language-yml">services:
+    alist:
+        image: 'xhofe/alist:latest'
+        container_name: alist
+        volumes:
+            - '/etc/alist:/opt/alist/data'
+        ports:
+            - '5244:5244'
+        environment:
+            - PUID=0
+            - PGID=0
+            - UMASK=022
+        restart: unless-stopped
+</code></pre>
+<p>使用<code>sudo docker-compose up -d</code>启动服务。然后访问<code>&lt;服务器地址&gt;:5244</code>登录控制台。初始账号为<code>admin</code>，密码随机生成，通过<code>sudo docker logs alist</code>查看日志：</p>
+<figure data-type="image" tabindex="1"><img src="https://jinvic.github.io/post-images/build-webdav-service-on-linux/pic1.png" alt="pic1" loading="lazy"></figure>
+<p>登录后记得修改密码。</p>
+<h3 id="连接存储">连接存储</h3>
+<p>连接存储直接看<a href="https://alist.nn.ci/zh/guide/drivers/common.html">官方文档</a>就行。</p>
+<p>有一点需要注意，我连接自建的webdav时直接用<code>&lt;ip&gt;:&lt;port&gt;</code>报错：<code>first path segment in URL cannot contain colon</code>，需要加上<code>http(s)://</code>协议头。</p>
+<h3 id="alist-justfile">alist justfile</h3>
+<p>alist 相关命令的justfile如下：</p>
+<pre><code class="language-yml">alias re := restart
+alias upd := update
+
+run:
+    sudo docker-compose up -d
+
+restart:
+    sudo docker-compose restart alist
+
+update:
+    sudo docker-compose pull | \
+    sudo docker-compose up -d
+
+log:
+    sudo docker logs alist
+</code></pre>
+<h2 id="客户端">客户端</h2>
+<h3 id="raidrive">raidrive</h3>
+<p>可以使用<a href="https://www.raidrive.com/">raidrive</a>将Webdav挂载到电脑盘。配置示例如下，依次填入你的服务器地址，配置中设置的端口号，账号密码：<br>
+<img src="https://jinvic.github.io/post-images/build-webdav-service-on-linux/pic2.png" alt="pic2" loading="lazy"></p>
+<p><strong>注意</strong>：如果你在配置中没有设置tls，不要勾选&quot;地址&quot;旁边的&quot;安全连接&quot;复选框。</p>
+<h3 id="davfs2">davfs2</h3>
+<p>Lunux系统挂载webdav可以使用davfs2，参考<a href="https://blog.lincloud.pro/archives/36.html">这篇文章</a></p>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#linux%E6%90%AD%E5%BB%BAwebdav%E6%9C%8D%E5%8A%A1">Linux搭建webDav服务</a>
+<ul>
+<li><a href="#webdav">webdav</a>
+<ul>
+<li><a href="#webdav%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE">webdav安装配置</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8%E9%87%8D%E5%90%AF%E6%9C%8D%E5%8A%A1">启动&amp;重启服务</a></li>
+<li><a href="#webdav-justfile">webdav justfile</a></li>
+</ul>
+</li>
+<li><a href="#alist">alist</a>
+<ul>
+<li><a href="#alist-%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E7%99%BB%E5%BD%95">alist 安装配置登录</a></li>
+<li><a href="#%E8%BF%9E%E6%8E%A5%E5%AD%98%E5%82%A8">连接存储</a></li>
+<li><a href="#alist-justfile">alist justfile</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%A2%E6%88%B7%E7%AB%AF">客户端</a>
+<ul>
+<li><a href="#raidrive">raidrive</a></li>
+<li><a href="#davfs2">davfs2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://jinvic.github.io/post/micro-blog-2024-12/">
+              <span class="post-title">
+                碎碎念 2024-12&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>

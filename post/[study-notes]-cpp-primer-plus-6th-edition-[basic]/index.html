@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[Jinvic&#39;s Blog]的个人博客">
+<meta name="author" content="kveln">
+<title>【学习笔记】C++ Primer Plus（第6版）【基础篇】 | Jinvic&#39;s Blog</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="【学习笔记】C++ Primer Plus（第6版）【基础篇】 | Jinvic&#39;s Blog » Feed"
+  href="https://jinvic.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://jinvic.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YCF6X0GKYH"></script>
+<script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-YCF6X0GKYH');</script>
+
+  <meta property="og:description" content="【学习笔记】C++ Primer Plus（第6版）【基础篇】" />
+  <meta property="og:url" content="https://jinvic.github.io/post/[study-notes]-cpp-primer-plus-6th-edition-[basic]/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Jinvic&#39;s Blog" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://jinvic.github.io">Jinvic&#39;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1750747815360"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://jinvic.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+                <a href="https://jinvic.github.io/tag/KbkCyWeWckl/" class="tag">笔记</a>
+                
+                <a href="https://jinvic.github.io/tag/0QTHmpszIWA/" class="tag">C/C++</a>
+                
+              </span>
+              <h1>【学习笔记】C++ Primer Plus（第6版）【基础篇】</h1>
+              <span class="meta">
+                Posted on
+                2023-06-06，38 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <h1 id="学习笔记c-primer-plus第6版基础篇">【学习笔记】C++ Primer Plus（第6版）【基础篇】</h1>
+<hr>
+<h2 id="目录">目录</h2>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0c-primer-plus%E7%AC%AC6%E7%89%88%E5%9F%BA%E7%A1%80%E7%AF%87">【学习笔记】C++ Primer Plus（第6版）【基础篇】</a>
+<ul>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E7%AC%AC1%E7%AB%A0-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86">第1章 预备知识</a></li>
+<li><a href="#%E7%AC%AC2%E7%AB%A0-%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0c">第2章 开始学习C++</a>
+<ul>
+<li><a href="#21-%E8%BF%9B%E5%85%A5c">2.1 进入C++</a>
+<ul>
+<li><a href="#%E5%A4%B4%E6%96%87%E4%BB%B6%E5%91%BD%E5%90%8D">头文件命名</a></li>
+<li><a href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4">命名空间</a></li>
+</ul>
+</li>
+<li><a href="#22-c%E8%AF%AD%E5%8F%A5">2.2 C++语句</a></li>
+<li><a href="#23-%E5%85%B6%E4%BB%96c%E8%AF%AD%E5%8F%A5">2.3 其他C++语句</a></li>
+<li><a href="#24-%E5%87%BD%E6%95%B0">2.4 函数</a>
+<ul>
+<li><a href="#%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B">函数原型</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC3%E7%AB%A0-%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE">第3章 处理数据</a>
+<ul>
+<li><a href="#31-%E7%AE%80%E5%8D%95%E5%8F%98%E9%87%8F">3.1 简单变量</a>
+<ul>
+<li><a href="#%E5%8F%98%E9%87%8F%E5%91%BD%E5%90%8D%E8%A7%84%E5%88%99">变量命名规则</a></li>
+<li><a href="#%E8%BF%90%E7%AE%97%E7%AC%A6sizeof">运算符sizeof</a></li>
+<li><a href="#%E5%A4%B4%E6%96%87%E4%BB%B6climits">头文件climits</a></li>
+<li><a href="#c%E8%BF%9B%E5%88%B6%E8%A1%A8%E7%A4%BA%E6%B3%95">C++进制表示法</a></li>
+<li><a href="#wchar_twcin%E5%92%8Cwcout">wchar_t,wcin和wcout</a></li>
+<li><a href="#char16_t%E5%92%8Cchar32_t">char16_t和char32_t</a></li>
+</ul>
+</li>
+<li><a href="#32-const%E9%99%90%E5%AE%9A%E7%AC%A6">3.2 const限定符</a></li>
+<li><a href="#33-%E6%B5%AE%E7%82%B9%E6%95%B0">3.3 浮点数</a>
+<ul>
+<li><a href="#cfloat%E6%88%96floath%E5%A4%B4%E6%96%87%E4%BB%B6">cfloat或float.h头文件</a></li>
+<li><a href="#%E6%B5%AE%E7%82%B9%E5%B8%B8%E9%87%8F%E5%90%8E%E7%BC%80">浮点常量后缀</a></li>
+</ul>
+</li>
+<li><a href="#34-c%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6">3.4 C++算术运算符</a>
+<ul>
+<li><a href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7">运算符优先级</a></li>
+<li><a href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2">类型转换</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC4%E7%AB%A0-%E5%A4%8D%E5%90%88%E7%B1%BB%E5%9E%8B">第4章 复合类型</a>
+<ul>
+<li><a href="#41-%E6%95%B0%E7%BB%84">4.1 数组</a>
+<ul>
+<li><a href="#%E6%95%B0%E7%BB%84%E5%88%9D%E5%A7%8B%E5%8C%96">数组初始化</a></li>
+</ul>
+</li>
+<li><a href="#42-%E5%AD%97%E7%AC%A6%E4%B8%B2">4.2 字符串</a>
+<ul>
+<li><a href="#%E8%AF%BB%E5%8F%96%E4%B8%80%E8%A1%8C%E5%AD%97%E7%AC%A6%E4%B8%B2">读取一行字符串</a></li>
+<li><a href="#%E7%A9%BA%E8%A1%8C%E5%92%8C%E6%BA%A2%E5%87%BA%E9%97%AE%E9%A2%98">空行和溢出问题</a></li>
+</ul>
+</li>
+<li><a href="#43-string%E7%B1%BB%E7%AE%80%E4%BB%8B">4.3 string类简介</a>
+<ul>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E5%A4%8D%E5%88%B6%E4%B8%8E%E6%8B%BC%E6%8E%A5">字符串的复制与拼接</a></li>
+<li><a href="#string%E7%B1%BB%E8%AF%BB%E5%85%A5%E4%B8%80%E8%A1%8C">string类读入一行</a></li>
+<li><a href="#%E5%8E%9F%E5%A7%8B%E5%AD%97%E7%AC%A6%E4%B8%B2">原始字符串</a></li>
+</ul>
+</li>
+<li><a href="#44-%E7%BB%93%E6%9E%84%E7%AE%80%E4%BB%8B">4.4 结构简介</a>
+<ul>
+<li><a href="#%E5%8C%BF%E5%90%8D%E7%BB%93%E6%9E%84%E4%BD%93">匿名结构体</a></li>
+<li><a href="#%E7%BB%93%E6%9E%84%E4%B8%AD%E7%9A%84%E4%BD%8D%E5%AD%97%E6%AE%B5">结构中的位字段</a></li>
+</ul>
+</li>
+<li><a href="#45-%E5%85%B1%E7%94%A8%E4%BD%93">4.5 共用体</a>
+<ul>
+<li><a href="#%E5%85%B1%E7%94%A8%E4%BD%93%E7%9A%84%E5%A4%A7%E5%B0%8F">共用体的大小</a></li>
+<li><a href="#%E5%8C%BF%E5%90%8D%E5%85%B1%E7%94%A8%E4%BD%93">匿名共用体</a></li>
+</ul>
+</li>
+<li><a href="#46-%E6%9E%9A%E4%B8%BE">4.6 枚举</a>
+<ul>
+<li><a href="#%E5%AE%9A%E4%B9%89%E4%B8%8E%E8%B5%8B%E5%80%BC">定义与赋值</a></li>
+<li><a href="#%E5%8F%96%E5%80%BC%E8%8C%83%E5%9B%B4">取值范围</a></li>
+</ul>
+</li>
+<li><a href="#47-%E6%8C%87%E9%92%88%E5%92%8C%E8%87%AA%E7%94%B1%E5%AD%98%E5%82%A8%E7%A9%BA%E9%97%B4">4.7 指针和自由存储空间</a>
+<ul>
+<li><a href="#%E5%86%85%E5%AD%98%E7%9A%84%E5%88%86%E9%85%8D%E5%92%8C%E9%87%8A%E6%94%BE">内存的分配和释放</a></li>
+<li><a href="#%E9%9D%99%E6%80%81%E8%81%94%E7%BC%96%E5%92%8C%E5%8A%A8%E6%80%81%E8%81%94%E7%BC%96">静态联编和动态联编</a></li>
+</ul>
+</li>
+<li><a href="#48-%E6%8C%87%E9%92%88-%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E7%AE%97">4.8 指针、数组和指针算</a>
+<ul>
+<li><a href="#%E6%95%B0%E7%BB%84%E7%9A%84%E5%9C%B0%E5%9D%80%E5%92%8C%E6%8C%87%E9%92%88%E7%B1%BB%E5%9E%8B">数组的地址和指针类型</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8C%87%E9%92%88">字符串指针</a></li>
+<li><a href="#%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8-%E9%9D%99%E6%80%81%E5%AD%98%E5%82%A8%E5%92%8C%E5%8A%A8%E6%80%81%E5%AD%98%E5%82%A8">自动存储、静态存储和动态存储</a></li>
+</ul>
+</li>
+<li><a href="#49-%E7%B1%BB%E5%9E%8B%E7%BB%84%E5%90%88">4.9 类型组合</a>
+<ul>
+<li><a href="#%E5%A4%8D%E6%9D%82%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E8%AF%86%E5%88%AB">复杂数据类型的识别</a></li>
+</ul>
+</li>
+<li><a href="#410-%E6%95%B0%E7%BB%84%E7%9A%84%E6%9B%BF%E4%BB%A3%E5%93%81">4.10 数组的替代品</a>
+<ul>
+<li><a href="#%E6%A8%A1%E6%9D%BF%E7%B1%BBvector%E5%92%8Carray">模板类vector和array</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC5%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E5%92%8C%E5%85%B3%E7%B3%BB%E8%A1%A8%E8%BE%BE%E5%BC%8F">第5章 循环和关系表达式</a>
+<ul>
+<li><a href="#51-for%E5%BE%AA%E7%8E%AF">5.1 for循环</a>
+<ul>
+<li><a href="#ios-boolalpha">ios:: boolalpha</a></li>
+<li><a href="#%E5%89%8D%E7%BC%80%E6%A0%BC%E5%BC%8F%E5%92%8C%E5%90%8E%E7%BC%80%E6%A0%BC%E5%BC%8F">前缀格式和后缀格式</a></li>
+</ul>
+</li>
+<li><a href="#52-while%E5%BE%AA%E7%8E%AF">5.2 while循环</a></li>
+<li><a href="#53-do-while%E5%BE%AA%E7%8E%AF">5.3 do while循环</a>
+<ul>
+<li><a href="#ctime%E5%A4%B4%E6%96%87%E4%BB%B6">ctime头文件</a></li>
+</ul>
+</li>
+<li><a href="#54-%E5%9F%BA%E4%BA%8E%E8%8C%83%E5%9B%B4%E7%9A%84for%E5%BE%AA%E7%8E%AF">5.4 基于范围的for循环</a></li>
+<li><a href="#55-%E5%BE%AA%E7%8E%AF%E5%92%8C%E6%96%87%E6%9C%AC%E8%BE%93%E5%85%A5">5.5 循环和文本输入</a>
+<ul>
+<li><a href="#%E6%96%87%E4%BB%B6%E5%B0%BEeof">文件尾EOF</a></li>
+</ul>
+</li>
+<li><a href="#56-%E5%B5%8C%E5%A5%97%E5%BE%AA%E7%8E%AF%E5%92%8C%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84">5.6 嵌套循环和二维数组</a>
+<ul>
+<li><a href="#%E6%8C%87%E9%92%88%E6%95%B0%E7%BB%84%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%BA%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F">指针数组初始化为字符串常量</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC6%E7%AB%A0-%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5%E5%92%8C%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97">第6章 分支语句和逻辑运算</a>
+<ul>
+<li><a href="#61-if%E8%AF%AD%E5%8F%A5">6.1 if语句</a></li>
+<li><a href="#62-%E9%80%BB%E8%BE%91%E8%A1%A8%E8%BE%BE%E5%BC%8F">6.2 逻辑表达式</a></li>
+<li><a href="#63-%E5%AD%97%E7%AC%A6%E5%87%BD%E6%95%B0%E5%BA%93cctype">6.3 字符函数库cctype</a></li>
+<li><a href="#64-%E8%BF%90%E7%AE%97%E7%AC%A6">6.4 ？：运算符</a></li>
+<li><a href="#65-switch%E8%AF%AD%E5%8F%A5">6.5 switch语句</a></li>
+<li><a href="#66-break%E5%92%8Ccontinue%E8%AF%AD%E5%8F%A5">6.6 break和continue语句</a></li>
+<li><a href="#67-%E8%AF%BB%E5%8F%96%E6%95%B0%E7%BB%84%E7%9A%84%E5%BE%AA%E7%8E%AF">6.7 读取数组的循环</a></li>
+<li><a href="#68-%E7%AE%80%E5%8D%95%E6%96%87%E4%BB%B6%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA">6.8 简单文件输入输出</a>
+<ul>
+<li><a href="#%E7%AE%80%E5%8D%95%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99">简单文件读写</a></li>
+<li><a href="#%E6%96%87%E6%9C%AC%E6%96%87%E4%BB%B6%E7%BB%93%E5%B0%BE">文本文件结尾</a></li>
+<li><a href="#%E6%96%87%E4%BB%B6%E6%89%93%E5%BC%80%E5%A4%B1%E8%B4%A5%E6%97%B6%E7%A1%AE%E5%AE%9A%E5%8E%9F%E5%9B%A0">文件打开失败时确定原因</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC7%E7%AB%A0-%E5%87%BD%E6%95%B0c%E7%9A%84%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9D%97">第7章 函数——C++的编程模块</a>
+<ul>
+<li><a href="#71-%E5%A4%8D%E4%B9%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86">7.1 复习函数的基本知识</a></li>
+<li><a href="#72-%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%92%8C%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92">7.2 函数参数和按值传递</a>
+<ul>
+<li><a href="#%E5%BD%A2%E5%8F%82%E5%92%8C%E5%AE%9E%E5%8F%82">形参和实参</a></li>
+</ul>
+</li>
+<li><a href="#73-%E5%87%BD%E6%95%B0%E5%92%8C%E6%95%B0%E7%BB%84">7.3 函数和数组</a>
+<ul>
+<li><a href="#%E6%95%B0%E7%BB%84%E4%BD%9C%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0">数组作函数参数</a></li>
+<li><a href="#%E6%8C%87%E9%92%88%E5%92%8Cconst">指针和const</a></li>
+<li><a href="#%E6%8C%87%E5%90%91%E5%B8%B8%E9%87%8F%E7%9A%84%E6%8C%87%E9%92%88%E5%92%8C%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88">指向常量的指针和常量指针</a></li>
+</ul>
+</li>
+<li><a href="#74-%E5%87%BD%E6%95%B0%E5%92%8C%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84">7.4 函数和二维数组</a>
+<ul>
+<li><a href="#%E4%BA%8C%E7%BB%B4%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E6%8C%87%E9%92%88">二维（多维）数组的指针</a></li>
+</ul>
+</li>
+<li><a href="#75-%E5%87%BD%E6%95%B0%E5%92%8Cc-%E9%A3%8E%E6%A0%BC%E5%AD%97%E7%AC%A6%E4%B8%B2">7.5 函数和C-风格字符串</a></li>
+<li><a href="#76-%E5%87%BD%E6%95%B0%E5%92%8C%E7%BB%93%E6%9E%84">7.6 函数和结构</a></li>
+<li><a href="#77-%E5%87%BD%E6%95%B0%E5%92%8Cstring%E5%AF%B9%E8%B1%A1">7.7 函数和string对象</a></li>
+<li><a href="#78-%E5%87%BD%E6%95%B0%E5%92%8Carray%E5%AF%B9%E8%B1%A1">7.8 函数和array对象</a></li>
+<li><a href="#79-%E9%80%92%E5%BD%92">7.9 递归</a></li>
+<li><a href="#710-%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88">7.10 函数指针</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<hr>
+<h2 id="前言">前言</h2>
+<p>这本书可以说是久仰大名了，但一直没有深入学习。一方面是没有时间，另一方面则是从学生时代的课堂学习转到看书自学中间还是需要个过渡的。这段时间刚度过考试周能喘口气，又为实习就业等未来感到焦虑，就看看书提升下自我吧。</p>
+<p>本来我学习是没有做笔记的习惯的，会就是会不会就是不会。但大学读了几年，愈发感到力不从心。要学的知识太多太杂，很多东西你学完当时掌握得很好，转过头回来就忘了个七七八八。这种感觉很痛苦，就像是游戏回坑结果新手村都出不去。最后还是妥协了，做点笔记吧，忘了什么查查笔记总比翻一本几百页的大部头方便。</p>
+<p>第一次边学边作笔记，我也不知道怎么弄比较好，摸索着来吧。这次我打算按目录分章分类，记下相对陌生的知识点方便日后查阅，更多是一种自用的功能性的索引的感觉。</p>
+<hr>
+<h2 id="第1章-预备知识">第1章 预备知识</h2>
+<p>这一章更多是一个科普的内容，感觉有空看看也还行。学干货这章就先跳过吧。</p>
+<hr>
+<h2 id="第2章-开始学习c">第2章 开始学习C++</h2>
+<h3 id="21-进入c">2.1 进入C++</h3>
+<p>这部分就是hello world，大部分内容都会。</p>
+<h4 id="头文件命名">头文件命名</h4>
+<p>头文件命名约定可以看看，了解一下c和c++头文件的区别。<br>
+<img src="https://jinvic.github.io/post-images/%5Bstudy-notes%5D-cpp-primer-plus-6th-edition-%5Bbasic%5D/2.1_1.png" alt="2.1_1" loading="lazy"></p>
+<h4 id="命名空间">命名空间</h4>
+<p>命名空间主要是用来区分不同的版本。例如A和B都写了一个函数func()，就可以用A::func()，B::func()来区别。<br>
+<code>using namespace std;</code>是一种偷懒的做法，现在我已经改掉了这个习惯，直接使用std::cin等。另一种可行的方法是<code>using std::cin</code>，这样也可以直接使用cin，相对using整个命名空间要安全些。此外，还可以将using语句放在特定的函数或结构体定义内来限制范围。</p>
+<h3 id="22-c语句">2.2 C++语句</h3>
+<h3 id="23-其他c语句">2.3 其他C++语句</h3>
+<p>这一部分没什么重要的内容。主要是面向初学者的专业名词解释。</p>
+<h3 id="24-函数">2.4 函数</h3>
+<h4 id="函数原型">函数原型</h4>
+<blockquote>
+<p><strong>注意</strong>：C++程序应当为程序中使用的每个函数提供原型。</p>
+</blockquote>
+<p>我之前一直将原型称为声明，因为原型的作用就和声明一样，告诉编译器有这么个东西。不过我一般不写原型，而是直接在用到函数之前把函数的定义写好在前面。这或许并不是一个好的编码习惯，需要改正。<br>
+再复习下原型和定义的区别：<br>
+<img src="https://jinvic.github.io/post-images/%5Bstudy-notes%5D-cpp-primer-plus-6th-edition-%5Bbasic%5D/2.4_1.png" alt="2.4_1" loading="lazy"></p>
+<hr>
+<h2 id="第3章-处理数据">第3章 处理数据</h2>
+<h3 id="31-简单变量">3.1 简单变量</h3>
+<h4 id="变量命名规则">变量命名规则</h4>
+<figure data-type="image" tabindex="1"><img src="https://jinvic.github.io/post-images/%5Bstudy-notes%5D-cpp-primer-plus-6th-edition-%5Bbasic%5D/3.1_1.png" alt="3.1_1" loading="lazy"></figure>
+<h4 id="运算符sizeof">运算符sizeof</h4>
+<p>可对类型名或变量名使用sizeof运算符。对类型名(如 int)使用sizeof运算符时，应将名称放在括号中;但对变量名(如n_short)使用该运算符，括号是可选的:</p>
+<pre><code class="language-C++">cout &lt;&lt; &quot;int is &quot; &lt;&lt; sizeof (int) &lt;&lt; &quot; bytes .\n&quot; ;
+cout &lt;&lt; &quot;short is &quot; &lt;&lt; sizeof n_short &lt;&lt; &quot; bytes.\n&quot; ;
+</code></pre>
+<h4 id="头文件climits">头文件climits</h4>
+<p>头文件climits定义了符号常量来表示类型的限制。<br>
+<img src="https://jinvic.github.io/post-images/%5Bstudy-notes%5D-cpp-primer-plus-6th-edition-%5Bbasic%5D/3.1_2.png" alt="3.1_2" loading="lazy"><br>
+<img src="https://jinvic.github.io/post-images/%5Bstudy-notes%5D-cpp-primer-plus-6th-edition-%5Bbasic%5D/3.1_3.png" alt="3.1_3" loading="lazy"></p>
+<h4 id="c进制表示法">C++进制表示法</h4>
+<p>C++使用前一（两）位来标识数字常量的基数。</p>
+<ul>
+<li>如果第一位为1~9，则基数为10（十进制);因此93是以10为基数的。</li>
+<li>如果第一位是0，第二位为1~7，则基数为8(八进制);因此042的基数是8，它相当于十进制数34。</li>
+<li>如果前两位为0x或0X，则基数为16(十六进制);</li>
+</ul>
+<p>头文件iostream提供了控制符<code>dec</code>、<code>hex</code>和 <code>oct,</code>分别用于指示cout以十进制、十六进制和八进制格式显示整数。</p>
+<h4 id="wchar_twcin和wcout">wchar_t,wcin和wcout</h4>
+<blockquote>
+<p>一种实现可以同时支持一个小型基本字符集和一个较大的扩展字符集。8位char可以表示基本字符集，另一种类型wchar_t (宽字符类型)可以表示扩展字符集。<code>wchar_t</code>类型是一种整数类型，它有足够的空间，可以表示系统使用的最大扩展字符集。这种类型与另一种整型（底层(underlying）类型）的长度和符号属性相同。对底层类型的选择取决于实现，因此在一个系统中，它可能是unsigned short，而在另一个系统中，则可能是int。<br>
+cin和 cout将输入和输出看作是char流，因此不适于用来处理wchar_t类型。iostream头文件的最新版本提供了作用相似的工具——<code>wcin</code>和<code>wcout</code>，可用于处理wchar_t流。另外，可以通过加上<code>前缀L</code>来指示宽字符常量和宽字符串。下面的代码将字母Р的wchar_t版本存储到变量bob中,并显示单词tall 的wchar_t版本:</p>
+</blockquote>
+<pre><code class="language-C++">wchar_t bob = L'P';
+l/ a wide-character constant
+wcout &lt;&lt; L&quot;tall&quot; &lt;&lt; endl; ll/ outputting a wide-character string
+</code></pre>
+<p>在支持两字节 wchar_t 的系统中，上述代码将把每个字符存储在一个两个字节的内存单元中。</p>
+<h4 id="char16_t和char32_t">char16_t和char32_t</h4>
+<blockquote>
+<p>C++11新增了类型<code>char16_t</code>和<code>char32_t</code>，其中前者是无符号的，长16位，而后者也是无符号的，但长32位。C++11使用<code>前缀u</code>表示char16_t字符常量和字符串常量,如uC'和u&quot;be good&quot;;并使用<code>前缀U</code>表示char32_t常量,如U'R'和U&quot;dirtyrat”。</p>
+</blockquote>
+<pre><code class="language-C++">char16_t ch1 = u'q' ;
+l / basic character in 16-bit form
+char32_t ch2 = U'\U0000222B'; // universal character name in 32-bit form
+</code></pre>
+<p>与wchar_t一样，char16_t和char32_t也都有底层类型——一种内置的整型，但底层类型可能随系统而已。</p>
+<h3 id="32-const限定符">3.2 const限定符</h3>
+<p><code>const</code>相比于<code>#define</code>的优点：</p>
+<ul>
+<li>首先，它能够明确指定类型。</li>
+<li>其次，可以使用C++的作用域规则将定义限制在特定的函数或文件中。</li>
+<li>第三，可以将const用于更复杂的类型，如第4章将介绍的数组和结构。</li>
+</ul>
+<p>此外，在C++（而不是C)中可以用const值来声明数组长度。</p>
+<h3 id="33-浮点数">3.3 浮点数</h3>
+<h4 id="cfloat或floath头文件">cfloat或float.h头文件</h4>
+<p>可以从<code>cfloat</code>或<code>float.h</code>头文件中关于有效位数和指数范围等的限制。</p>
+<h4 id="浮点常量后缀">浮点常量后缀</h4>
+<p>在默认情况下，像8.24和2.4E8这样的浮点常量都属于double类型。<br>
+如果希望常量为float类型，请使用<code>f或F后缀</code>。<br>
+对于long double类型，可使用<code>l或L后缀</code>（由于l看起来像数字1，因此L是更好的选择)。<br>
+下面是一些示例:</p>
+<pre><code class="language-C++">1.234f  // a float constant
+2.45E20F // a float constant
+2.345324E28 // a double constant
+2.2L  // a long double constant
+</code></pre>
+<h3 id="34-c算术运算符">3.4 C++算术运算符</h3>
+<h4 id="运算符优先级">运算符优先级</h4>
+<p>书里只简单讲了讲优先级和结合性的概念。这里放一张<a href="https://learn.microsoft.com/zh-cn/cpp/cpp/cpp-built-in-operators-precedence-and-associativity?view=msvc-170">微软文档</a>里的表，这张表的内容很全，方便查表。<br>
+顺便吐槽，这表里有机翻啊，除法翻译成部门，赋值翻译成转让。。。我用md的表格语法贴上来，改掉上述翻译错误。</p>
+<!-- ![](https://jinvic.github.io/post-images/[study-notes]-cpp-primer-plus-6th-edition-[basic]/3.4_1.png) -->
+<table>
+<thead>
+<tr>
+<th>运算符说明</th>
+<th style="text-align:center">运算符</th>
+<th style="text-align:center">替代方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第 1 组优先级，无关联性</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>范围解析</td>
+<td style="text-align:center">::</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>第 2 组优先级，从左到右关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>成员选择（对象或指针）</td>
+<td style="text-align:center">或 -&gt;</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>数组下标</td>
+<td style="text-align:center">[]</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>函数调用</td>
+<td style="text-align:center">()</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>后缀递增</td>
+<td style="text-align:center">++</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>后缀递减</td>
+<td style="text-align:center">--</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>类型名称</td>
+<td style="text-align:center">typeid</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>常量类型转换</td>
+<td style="text-align:center">const_cast</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>动态类型转换</td>
+<td style="text-align:center">dynamic_cast</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>重新解释的类型转换</td>
+<td style="text-align:center">reinterpret_cast</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>静态类型转换</td>
+<td style="text-align:center">static_cast</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>第 3 组优先级，从右到左关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>对象或类型的大小</td>
+<td style="text-align:center">sizeof</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>前缀递增</td>
+<td style="text-align:center">++</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>前缀递减</td>
+<td style="text-align:center">--</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>二进制反码</td>
+<td style="text-align:center">~</td>
+<td style="text-align:center">compl</td>
+</tr>
+<tr>
+<td>逻辑“非”</td>
+<td style="text-align:center">!</td>
+<td style="text-align:center">not</td>
+</tr>
+<tr>
+<td>一元求反</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>一元加</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>Address-of</td>
+<td style="text-align:center">&amp;</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>间接寻址</td>
+<td style="text-align:center">*</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>创建对象</td>
+<td style="text-align:center">new</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>销毁对象</td>
+<td style="text-align:center">delete</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>强制转换</td>
+<td style="text-align:center">()</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>第 4 组优先级，从左到右关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>指向成员的指针（对象或指针）</td>
+<td style="text-align:center">或 -&gt;*</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>第 5 组优先级，从左到右关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>乘法</td>
+<td style="text-align:center">*</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>除法</td>
+<td style="text-align:center">/</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>取模</td>
+<td style="text-align:center">%</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>第 6 组优先级，从左到右关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>加法</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>减法</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>第 7 组优先级，从左到右关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>左移</td>
+<td style="text-align:center">&lt;&lt;</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>右移</td>
+<td style="text-align:center">&gt;&gt;</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>第 8 组优先级，从左到右关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>小于</td>
+<td style="text-align:center">&lt;</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>大于</td>
+<td style="text-align:center">&gt;</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>小于或等于</td>
+<td style="text-align:center">&lt;=</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>大于或等于</td>
+<td style="text-align:center">&gt;=</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>第 9 组优先级，从左到右关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>相等</td>
+<td style="text-align:center">==</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>不相等</td>
+<td style="text-align:center">!=</td>
+<td style="text-align:center">not_eq</td>
+</tr>
+<tr>
+<td>第 10 组优先级，从左到右关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>位与</td>
+<td style="text-align:center">&amp;</td>
+<td style="text-align:center">bitand</td>
+</tr>
+<tr>
+<td>第 11 组优先级，从左到右关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>位异或</td>
+<td style="text-align:center">^</td>
+<td style="text-align:center">xor</td>
+</tr>
+<tr>
+<td>第 12 组优先级，从左到右关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>位或</td>
+<td style="text-align:center">|</td>
+<td style="text-align:center">bitor</td>
+</tr>
+<tr>
+<td>第 13 组优先级，从左到右关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>逻辑与</td>
+<td style="text-align:center">&amp;&amp;</td>
+<td style="text-align:center">and</td>
+</tr>
+<tr>
+<td>第 14 组优先级，从左到右关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>逻辑或</td>
+<td style="text-align:center">||</td>
+<td style="text-align:center">or</td>
+</tr>
+<tr>
+<td>第 15 组优先级，从右到左关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>条件逻辑</td>
+<td style="text-align:center">? :</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>赋值</td>
+<td style="text-align:center">=</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>乘法赋值</td>
+<td style="text-align:center">*=</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>除法赋值</td>
+<td style="text-align:center">/=</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>取模赋值</td>
+<td style="text-align:center">%=</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>加法赋值</td>
+<td style="text-align:center">+=</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>减法赋值</td>
+<td style="text-align:center">-=</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>左移赋值</td>
+<td style="text-align:center">&lt;&lt;=</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>右移赋值</td>
+<td style="text-align:center">&gt;&gt;=</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>按位“与”赋值</td>
+<td style="text-align:center">&amp;=</td>
+<td style="text-align:center">and_eq</td>
+</tr>
+<tr>
+<td>按位“与或”赋值</td>
+<td style="text-align:center">|=</td>
+<td style="text-align:center">or_eq</td>
+</tr>
+<tr>
+<td>按位“异或”赋值</td>
+<td style="text-align:center">^=</td>
+<td style="text-align:center">xor_eq</td>
+</tr>
+<tr>
+<td>引发表达式</td>
+<td style="text-align:center">throw</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>第 16 组优先级，从左到右关联</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>逗号</td>
+<td style="text-align:center">,</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h4 id="类型转换">类型转换</h4>
+<p><img src="https://jinvic.github.io/post-images/%5Bstudy-notes%5D-cpp-primer-plus-6th-edition-%5Bbasic%5D/3.4_2.png" alt="3.4_2" loading="lazy"><br>
+在进行<strong>列表初始化（list-initiallization）</strong>，即使用{}进行初始化（C++11）时，不允许<strong>缩窄（narrowing）</strong>，即变量的类型可能无法表示赋给它的值。</p>
+<pre><code class="language-C++">const int code = 66;
+int x = 66;
+char c1{31325}; // narrowing, not allowed
+char c2 = {66}; // allowed because char can hold 66
+char c3{code}; // ditto
+char c4 = {x}; // not allowed,x is not constant
+x = 31325;
+char c5 = x; // allowed by this form of initialization
+</code></pre>
+<hr>
+<h2 id="第4章-复合类型">第4章 复合类型</h2>
+<h3 id="41-数组">4.1 数组</h3>
+<h4 id="数组初始化">数组初始化</h4>
+<p>需要注意的一些规则：</p>
+<ul>
+<li>只有在定义的时候才能初始化</li>
+<li>如果只对数组一部分初始化，则编译器把其他元素设置为0</li>
+<li>如果初始化数组是方括号[]内为空，则C++编译器将计算元素个数。<br>
+一般不推荐这样做。不过，在初始化const char[]时可以这么做，不用去数字符串长度。</li>
+</ul>
+<p>以下是C++11新增的一些特性：</p>
+<ul>
+<li>初始化数组时可省略等号</li>
+<li>可不在大括号内包含任何东西，这将把所有元素设置为零</li>
+<li>列表初始化禁止缩窄转换，详见<a href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2">3.4 C++算术运算符-类型转换</a></li>
+</ul>
+<h3 id="42-字符串">4.2 字符串</h3>
+<h4 id="读取一行字符串">读取一行字符串</h4>
+<p><code>cin.getline()</code>：该函数读取整行，使用回车键输入的换行符确定输入结尾。<br>
+第一个参数：存储输入行的数组的名称<br>
+第二个参数：读取的字符数。<strong>注意：</strong> 有一个多余空间用于存储'\0'，如下实际能存储的字符数为19</p>
+<pre><code class="language-C++">cin.getline(name,20);
+</code></pre>
+<p><code>cin.get()</code>：该函数在读入一行时参数和用法大致与getline()相同，区别是getline()读取并丢弃换行符，而get()将其<strong>留在输入队列中</strong>。<br>
+另一种用法是使用不带参数的<code>cin.get()</code>，它将读取下一个字符，因此可以用于处理换行符。<br>
+在混合输入数字和字符串时，就可以用这个方法处理掉多余的换行符。如：</p>
+<pre><code class="language-C++">(cin&gt;&gt;age).get()&gt;&gt;name;
+</code></pre>
+<h4 id="空行和溢出问题">空行和溢出问题</h4>
+<p>这个问题我挺在意，但书上表示在之后章节再详细介绍，先mark一下</p>
+<h3 id="43-string类简介">4.3 string类简介</h3>
+<h4 id="字符串的复制与拼接">字符串的复制与拼接</h4>
+<p>c中的char数组需要使用<code>strcpy()</code>进行复制，<code>strcat()</code>进行拼接。而c++的string类可以通过赋值进行复制，+运算符进行拼接。例如，将字符串1和2拼接后复制给3：</p>
+<pre><code class="language-C++">//C风格
+strcpy(charr3, charr1);
+strcat(charr3, charr2);
+//C++风格
+str3 = str1 + str2;
+</code></pre>
+<p>相比于c的数组操作，c++的类操作还不用担心长度溢出等问题。</p>
+<h4 id="string类读入一行">string类读入一行</h4>
+<pre><code class="language-C++">cin.getline(charr, 20); //char数组读入一行
+getline (cin , str) ; // string类读入一行
+</code></pre>
+<p>这里没有使用句点表示法，这表明这个getline()不是类方法。它将cin 作为参数，指出到哪里去查找输入。另外，也没有指出字符串长度的参数，因为string对象将根据字符串的长度自动调整自己的大小。<br>
+istream类因为引入在string类之前，所以没有考虑string类型。<code>cin&gt;&gt;x</code>在读入其他类型时，使用的是istream类的<strong>成员函数</strong>，而<code>cin&gt;&gt;str</code>使用的是string类的<strong>友元函数</strong>。关于友元函数将在11章详细介绍。</p>
+<h4 id="原始字符串">原始字符串</h4>
+<p>原始字符串将<code>&quot;(</code>和<code>)&quot;</code>用作定界符，并使用<code>前缀R</code>来标识原始字符串:</p>
+<pre><code class="language-C++">cout &lt;&lt; R&quot;(Jim &quot;King&quot; Tutt uses &quot;\n&quot; instead of endl. )&quot; &lt;&lt; ' \n ';
+</code></pre>
+<ul>
+<li>输入原始字符串时，按回车键不仅会移到下一行，还将在原始字符串中添加回车字符。</li>
+<li>自定义定界符时，在默认定界符之间添加任意数量的基本字符，但空格、左括号、右括号、斜杠和控制字符（如制表符和换行符）除外。</li>
+<li>可将前缀R与其他字符串前缀结合使用，以标识wchar_t等类型的原始字符串。R放在前后都可以。</li>
+</ul>
+<h3 id="44-结构简介">4.4 结构简介</h3>
+<p>没什么需要注意的知识点。记一下匿名结构体吧。</p>
+<h4 id="匿名结构体">匿名结构体</h4>
+<p>可以省略名称，定义一种结构类型和这种类型的变量。</p>
+<pre><code class="language-C++">struct
+{
+    int x;
+    int y;
+}position;
+</code></pre>
+<p>这种结构体类型没有名称，因此无法创建这种类型的变量，只能在定义的同时声明变量。</p>
+<h4 id="结构中的位字段">结构中的位字段</h4>
+<p>类型：整形或枚举。定义方式：冒号+位数。</p>
+<pre><code class="language-C++">struct torgle_register
+{
+    unsigned int sN : 4; // 4 bits for sN value
+    unsigned int : 4;    // 4 bits unused
+    bool goodIn : 1;     // valid input (1 bit)
+    bool goodTorgle : 1; // successful torgling
+};
+</code></pre>
+<p>书上提到位字段常用于低级编程，也就是更接近硬件和底层，所以了解一下就行，可以使用位运算替代。</p>
+<h3 id="45-共用体">4.5 共用体</h3>
+<p><strong>共用体（union）</strong> 是一种数据格式，它能够存储不同的数据类型，但只能同时存储其中的一种类型。</p>
+<h4 id="共用体的大小">共用体的大小</h4>
+<p>这部分书上没提，稍微查了下，共用体的大小要<strong>大于最大的成员，并且对齐所有的成员</strong>。以下面这个共用体为例：</p>
+<pre><code class="language-C++">union U
+{
+    char s[9];
+    int n;
+    double d;
+};
+</code></pre>
+<p>用运算符sizeof测试其大小为16。这是因为这里存在字节对齐的问题，9既不能被4整除，也不能被8整除。因此补充字节到16，这样就符合所有成员的自身对齐了。</p>
+<h4 id="匿名共用体">匿名共用体</h4>
+<p>匿名共用体和上面讲的匿名结构体差不多。它的一种用法是作为结构体的成员变量，共用体的成员将成为相同地址处的结构体的变量。</p>
+<pre><code class="language-C++">struct widget
+    {
+        char brand[20];
+        int type;
+        union // anonymous union
+        {
+            long id_num;      // type 1 widgets
+            char id_char[20]; // other widgets
+        };
+    };
+    widget prize;
+    if (prize.type == 1)
+        cin &gt;&gt; prize.id_num;
+    else
+        cin &gt;&gt; prize.id_char;
+</code></pre>
+<p>如上，可以直接使用prize.id_num访问共用体内成员，不需要命名和定义共同体在通过共用体访问内部成员。</p>
+<h3 id="46-枚举">4.6 枚举</h3>
+<h4 id="定义与赋值">定义与赋值</h4>
+<p>定义格式：<strong>enum 类型名 {枚举量[,枚举量]};</strong>，以下是一个示例：</p>
+<pre><code class="language-C++">enum spectrum {red , orange, yellow, green, blue, violet, indigo, ultraviolet};
+</code></pre>
+<ul>
+<li>默认情况下枚举量的值从0开始类推。</li>
+<li>也可以通过赋值显式设置枚举量的值。</li>
+<li>指定的值必须是整数。</li>
+<li>如果只显式定义了部分枚举量的值，未被初始化的枚举量的值将比前一个大1。</li>
+<li>也可以创建多个值相同的枚举量。</li>
+</ul>
+<h4 id="取值范围">取值范围</h4>
+<blockquote>
+<p>每个枚举都有取值范围（range），通过强制类型转换，可以将取值范围内的任何整数值赋值给枚举变量，即使这个值不是枚举值。</p>
+</blockquote>
+<p>取值范围的确定如下：</p>
+<ul>
+<li><strong>上限</strong>： 大于最大值的最小的2的幂减1。</li>
+<li><strong>下限</strong>：若最小值为0，则下限为0；否则，为上限相同方式加负号。<br>
+C++11增加了域内枚举（scoped enumeration），这将在第十章介绍。</li>
+</ul>
+<h3 id="47-指针和自由存储空间">4.7 指针和自由存储空间</h3>
+<p>两个基本运算符：<code>取地址&amp;</code>，<code>解引用*</code></p>
+<h4 id="内存的分配和释放">内存的分配和释放</h4>
+<p>在c中，可以使用<code>malloc()</code>和<code>calloc()</code>分配内存。</p>
+<pre><code class="language-C++"> void *malloc( size_t size );
+ void *calloc( size_t num, size_t size );
+</code></pre>
+<p>calloc()内部其实就是用malloc实现的。<br>
+可以使用<code>free()</code>释放内存。</p>
+<pre><code class="language-C++">void free( void *ptr );
+</code></pre>
+<p>在C++中，使用<code>new</code>申请内存空间，<code>delete</code>释放内存空间。</p>
+<pre><code class="language-C++">pointer = new type;
+pointer = new type( initializer );
+pointer = new type[size];
+
+delete p;
+delete[] pArray;
+</code></pre>
+<p>书中在这里还提到了静态联编和动态联编的区别。</p>
+<h4 id="静态联编和动态联编">静态联编和动态联编</h4>
+<p>静态联编:</p>
+<blockquote>
+<p>使用数组声明来创建数组时，将采用静态联编，即数组的长度在编译时设置。</p>
+</blockquote>
+<p>动态联编:</p>
+<blockquote>
+<p>使用new[]运算符创建数组时，将采用动态联编（动态数组)，即将在运行时为数组分配空间，其长度也将在运行时设置。使用完这种数组后，应使用delete[]释放其占用的内存。</p>
+</blockquote>
+<h3 id="48-指针-数组和指针算">4.8 指针、数组和指针算</h3>
+<h4 id="数组的地址和指针类型">数组的地址和指针类型</h4>
+<p>这一部分看起来或许很抽象，但在应用时很容易出错。</p>
+<blockquote>
+<p>数组名被解释为其第一个元素的地址，而对数组名应用地址运算符时，得到的是整个数组的地址。</p>
+</blockquote>
+<pre><code class="language-C++">short tell[10];        // tell an array of 20 bytes
+cout &lt;&lt; tell &lt;&lt; endl;  // displays &amp;tell[0]
+cout &lt;&lt; &amp;tell &lt;&lt; endl; // displays address of whole array
+</code></pre>
+<blockquote>
+<p>从数字上说，这两个地址相同;但从概念上说，&amp;tell[0](即tell )是一个2字节内存块的地址，而&amp;tell是一个20字节内存块的地址。因此，表达式tell+1将地址值加2，而表达式&amp;tell+2将地址加20。换句话说, tell是一个 short指针(*short )，而&amp;tell是一个这样的指针，即指向包含20个元素的short 数组(short <a href="20">*</a> )。</p>
+</blockquote>
+<p>让我们看看这个short数组的指针类型：<code>short (*)[20]</code>，乍一看似乎并不好理解。这是一个长为20的short数组的指针？还是一个short指针的数组，长为20？让我们接着看下去。<br>
+我们可以这样声明和初始化这种指针：</p>
+<pre><code class="language-C++">short (*pas)[20] = &amp;tell;   //pas points to array of 20 shorts
+</code></pre>
+<blockquote>
+<p>如果省略括号,优先级规则将使得pas先与[20]结合，导致pas是一个short 指针数组,它包含20个元素,因此括号是必不可少的。其次，如果要描述变量的类型，可将声明中的变量名删除。因此, pas的类型为short(*)[20]。另外，由于pas被设置为&amp;tell，因此*pas与tell等价，所以(*pas)[0]为tell数组的第一个元素。</p>
+</blockquote>
+<p>这里通过优先级的区别回答了上述问题。我提供另一种理解思路，不一定对：</p>
+<ul>
+<li>如果没有括号，short与*结合，认为是short指针，再通过后面的[20]判定为指针数组。</li>
+<li>有括号时，先是short和[20]结合判定为short数组，再通过*判定为数组指针。</li>
+</ul>
+<p>我再讲讲关于使用<code>方括号[]</code> 进行数组索引的问题。这个方括号其实就相当于解引用，比如a[5]就相当于<code>\*(a+5)</code>。理解了这个，一些直接使用指针的数组操作就更好理解了。</p>
+<h4 id="字符串指针">字符串指针</h4>
+<p>字符串指针和其他类型有所不同，它就是<code>char *</code>，而<strong>不是</strong><code>char (*)[20]</code>，因为字符串的长度是由后续地址中'\0'的位置决定的，而不是一开始被声明的。此外，在尝试输出字符串地址时，将会输出字符串的值：<code>cout&lt;&lt;str;</code>。如果需要输出字符串的地址，需要强制转换成其他类型的指针：<code>cout&lt;&lt;(int*)str;</code>。</p>
+<h4 id="自动存储-静态存储和动态存储">自动存储、静态存储和动态存储</h4>
+<p>这部分其实看看书就好，我简单总结一下：</p>
+<ul>
+<li>自动存储就是在函数内部定义的变量，即局部变量，只在其所在的代码块内有效，离开代码块后内存被释放。</li>
+<li>静态存储的方式有两种，一种是在函数外定义，即全局变量；另一种是使用<code>static</code>关键字。静态存储的变量存在程序的整个生命周期，在程序结束后释放内存。</li>
+<li>动态存储就是使用<code>new</code>和<code>delete</code>申请和释放内存，管理了一个内存池。这种方式更自由，但也导致了更复杂的内存管理。</li>
+</ul>
+<p>进一步总结一下分配位置和生命周期：</p>
+<ul>
+<li>自动存储分配在<strong>栈</strong>上，生命周期与所属函数的生命周期相同。</li>
+<li>静态存储是分配在<strong>数据段</strong>中的，其生命周期从程序开始执行到结束都存在。</li>
+<li>动态存储分配在<strong>自由存储区</strong>和<strong>堆</strong>上，需要手动分配和释放内存，其生命周期由程序员控制。</li>
+</ul>
+<h3 id="49-类型组合">4.9 类型组合</h3>
+<p>没什么内容，看看指向指针数组的指针这种一堆*号嵌套怎么辨别吧。</p>
+<h4 id="复杂数据类型的识别">复杂数据类型的识别</h4>
+<pre><code class="language-C++">int a;                    // int类型
+int *b[3] = {&amp;a, &amp;a, &amp;a}; // int指针数组
+int **c = b;              // 指向int指针数组的指针
+</code></pre>
+<p>一种方式就是之前提到的，*和[]的转换。比如b，你把后面的[3]看成一个*，于是b的类型就为int**。从int**到int* []也是一样的，可以看出int**是一个int指针的数组。<br>
+书上还提到用<code>auto</code>自动获取类型：<code>auto c=b</code>，就不用纠结怎么写c的类型了。但这样编译是过了，还是不知道c到底是什么类型。另一种可行的方法是<code>typeid(b).name()</code>，我们只要输出一下，编译器就会告诉我们数据类型了。</p>
+<h3 id="410-数组的替代品">4.10 数组的替代品</h3>
+<h4 id="模板类vector和array">模板类vector和array</h4>
+<p>简单介绍了模板类<code>vector</code>和<code>array</code>，讲的比较浅。贴两个声明方式吧：</p>
+<pre><code class="language-C++">vector&lt;typeName&gt; vt (n_elem) ;
+arrayetypeName, n_elem&gt; arr;
+</code></pre>
+<p>它们的区别在于：<strong>vector长度可变，array长度固定</strong>。这是因为vector内部就是用new和delete来管理内存的，它的内存空间位于自由存储区和堆，而array的内存空间和常规数组一样位于栈或数据段中。<br>
+此外，vector和array和常规数组一样不检查下标越界的问题。为了安全可以使用<code>at()</code>成员函数，它将在运行期间捕获非法索引，同时程序默认中断。</p>
+<hr>
+<h2 id="第5章-循环和关系表达式">第5章 循环和关系表达式</h2>
+<h3 id="51-for循环">5.1 for循环</h3>
+<p><strong>都是基础，记点杂项。</strong></p>
+<h4 id="ios-boolalpha">ios:: boolalpha</h4>
+<blockquote>
+<p>通常，cout在显示 bool值之前将它们转换为int，但cout.setf (ios:: boolalpha）函数调用设置了一个标记，该标记命令cout显示 true和 false，而不是1和0。</p>
+</blockquote>
+<h4 id="前缀格式和后缀格式">前缀格式和后缀格式</h4>
+<blockquote>
+<p>对于内置类型，采用哪种格式不会有差别;<br>
+但对于用户定义的类型，如果有用户定义的递增和递减运算符，则前缀格式的效率更高。</p>
+</blockquote>
+<h3 id="52-while循环">5.2 while循环</h3>
+<h3 id="53-do-while循环">5.3 do while循环</h3>
+<p><strong>都是基础，记点杂项。</strong></p>
+<h4 id="ctime头文件">ctime头文件</h4>
+<blockquote>
+<p>头文件ctime(较早的实现中为time.h）首先定义了一个符号常量——CLOCKS_PER_SEC，该常量等于每秒钟包含的系统时间单位数。因此，将系统时间除以这个值，可以得到秒数。或者将秒数乘以CLOCK_PER_SEC，可以得到以系统时间单位为单位的时间。其次，ctime将clock_t作为clock()返回类型的别名（参见本章后面的注释“类型别名”)，这意味着可以将变量声明为clock_t类型，编译器将把它转换为long、unsigned int或适合系统的其他类型。</p>
+</blockquote>
+<h3 id="54-基于范围的for循环">5.4 基于范围的for循环</h3>
+<p><code>for(auto x:array)</code>：对数组（或容器类）的每个元素执行相同的操作。<br>
+<code>for(auto &amp;x:array)</code>：&amp;表示x为<strong>引用变量</strong>，使可以修改数组内容。</p>
+<h3 id="55-循环和文本输入">5.5 循环和文本输入</h3>
+<h4 id="文件尾eof">文件尾EOF</h4>
+<p>看看书吧。这里记一下通过键盘来模拟文件尾条件。Unix：<code>Crtl+D</code>，Windows：<code>Crtl+Z</code>和<code>Enter</code>。</p>
+<blockquote>
+<p>检测到EOF后，cin将两位（eofbit和failbit）都设置为1。可以通过成员函数eof( )来查看eofbit是否被设置;如果检测到EOF，则cin.eof()将返回 bool值 true，否则返回 false。同样，如果eofbit或failbit被设置为1，则 fail()成员函数返回 true，否则返回false。注意，eof()和fail()方法报告最近读取的结果;也就是说，它们在事后报告，而不是预先报告。因此应将cin.eof( )或cin.fail()测试放在读取后，程序清单5.18中的设计体现了这一点。它使用的是 fail()，而不是eof( )，因为前者可用于更多的实现中。</p>
+</blockquote>
+<p>事实上，关于EOF的检测还有很多细碎的知识点，我就不一一列举了，掌握常用的方法就行。这部分内容更多是扩展一下视野让你知道为什么会这样，以及简单提及对象、原型和重载这些概念，对我作用不大。<br>
+<img src="https://jinvic.github.io/post-images/%5Bstudy-notes%5D-cpp-primer-plus-6th-edition-%5Bbasic%5D/5.2_1.png" alt="5.2_1" loading="lazy"></p>
+<h3 id="56-嵌套循环和二维数组">5.6 嵌套循环和二维数组</h3>
+<h4 id="指针数组初始化为字符串常量">指针数组初始化为字符串常量</h4>
+<p>这对我是一种很新鲜的写法，因为我一般直接用std::string数组或者二维char数组。这种方法仔细想想也确实可行。</p>
+<pre><code class="language-C++">const char *cities[5] = // array of pointers
+    {                   // to 5 strings
+        &quot;Gribble city&quot;,
+        &quot;Gribbletown &quot;,
+        &quot;New Gribble&quot;,
+        &quot;san Gribble&quot;,
+        &quot;Gribble vista&quot;};
+
+</code></pre>
+<hr>
+<h2 id="第6章-分支语句和逻辑运算">第6章 分支语句和逻辑运算</h2>
+<h3 id="61-if语句">6.1 if语句</h3>
+<p>都是基础，略</p>
+<h3 id="62-逻辑表达式">6.2 逻辑表达式</h3>
+<p>有一点书上只提了一下，但我认为需要注意单独拿出来（看到后面才发现书上还是讲了这点，只不过举的除零的例子）。就是或运算符<code>||</code>和与运算符<code>&amp;&amp;</code>的判断是有顺序的，后续表达式对结果没有影响时会提前结束。这使得我们可以写出一些看上去有问题的逻辑表达式，因为逻辑运算符的本质就是写了个会提前返回的if-else表达式嵌套。例如我们判断可变数组里某个值是否为1（当然，这只是一个简单的例子，实际应用会比这复杂得多）：</p>
+<pre><code class="language-C++">if(v[i] == 1)                 // exist risk
+if(v.size() &gt;= i &amp;&amp; v[i] == 1) // more safe
+/* equal to below
+if(v.size() &gt;= i)
+{
+    if(v[i] == 1)
+        return true;
+    else
+        return false;
+}
+else
+    return false;
+*/
+</code></pre>
+<p>这种写法会先判断数组长度避免越界，再访问对应下标的值。如果下标越界，<code>v.size() &gt;= i</code>的值为false，后面无论是true还是false都对结果没有影响，于是判断提前结束。即使下标越界，<code>v[i] == 1</code>语句并不会被执行，所以运行时不会出问题。</p>
+<p>此外，C++中也可以用and，or、not作为逻辑运算符。c中要想这样做需要包含<code>iso646.h</code>头文件，不过我个人觉得没必要。</p>
+<h3 id="63-字符函数库cctype">6.3 字符函数库cctype</h3>
+<figure data-type="image" tabindex="2"><img src="https://jinvic.github.io/post-images/%5Bstudy-notes%5D-cpp-primer-plus-6th-edition-%5Bbasic%5D/6.3_1.png" alt="6.3_1" loading="lazy"></figure>
+<h3 id="64-运算符">6.4 ？：运算符</h3>
+<p>这个最好只用于简单条件判断，复杂的嵌套什么的可以写但没必要，不差那几行代码对吧，可读性比较重要。</p>
+<h3 id="65-switch语句">6.5 switch语句</h3>
+<p><strong>注意</strong>：switch语句中的break不是必须的，你可以通过将多个case并在一起来提高代码复用。</p>
+<p>书上提到使用枚举型变量，这是因为枚举型变量本质上就是给0,1,2这样的具体值起了个别名，这点我们在之前提到过。</p>
+<h3 id="66-break和continue语句">6.6 break和continue语句</h3>
+<p>break和continue很基础就不说了。<br>
+goto书上提了一句， 大多数情况甚至任何情况都尽量避免使用goto。我也见过goto存在即合理就是给你用的这样的观点。我的看法是如果使用前叙述的结构化语句很复杂麻烦，而goto能很好地提升代码可读性的话用用也未尝不可，没必要当洪水猛兽。</p>
+<h3 id="67-读取数组的循环">6.7 读取数组的循环</h3>
+<p>提到了一点错误处理，在本应输入数字是输入字符，可以先用<code>cin.clear()</code>重置cin，再while(cin.get()!='\n') 来读掉错误输入，最后要求用户重新输入。<br>
+我觉得这个看看就行不用认真记。后面肯定有专门的错误处理方法。这种就初学者为了用户交互用用。</p>
+<h3 id="68-简单文件输入输出">6.8 简单文件输入输出</h3>
+<h4 id="简单文件读写">简单文件读写</h4>
+<p>一些简单的文件读写，详细的要看后面。临时简单用用还行。</p>
+<blockquote>
+<p>写入文本文件：</p>
+<ul>
+<li>1．包含头文件 fstream。</li>
+<li>2．创建一个ofstream对象。</li>
+<li>3．将该ofstream对象同一个文件关联起来（ofstream.open(filename)）。</li>
+<li>4．就像使用cout那样使用该ofstream对象。</li>
+</ul>
+</blockquote>
+<p>在使用<code>ofstream.open()</code>是，如果文件不存在将被创建；如果文件已存在默认将丢弃原有内容重新写入。<br>
+使用完文件后记得用<code>ofstream.close()</code>将其关闭。</p>
+<p>读取文本文件大致相似。可以使用<code>ifstream.is_open()</code>检测文件是否成功打开。</p>
+<pre><code class="language-C++">if(!fin.is_open())
+    exit(EXIT_FAILURE);
+</code></pre>
+<blockquote>
+<p>如果文件被成功地打开，方法 is_open()将返回 true;因此如果文件没有被打开，表达式!inFile.isopen()将为true。函数 exit()的原型是在头文件cstdib 中定义的，在该头文件中，还定义了一个用于同操作系统通信的参数值EXIT_FAILURE。函数exit()终止程序。</p>
+</blockquote>
+<h4 id="文本文件结尾">文本文件结尾</h4>
+<p>\n\r什么的书上也提了下，感觉算那种暂时可以不了解但不能不知道的小知识，<strong>大部分时候都不用管但不知道什么时候就会因为这个出问题</strong>。这东西Windows和Linux还不一样，每次看到这类东西都想着要是能统一一下就好了，但也没啥可能，积重难返。</p>
+<blockquote>
+<p>警告:Windows文本文件的每行都以回车字符和换行符结尾;通常情况下，C++在读取文件时将这两个字符转换为换行符，并在写入文件时执行相反的转换。有些文本编辑器(如Metrowerks CodeWarrior IDE编辑器)，不会自动在最后一行末尾加上换行符。因此，如果读者使用的是这种编辑器，请在输入最后的文本后按下回车键，然后再保存文件。</p>
+</blockquote>
+<h4 id="文件打开失败时确定原因">文件打开失败时确定原因</h4>
+<p>在检测文件是否成功打开时，一种简单的方法是使用<code>good()</code>，该方法将在没有发生任何错误时返回true，也可以使用<code>eof()</code>（读到eof）,<code>fail()</code>（读到eof、类型不匹配）,<code>bad()</code>（文件受损、硬件故障等）来尝试确定具体原因。</p>
+<hr>
+<h2 id="第7章-函数c的编程模块">第7章 函数——C++的编程模块</h2>
+<h3 id="71-复习函数的基本知识">7.1 复习函数的基本知识</h3>
+<p>主要还是讲函数原型，讲的太细反而看不出有什么重点。。。<br>
+函数和返回值类型不匹配时会自动转换什么的用过一两次就知道了。</p>
+<h3 id="72-函数参数和按值传递">7.2 函数参数和按值传递</h3>
+<h4 id="形参和实参">形参和实参</h4>
+<p>了解一下形参（parameter）和实参（argument）的概念。形参是实参的副本，修改形参并不会影响实参。但如果你需要修改实参，则可以传递地址或者取引用，后面会讲。</p>
+<h3 id="73-函数和数组">7.3 函数和数组</h3>
+<h4 id="数组作函数参数">数组作函数参数</h4>
+<p>主要就是第4章的数组的地址和指针类型里讲过的，数组名相当于第一个元素的地址。当然，他和真正的地址有一点区别，因为程序是将它标记成数组的，所以<code>sizeof</code>运算符和<code>&amp;</code>地址运算符都返回的是整个数组的长度or地址。而进行函数传参时，它就失去了作为数组名的特性，仅仅是首元素地址了，所以我们<strong>通常需要额外的参数来说明数组长度</strong>。</p>
+<h4 id="指针和const">指针和const</h4>
+<p>在只有一级间接关系时还好理解，到了二级就有点似懂非懂，看了蛮久才勉强明白。所以说指针这东西就是麻烦。这里直接贴结论，详细还是看书多思考一下：</p>
+<blockquote>
+<p>注意:如果数据类型本身并不是指针，则可以将const 数据或非const 数据的地址赋给指向const 的指针，但只能将非const 数据的地址赋给非const指针。</p>
+</blockquote>
+<h4 id="指向常量的指针和常量指针">指向常量的指针和常量指针</h4>
+<ul>
+<li>当const写在指针类型<strong>前</strong>时，它表示<strong>指向常量的指针</strong>，指针指向对象的值不能改变，但指针的对象可以改变。</li>
+<li>当const写在指针类型<strong>后</strong>时，它表示<strong>常量指针</strong>，指针指向对象的值可以改变，但指针的对象不能改变。</li>
+</ul>
+<p>当然，也可以写两个const，使指针指向的对象和指向对象的值都不能改变。</p>
+<h3 id="74-函数和二维数组">7.4 函数和二维数组</h3>
+<h4 id="二维多维数组的指针">二维（多维）数组的指针</h4>
+<p>做函数参数的二维数组长啥样？答案是<code>int (*)[]</code>，这是类型名。例如一个3*4的二维数组arr，就是int (*arr)[4]。当然可以写int arr[][4]，后者可读性更好但前者更利于你了解指针。又来了，C/C++的噩梦——指针。这个地方多一个括号少一个括号意思完全不一样，难怪不少人谈指针色变。</p>
+<p>带括号时，<code>int (*arr)[4]</code>，它表示指向长为4的int数组的指针；而不带括号的<code>int *arr[4]</code>，它表示长为4的指向int类型指针的数组。是不是有点晕了（笑）。我们这样来看，带括号时，先是int与[4]结合，表示长为4的int数组，再看*号，就是指向这个数组的指针。而不带括号时，首先是int与*结合，表示指向int类型的指针，再看后面的[4]，表示长为4的数组，这样就行了。</p>
+<p>我之前想当然的移位一维数组是<code>int *</code>，二维数组就应该是<code>int **</code>，这是不对的，实际上后者表示的是指向int指针的指针，或者说可以作为int指针的数组。这是你可能就疑问了，每个一维数组是一个int指针，int指针的数组不就是二维数组了吗？这你就忽略了最重要的一个因素：长度。你没有指定一维数组的长度，这种定义就相当于连续的一维数组指针放在一起而没有对应的数组空间，你只能动态给它分配内存，和我们平常说的拥有连续内存空间的二维数组并不一样。举个例子：</p>
+<pre><code class="language-C++">// 静态分配内存
+int arr[3][4];
+// 动态分配内存
+int **arr2;
+arr2 = new int *[3];
+for (int i = 0; i &lt; 3; i++)
+    arr2[i] = new int[4];
+// 使用方法近似
+for (int i = 0; i &lt; 3; i++)
+    for (int j = 0; j &lt; 4; j++)
+        arr[i][j] = arr2[i][j] = i &amp; 4 + j;
+</code></pre>
+<p>它们虽然用起来差不多，但在函数传参时，如果不能正确地指定类型名是不行的。所以还是要搞懂它们的区别。</p>
+<h3 id="75-函数和c-风格字符串">7.5 函数和C-风格字符串</h3>
+<p>略，就是强调传值直接传指针。字符串因为有<code>\0</code>不用再传长度。</p>
+<h3 id="76-函数和结构">7.6 函数和结构</h3>
+<h3 id="77-函数和string对象">7.7 函数和string对象</h3>
+<h3 id="78-函数和array对象">7.8 函数和array对象</h3>
+<p>一路看下来没什么重要的内容。感觉一直在强调可以用指针但后面会讲更好用的引用这样。</p>
+<h3 id="79-递归">7.9 递归</h3>
+<p>略。</p>
+<h3 id="710-函数指针">7.10 函数指针</h3>
+<p>函数指针乍一看很高大上，其实声明和用法什么的是共通的。就像基本类型一样，你在函数声明的变量前加个*就是函数声明了。但因为函数有参数列表，所以要用括号括起来避免优先级的问题。如下：</p>
+<pre><code class="language-C++">double (*pf)(int);  //指向返回值为double的函数的指针
+double *pf(int);    //返回值为指向double的指针的函数
+</code></pre>
+<p>此外，使用指针调用函数时，既可以使用(*pf)，也可以直接使用pf当函数名。虽然两者逻辑上是冲突的，但支持两种做法的人都有，所以C++进行了折中，两种做法都是正确的。</p>
+<p>在进行函数指针声明时，也可直接用auto+初始化的方式：</p>
+<pre><code class="language-C++">double func(int)；
+auto pf=func;
+</code></pre>
+<p>要查看实际的函数地址，则需要解引用，如*pf或者*(*pf)。</p>
+<p>再上点强度，指向函数的指针的数组怎么写？</p>
+<pre><code class="language-C++">const double * (*pf[3]) (const double *, int);
+</code></pre>
+<p>如上是指向返回类型为const double *的函数的指针的数组。正如我们之前所说，pf先与[3]结合表示是数组，*表示数组内存的是指针，其他表示这是一个函数指针。如果括起来，理论上就是指向函数数组的指针了。尝试了一下，编译器将报错不允许使用函数数组。</p>
+<p>再套一层，指向这个数组的指针怎么写？</p>
+<pre><code class="language-C++">const double * (*(*ppf)[3]) (const double *, int);
+</code></pre>
+<p>从里往外看，首先(*ppf)表示这是一个指针，把它摘出去，剩下的<code>const double * (*[3]) (const double *, int);</code>其实就是上面那个数组的类型了，合起来看就是指向这个类型的指针，怎么样，晕了吧。没关系，我也晕。</p>
+<p>最后，记得用auto和typedef简化编码。例如上述的指向函数的指针的数组的指针，就可以如下定义：</p>
+<pre><code class="language-C++">const double * (*pf[3]) (const double *, int);
+auto ppf=&amp;pf;
+</code></pre>
+<p>以及使用typedef为复杂的类型起一个别名。</p>
+<pre><code class="language-C++">typedef const double * (*p_func) (const double *, int);
+p_func pf=func;
+</code></pre>
+
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0c-primer-plus%E7%AC%AC6%E7%89%88%E5%9F%BA%E7%A1%80%E7%AF%87">【学习笔记】C++ Primer Plus（第6版）【基础篇】</a>
+<ul>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E7%AC%AC1%E7%AB%A0-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86">第1章 预备知识</a></li>
+<li><a href="#%E7%AC%AC2%E7%AB%A0-%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0c">第2章 开始学习C++</a>
+<ul>
+<li><a href="#21-%E8%BF%9B%E5%85%A5c">2.1 进入C++</a>
+<ul>
+<li><a href="#%E5%A4%B4%E6%96%87%E4%BB%B6%E5%91%BD%E5%90%8D">头文件命名</a></li>
+<li><a href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4">命名空间</a></li>
+</ul>
+</li>
+<li><a href="#22-c%E8%AF%AD%E5%8F%A5">2.2 C++语句</a></li>
+<li><a href="#23-%E5%85%B6%E4%BB%96c%E8%AF%AD%E5%8F%A5">2.3 其他C++语句</a></li>
+<li><a href="#24-%E5%87%BD%E6%95%B0">2.4 函数</a>
+<ul>
+<li><a href="#%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B">函数原型</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC3%E7%AB%A0-%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE">第3章 处理数据</a>
+<ul>
+<li><a href="#31-%E7%AE%80%E5%8D%95%E5%8F%98%E9%87%8F">3.1 简单变量</a>
+<ul>
+<li><a href="#%E5%8F%98%E9%87%8F%E5%91%BD%E5%90%8D%E8%A7%84%E5%88%99">变量命名规则</a></li>
+<li><a href="#%E8%BF%90%E7%AE%97%E7%AC%A6sizeof">运算符sizeof</a></li>
+<li><a href="#%E5%A4%B4%E6%96%87%E4%BB%B6climits">头文件climits</a></li>
+<li><a href="#c%E8%BF%9B%E5%88%B6%E8%A1%A8%E7%A4%BA%E6%B3%95">C++进制表示法</a></li>
+<li><a href="#wchar_twcin%E5%92%8Cwcout">wchar_t,wcin和wcout</a></li>
+<li><a href="#char16_t%E5%92%8Cchar32_t">char16_t和char32_t</a></li>
+</ul>
+</li>
+<li><a href="#32-const%E9%99%90%E5%AE%9A%E7%AC%A6">3.2 const限定符</a></li>
+<li><a href="#33-%E6%B5%AE%E7%82%B9%E6%95%B0">3.3 浮点数</a>
+<ul>
+<li><a href="#cfloat%E6%88%96floath%E5%A4%B4%E6%96%87%E4%BB%B6">cfloat或float.h头文件</a></li>
+<li><a href="#%E6%B5%AE%E7%82%B9%E5%B8%B8%E9%87%8F%E5%90%8E%E7%BC%80">浮点常量后缀</a></li>
+</ul>
+</li>
+<li><a href="#34-c%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6">3.4 C++算术运算符</a>
+<ul>
+<li><a href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7">运算符优先级</a></li>
+<li><a href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2">类型转换</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC4%E7%AB%A0-%E5%A4%8D%E5%90%88%E7%B1%BB%E5%9E%8B">第4章 复合类型</a>
+<ul>
+<li><a href="#41-%E6%95%B0%E7%BB%84">4.1 数组</a>
+<ul>
+<li><a href="#%E6%95%B0%E7%BB%84%E5%88%9D%E5%A7%8B%E5%8C%96">数组初始化</a></li>
+</ul>
+</li>
+<li><a href="#42-%E5%AD%97%E7%AC%A6%E4%B8%B2">4.2 字符串</a>
+<ul>
+<li><a href="#%E8%AF%BB%E5%8F%96%E4%B8%80%E8%A1%8C%E5%AD%97%E7%AC%A6%E4%B8%B2">读取一行字符串</a></li>
+<li><a href="#%E7%A9%BA%E8%A1%8C%E5%92%8C%E6%BA%A2%E5%87%BA%E9%97%AE%E9%A2%98">空行和溢出问题</a></li>
+</ul>
+</li>
+<li><a href="#43-string%E7%B1%BB%E7%AE%80%E4%BB%8B">4.3 string类简介</a>
+<ul>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E5%A4%8D%E5%88%B6%E4%B8%8E%E6%8B%BC%E6%8E%A5">字符串的复制与拼接</a></li>
+<li><a href="#string%E7%B1%BB%E8%AF%BB%E5%85%A5%E4%B8%80%E8%A1%8C">string类读入一行</a></li>
+<li><a href="#%E5%8E%9F%E5%A7%8B%E5%AD%97%E7%AC%A6%E4%B8%B2">原始字符串</a></li>
+</ul>
+</li>
+<li><a href="#44-%E7%BB%93%E6%9E%84%E7%AE%80%E4%BB%8B">4.4 结构简介</a>
+<ul>
+<li><a href="#%E5%8C%BF%E5%90%8D%E7%BB%93%E6%9E%84%E4%BD%93">匿名结构体</a></li>
+<li><a href="#%E7%BB%93%E6%9E%84%E4%B8%AD%E7%9A%84%E4%BD%8D%E5%AD%97%E6%AE%B5">结构中的位字段</a></li>
+</ul>
+</li>
+<li><a href="#45-%E5%85%B1%E7%94%A8%E4%BD%93">4.5 共用体</a>
+<ul>
+<li><a href="#%E5%85%B1%E7%94%A8%E4%BD%93%E7%9A%84%E5%A4%A7%E5%B0%8F">共用体的大小</a></li>
+<li><a href="#%E5%8C%BF%E5%90%8D%E5%85%B1%E7%94%A8%E4%BD%93">匿名共用体</a></li>
+</ul>
+</li>
+<li><a href="#46-%E6%9E%9A%E4%B8%BE">4.6 枚举</a>
+<ul>
+<li><a href="#%E5%AE%9A%E4%B9%89%E4%B8%8E%E8%B5%8B%E5%80%BC">定义与赋值</a></li>
+<li><a href="#%E5%8F%96%E5%80%BC%E8%8C%83%E5%9B%B4">取值范围</a></li>
+</ul>
+</li>
+<li><a href="#47-%E6%8C%87%E9%92%88%E5%92%8C%E8%87%AA%E7%94%B1%E5%AD%98%E5%82%A8%E7%A9%BA%E9%97%B4">4.7 指针和自由存储空间</a>
+<ul>
+<li><a href="#%E5%86%85%E5%AD%98%E7%9A%84%E5%88%86%E9%85%8D%E5%92%8C%E9%87%8A%E6%94%BE">内存的分配和释放</a></li>
+<li><a href="#%E9%9D%99%E6%80%81%E8%81%94%E7%BC%96%E5%92%8C%E5%8A%A8%E6%80%81%E8%81%94%E7%BC%96">静态联编和动态联编</a></li>
+</ul>
+</li>
+<li><a href="#48-%E6%8C%87%E9%92%88-%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E7%AE%97">4.8 指针、数组和指针算</a>
+<ul>
+<li><a href="#%E6%95%B0%E7%BB%84%E7%9A%84%E5%9C%B0%E5%9D%80%E5%92%8C%E6%8C%87%E9%92%88%E7%B1%BB%E5%9E%8B">数组的地址和指针类型</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8C%87%E9%92%88">字符串指针</a></li>
+<li><a href="#%E8%87%AA%E5%8A%A8%E5%AD%98%E5%82%A8-%E9%9D%99%E6%80%81%E5%AD%98%E5%82%A8%E5%92%8C%E5%8A%A8%E6%80%81%E5%AD%98%E5%82%A8">自动存储、静态存储和动态存储</a></li>
+</ul>
+</li>
+<li><a href="#49-%E7%B1%BB%E5%9E%8B%E7%BB%84%E5%90%88">4.9 类型组合</a>
+<ul>
+<li><a href="#%E5%A4%8D%E6%9D%82%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E8%AF%86%E5%88%AB">复杂数据类型的识别</a></li>
+</ul>
+</li>
+<li><a href="#410-%E6%95%B0%E7%BB%84%E7%9A%84%E6%9B%BF%E4%BB%A3%E5%93%81">4.10 数组的替代品</a>
+<ul>
+<li><a href="#%E6%A8%A1%E6%9D%BF%E7%B1%BBvector%E5%92%8Carray">模板类vector和array</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC5%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E5%92%8C%E5%85%B3%E7%B3%BB%E8%A1%A8%E8%BE%BE%E5%BC%8F">第5章 循环和关系表达式</a>
+<ul>
+<li><a href="#51-for%E5%BE%AA%E7%8E%AF">5.1 for循环</a>
+<ul>
+<li><a href="#ios-boolalpha">ios:: boolalpha</a></li>
+<li><a href="#%E5%89%8D%E7%BC%80%E6%A0%BC%E5%BC%8F%E5%92%8C%E5%90%8E%E7%BC%80%E6%A0%BC%E5%BC%8F">前缀格式和后缀格式</a></li>
+</ul>
+</li>
+<li><a href="#52-while%E5%BE%AA%E7%8E%AF">5.2 while循环</a></li>
+<li><a href="#53-do-while%E5%BE%AA%E7%8E%AF">5.3 do while循环</a>
+<ul>
+<li><a href="#ctime%E5%A4%B4%E6%96%87%E4%BB%B6">ctime头文件</a></li>
+</ul>
+</li>
+<li><a href="#54-%E5%9F%BA%E4%BA%8E%E8%8C%83%E5%9B%B4%E7%9A%84for%E5%BE%AA%E7%8E%AF">5.4 基于范围的for循环</a></li>
+<li><a href="#55-%E5%BE%AA%E7%8E%AF%E5%92%8C%E6%96%87%E6%9C%AC%E8%BE%93%E5%85%A5">5.5 循环和文本输入</a>
+<ul>
+<li><a href="#%E6%96%87%E4%BB%B6%E5%B0%BEeof">文件尾EOF</a></li>
+</ul>
+</li>
+<li><a href="#56-%E5%B5%8C%E5%A5%97%E5%BE%AA%E7%8E%AF%E5%92%8C%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84">5.6 嵌套循环和二维数组</a>
+<ul>
+<li><a href="#%E6%8C%87%E9%92%88%E6%95%B0%E7%BB%84%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%BA%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F">指针数组初始化为字符串常量</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC6%E7%AB%A0-%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5%E5%92%8C%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97">第6章 分支语句和逻辑运算</a>
+<ul>
+<li><a href="#61-if%E8%AF%AD%E5%8F%A5">6.1 if语句</a></li>
+<li><a href="#62-%E9%80%BB%E8%BE%91%E8%A1%A8%E8%BE%BE%E5%BC%8F">6.2 逻辑表达式</a></li>
+<li><a href="#63-%E5%AD%97%E7%AC%A6%E5%87%BD%E6%95%B0%E5%BA%93cctype">6.3 字符函数库cctype</a></li>
+<li><a href="#64-%E8%BF%90%E7%AE%97%E7%AC%A6">6.4 ？：运算符</a></li>
+<li><a href="#65-switch%E8%AF%AD%E5%8F%A5">6.5 switch语句</a></li>
+<li><a href="#66-break%E5%92%8Ccontinue%E8%AF%AD%E5%8F%A5">6.6 break和continue语句</a></li>
+<li><a href="#67-%E8%AF%BB%E5%8F%96%E6%95%B0%E7%BB%84%E7%9A%84%E5%BE%AA%E7%8E%AF">6.7 读取数组的循环</a></li>
+<li><a href="#68-%E7%AE%80%E5%8D%95%E6%96%87%E4%BB%B6%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA">6.8 简单文件输入输出</a>
+<ul>
+<li><a href="#%E7%AE%80%E5%8D%95%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99">简单文件读写</a></li>
+<li><a href="#%E6%96%87%E6%9C%AC%E6%96%87%E4%BB%B6%E7%BB%93%E5%B0%BE">文本文件结尾</a></li>
+<li><a href="#%E6%96%87%E4%BB%B6%E6%89%93%E5%BC%80%E5%A4%B1%E8%B4%A5%E6%97%B6%E7%A1%AE%E5%AE%9A%E5%8E%9F%E5%9B%A0">文件打开失败时确定原因</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC7%E7%AB%A0-%E5%87%BD%E6%95%B0c%E7%9A%84%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9D%97">第7章 函数——C++的编程模块</a>
+<ul>
+<li><a href="#71-%E5%A4%8D%E4%B9%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86">7.1 复习函数的基本知识</a></li>
+<li><a href="#72-%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%92%8C%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92">7.2 函数参数和按值传递</a>
+<ul>
+<li><a href="#%E5%BD%A2%E5%8F%82%E5%92%8C%E5%AE%9E%E5%8F%82">形参和实参</a></li>
+</ul>
+</li>
+<li><a href="#73-%E5%87%BD%E6%95%B0%E5%92%8C%E6%95%B0%E7%BB%84">7.3 函数和数组</a>
+<ul>
+<li><a href="#%E6%95%B0%E7%BB%84%E4%BD%9C%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0">数组作函数参数</a></li>
+<li><a href="#%E6%8C%87%E9%92%88%E5%92%8Cconst">指针和const</a></li>
+<li><a href="#%E6%8C%87%E5%90%91%E5%B8%B8%E9%87%8F%E7%9A%84%E6%8C%87%E9%92%88%E5%92%8C%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88">指向常量的指针和常量指针</a></li>
+</ul>
+</li>
+<li><a href="#74-%E5%87%BD%E6%95%B0%E5%92%8C%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84">7.4 函数和二维数组</a>
+<ul>
+<li><a href="#%E4%BA%8C%E7%BB%B4%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E6%8C%87%E9%92%88">二维（多维）数组的指针</a></li>
+</ul>
+</li>
+<li><a href="#75-%E5%87%BD%E6%95%B0%E5%92%8Cc-%E9%A3%8E%E6%A0%BC%E5%AD%97%E7%AC%A6%E4%B8%B2">7.5 函数和C-风格字符串</a></li>
+<li><a href="#76-%E5%87%BD%E6%95%B0%E5%92%8C%E7%BB%93%E6%9E%84">7.6 函数和结构</a></li>
+<li><a href="#77-%E5%87%BD%E6%95%B0%E5%92%8Cstring%E5%AF%B9%E8%B1%A1">7.7 函数和string对象</a></li>
+<li><a href="#78-%E5%87%BD%E6%95%B0%E5%92%8Carray%E5%AF%B9%E8%B1%A1">7.8 函数和array对象</a></li>
+<li><a href="#79-%E9%80%92%E5%BD%92">7.9 递归</a></li>
+<li><a href="#710-%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88">7.10 函数指针</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://jinvic.github.io/post/python-spider-based-arc-ptt-culculation/">
+              <span class="post-title">
+                基于python爬虫的arcptt计算器【备份留档】&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
+
+            
+            
+            
+            <!-- <script src='https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js'></script> -->
+<script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet' />
+
+<!-- <style>
+	div#vcomments{
+		width:100%;
+		max-width: 1000px;
+		padding: 2.5%
+	}
+</style> -->
+
+<!--  -->
+
+	<div id="wcomments"></div>
+
+<script>
+	// new Valine({
+	Waline.init({
+		el: '#wcomments',
+		serverURL: 'personal-blog-comments.vercel.app',
+		login: 'enable',
+		wordLimit: 300,
+		pageSize: 10,
+		reaction: true,
+		
+	});
+</script>
+
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/Jinvic" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://jinvic.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>Jinvic&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://jinvic.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <div id="landlord-parent">
+    <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="200" height="300" class="live2d"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+        //移动端
+        console.log("------ 移动端");
+    } else {
+        console.log("------ PC端 " + navigator.userAgent);
+
+        addScript("https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/js/live2d.js", () => {
+            // 加载完成后再loadlive2d
+            loadlive2d("live2d", "https://jinvic.github.io/media/live2d/assets/koharu.model.json");
+        });
+
+        var home_Path = "https://jinvic.github.io/";
+        addScript("https://jinvic.github.io/media/live2d/js/message.js", () => { });
+    }
+
+    // 插入js文件，完成后callback
+    function addScript(jsfile, callback) {
+        var landlord_parent = document.getElementById("landlord-parent");
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = jsfile;
+        landlord_parent.appendChild(script);
+        script.onload = script.onreadystatechange = function () {
+            if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                script.onload = script.onreadystatechange = null;
+                if (callback && typeof callback == "function") {
+                    callback(); //window[callback]();如果传递字符串过来 调用window['函数名']() 调用方法
+                }
+            }
+        };
+    }
+</script>
+  
+  <script src="https://jinvic.github.io/media/scripts/tocScript.js"></script>
+</body>
+
+</html>
